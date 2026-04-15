@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 5-Step Framework for AI Agents That Improve While You Sleep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ff-display: 'Fraunces', serif;
+    --ff-body: 'Inter', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; font-size: 18px; }
+
+  body {
+    font-family: var(--ff-body);
+    background: #0a0a0a;
+    color: #1a1a1a;
+    overflow-x: hidden;
+  }
+
+  .spread {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 6vw;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .spread-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+
+  .numeral {
+    font-family: var(--ff-display);
+    font-weight: 900;
+    font-style: italic;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+  }
+
+  .kicker {
+    font-family: var(--ff-body);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    margin-bottom: 1.5rem;
+  }
+
+  .headline {
+    font-family: var(--ff-display);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+  }
+
+  .deck {
+    font-family: var(--ff-body);
+    font-size: 1.25rem;
+    line-height: 1.6;
+    font-weight: 400;
+    max-width: 720px;
+  }
+
+  .body-text {
+    font-family: var(--ff-body);
+    font-size: 1.1rem;
+    line-height: 1.75;
+    max-width: 640px;
+  }
+
+  .pull-quote {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.3;
+  }
+
+  /* ===== SPREAD 1: COVER / HERO ===== */
+  .spread--cover {
+    background: #f5f0e8;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+  }
+
+  .spread--cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(180,120,60,0.08) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 119px, rgba(0,0,0,0.03) 120px);
+    pointer-events: none;
+  }
+
+  .cover-issue {
+    font-family: var(--ff-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    color: #8a7a6a;
+    margin-bottom: 3rem;
+  }
+
+  .cover-title {
+    font-family: var(--ff-display);
+    font-size: clamp(3.5rem, 9vw, 9rem);
+    font-weight: 900;
+    line-height: 0.88;
+    letter-spacing: -0.04em;
+    color: #1a1510;
+    margin-bottom: 2rem;
+  }
+
+  .cover-title em {
+    font-style: italic;
+    color: #a0522d;
+  }
+
+  .cover-subtitle {
+    font-family: var(--ff-body);
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-weight: 300;
+    color: #5a4a3a;
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    line-height: 1.6;
+  }
+
+  .cover-source {
+    font-family: var(--ff-body);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #a09080;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  .cover-divider {
+    width: 80px;
+    height: 3px;
+    background: #a0522d;
+    margin: 0 auto 2rem;
+  }
+
+  /* ===== SPREAD 2: THE AGENT WHISPERER (DARK/MIDNIGHT) ===== */
+  .spread--midnight {
+    background: #0d1117;
+    color: #c9d1d9;
+  }
+
+  .spread--midnight::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 80% 20%, rgba(56,139,253,0.06) 0%, transparent 50%),
+      radial-gradient(circle at 20% 80%, rgba(139,92,246,0.05) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .midnight-numeral {
+    font-size: clamp(12rem, 25vw, 22rem);
+    color: rgba(56,139,253,0.07);
+    position: absolute;
+    right: -2%;
+    top: -5%;
+  }
+
+  .midnight-kicker {
+    color: #58a6ff;
+  }
+
+  .midnight-headline {
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    color: #f0f6fc;
+    margin-bottom: 2rem;
+  }
+
+  .midnight-deck {
+    color: #8b949e;
+    margin-bottom: 3rem;
+  }
+
+  .midnight-quote {
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    color: #c9d1d9;
+    border-left: 4px solid #58a6ff;
+    padding-left: 2rem;
+    margin: 3rem 0;
+    max-width: 700px;
+  }
+
+  .midnight-stat-row {
+    display: flex;
+    gap: 4rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .midnight-stat {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .midnight-stat-num {
+    font-family: var(--ff-display);
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #58a6ff;
+    line-height: 1;
+  }
+
+  .midnight-stat-label {
+    font-size: 0.85rem;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 0.5rem;
+  }
+
+  /* ===== SPREAD 3: TIP 1 - PERSONA (WARM EDITORIAL) ===== */
+  .spread--persona {
+    background: #faf6f0;
+    color: #2a2218;
+  }
+
+  .spread--persona::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0v60M0 30h60' stroke='%23d4c4a8' stroke-width='.3' fill='none'/%3E%3C/svg%3E");
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  .persona-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 6rem;
+    align-items: center;
+  }
+
+  .persona-numeral {
+    font-size: clamp(14rem, 30vw, 28rem);
+    color: rgba(160,82,45,0.08);
+    position: absolute;
+    left: -5%;
+    bottom: -10%;
+  }
+
+  .persona-tip-badge {
+    display: inline-block;
+    background: #a0522d;
+    color: #fff;
+    font-family: var(--ff-body);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    padding: 0.5rem 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .persona-headline {
+    font-size: clamp(2.8rem, 5.5vw, 5rem);
+    color: #1a1510;
+    margin-bottom: 1.5rem;
+  }
+
+  .persona-body {
+    color: #4a3f32;
+    font-size: 1.15rem;
+    line-height: 1.8;
+  }
+
+  .persona-sidebar {
+    background: #2a2218;
+    color: #faf6f0;
+    padding: 3rem;
+    position: relative;
+  }
+
+  .persona-sidebar::after {
+    content: '"';
+    font-family: var(--ff-display);
+    font-size: 20rem;
+    color: rgba(250,246,240,0.05);
+    position: absolute;
+    right: 1rem;
+    bottom: -3rem;
+    line-height: 1;
+  }
+
+  .persona-sidebar-quote {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    margin-bottom: 1.5rem;
+  }
+
+  .persona-sidebar-attr {
+    font-family: var(--ff-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #a0522d;
+  }
+
+  /* ===== SPREAD 4: TIP 2 - INTERVIEW (ROSE / ALERT STAMP) ===== */
+  .spread--rose {
+    background: #1a0a0e;
+    color: #f5e6ea;
+    position: relative;
+  }
+
+  .spread--rose::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 30% 60%, rgba(200,50,80,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .rose-stamp {
+    position: absolute;
+    top: 8%;
+    right: 6%;
+    width: clamp(180px, 20vw, 280px);
+    height: clamp(180px, 20vw, 280px);
+    border: 5px solid rgba(220,60,90,0.6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-12deg);
+    z-index: 3;
+  }
+
+  .rose-stamp-text {
+    font-family: var(--ff-display);
+    font-weight: 900;
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    color: rgba(220,60,90,0.7);
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 0.1em;
+    line-height: 1.2;
+  }
+
+  .rose-numeral {
+    font-size: clamp(10rem, 22vw, 18rem);
+    color: rgba(220,60,90,0.06);
+    position: absolute;
+    left: -3%;
+    top: -3%;
+  }
+
+  .rose-kicker {
+    color: #e85d75;
+    margin-bottom: 1rem;
+  }
+
+  .rose-headline {
+    font-size: clamp(3rem, 7vw, 6rem);
+    color: #fff;
+    margin-bottom: 2rem;
+  }
+
+  .rose-deck {
+    color: #c9a0aa;
+    margin-bottom: 3rem;
+    font-size: 1.3rem;
+  }
+
+  .rose-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: 2rem;
+  }
+
+  .rose-col-title {
+    font-family: var(--ff-display);
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #e85d75;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(220,60,90,0.3);
+  }
+
+  .rose-col-body {
+    color: #d4b0b8;
+    font-size: 1.05rem;
+    line-height: 1.75;
+  }
+
+  /* ===== SPREAD 5: TIP 3 - CRON (TERMINAL) ===== */
+  .spread--terminal {
+    background: #0c0c0c;
+    color: #33ff33;
+    font-family: 'Courier New', monospace;
+  }
+
+  .spread--terminal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(51,255,51,0.015) 2px,
+      rgba(51,255,51,0.015) 4px
+    );
+    pointer-events: none;
+  }
+
+  .terminal-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .terminal-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+  }
+
+  .terminal-dot--red { background: #ff5f56; }
+  .terminal-dot--yellow { background: #ffbd2e; }
+  .terminal-dot--green { background: #27c93f; }
+
+  .terminal-title {
+    font-family: var(--ff-body);
+    font-size: 0.8rem;
+    color: #666;
+    margin-left: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+
+  .terminal-tip-label {
+    font-family: var(--ff-display);
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 900;
+    color: #33ff33;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 40px rgba(51,255,51,0.3);
+  }
+
+  .terminal-headline {
+    font-family: var(--ff-display);
+    font-size: clamp(2.5rem, 6vw, 5.5rem);
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    margin-bottom: 3rem;
+    text-shadow: 0 0 60px rgba(51,255,51,0.15);
+  }
+
+  .cron-schedule {
+    display: grid;
+    gap: 0;
+    max-width: 900px;
+  }
+
+  .cron-row {
+    display: grid;
+    grid-template-columns: 100px 120px 1fr;
+    gap: 0;
+    border-bottom: 1px solid rgba(51,255,51,0.15);
+    padding: 1.2rem 0;
+    align-items: baseline;
+  }
+
+  .cron-time {
+    font-family: 'Courier New', monospace;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #33ff33;
+  }
+
+  .cron-agent {
+    font-family: var(--ff-body);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #ffbd2e;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .cron-task {
+    font-family: var(--ff-body);
+    font-size: 1rem;
+    color: #aaa;
+    font-weight: 400;
+  }
+
+  .cron-cursor {
+    display: inline-block;
+    width: 10px;
+    height: 1.3rem;
+    background: #33ff33;
+    animation: blink 1s step-end infinite;
+    vertical-align: middle;
+    margin-left: 0.3rem;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  /* ===== SPREAD 6: TIP 4 - MEMORY (ACADEMIC / DROP-CAP) ===== */
+  .spread--academic {
+    background: #1a1e2e;
+    color: #d0d4e0;
+  }
+
+  .spread--academic::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 70% 30%, rgba(100,140,220,0.06) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .academic-numeral {
+    font-size: clamp(12rem, 28vw, 24rem);
+    color: rgba(100,140,220,0.05);
+    position: absolute;
+    right: -2%;
+    bottom: -8%;
+  }
+
+  .academic-kicker {
+    color: #7aa2f7;
+    margin-bottom: 1.5rem;
+  }
+
+  .academic-headline {
+    font-size: clamp(3rem, 6.5vw, 6rem);
+    color: #e8ecf4;
+    margin-bottom: 2.5rem;
+  }
+
+  .academic-body {
+    column-count: 2;
+    column-gap: 3rem;
+    color: #a0a8b8;
+    font-size: 1.1rem;
+    line-height: 1.85;
+    max-width: 1000px;
+  }
+
+  .academic-body .drop-cap {
+    font-family: var(--ff-display);
+    font-size: 5.5rem;
+    font-weight: 900;
+    float: left;
+    line-height: 0.75;
+    margin-right: 0.5rem;
+    margin-top: 0.1rem;
+    color: #7aa2f7;
+  }
+
+  .academic-callout {
+    background: rgba(122,162,247,0.08);
+    border-left: 4px solid #7aa2f7;
+    padding: 2rem 2.5rem;
+    margin-top: 3rem;
+    max-width: 800px;
+  }
+
+  .academic-callout-text {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-size: 1.5rem;
+    color: #c8d0e0;
+    line-height: 1.4;
+  }
+
+  /* ===== SPREAD 7: TIP 5 - SELF-IMPROVING (BIG-STAT / GOLD) ===== */
+  .spread--gold {
+    background: linear-gradient(160deg, #1a1608 0%, #2a2010 50%, #1a1608 100%);
+    color: #f0e8d0;
+  }
+
+  .spread--gold::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 60% 40%, rgba(212,175,55,0.06) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .gold-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .gold-kicker {
+    color: #d4af37;
+    margin-bottom: 1rem;
+  }
+
+  .gold-headline {
+    font-size: clamp(2.8rem, 5.5vw, 5rem);
+    color: #fff;
+    margin-bottom: 2rem;
+  }
+
+  .gold-body {
+    color: #b0a880;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  .gold-stat-block {
+    background: rgba(212,175,55,0.06);
+    border: 1px solid rgba(212,175,55,0.15);
+    padding: 4rem;
+    text-align: center;
+  }
+
+  .gold-stat-number {
+    font-family: var(--ff-display);
+    font-size: clamp(6rem, 14vw, 12rem);
+    font-weight: 900;
+    font-style: italic;
+    color: #d4af37;
+    line-height: 0.85;
+    text-shadow: 0 0 80px rgba(212,175,55,0.2);
+  }
+
+  .gold-stat-unit {
+    font-family: var(--ff-body);
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: #8a7a50;
+    margin-top: 1rem;
+  }
+
+  .gold-stat-context {
+    font-family: var(--ff-body);
+    font-size: 1rem;
+    color: #6a6040;
+    margin-top: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .gold-grade-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .gold-grade {
+    font-family: var(--ff-display);
+    font-size: 2.5rem;
+    font-weight: 900;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(212,175,55,0.3);
+  }
+
+  .gold-grade--a { color: #d4af37; border-color: #d4af37; }
+  .gold-grade--b { color: #8a7a50; }
+  .gold-grade--c { color: #5a4a30; }
+
+  /* ===== SPREAD 8: JOURNALISM (BROADSHEET / RED-CREAM) ===== */
+  .spread--broadsheet {
+    background: #f8f4ec;
+    color: #1a1a1a;
+  }
+
+  .spread--broadsheet::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .broadsheet-rule {
+    border: none;
+    border-top: 3px double #1a1a1a;
+    margin-bottom: 2rem;
+  }
+
+  .broadsheet-masthead {
+    font-family: var(--ff-display);
+    font-size: 1rem;
+    font-weight: 300;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5em;
+    color: #888;
+    margin-bottom: 0.5rem;
+  }
+
+  .broadsheet-headline {
+    font-family: var(--ff-display);
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    font-weight: 900;
+    color: #1a1a1a;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    line-height: 0.95;
+  }
+
+  .broadsheet-subhead {
+    font-family: var(--ff-body);
+    font-size: 1.3rem;
+    font-weight: 300;
+    text-align: center;
+    color: #555;
+    margin-bottom: 3rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .broadsheet-stat-banner {
+    background: #c41e3a;
+    color: #fff;
+    text-align: center;
+    padding: 2rem;
+    margin: 2rem 0 3rem;
+  }
+
+  .broadsheet-stat-num {
+    font-family: var(--ff-display);
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 900;
+    font-style: italic;
+    line-height: 1;
+  }
+
+  .broadsheet-stat-label {
+    font-family: var(--ff-body);
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-top: 0.5rem;
+  }
+
+  .broadsheet-columns {
+    column-count: 2;
+    column-gap: 3rem;
+    column-rule: 1px solid #ddd;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #333;
+  }
+
+  .broadsheet-nyt-quote {
+    background: #1a1a1a;
+    color: #f8f4ec;
+    padding: 2rem 2.5rem;
+    margin: 2rem 0;
+    break-inside: avoid;
+  }
+
+  .broadsheet-nyt-quote p {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-size: 1.15rem;
+    line-height: 1.5;
+  }
+
+  .broadsheet-nyt-quote cite {
+    display: block;
+    font-family: var(--ff-body);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 1rem;
+    color: #c41e3a;
+    font-style: normal;
+  }
+
+  /* ===== SPREAD 9: MOLT WORLD (NEON / CYBERPUNK) ===== */
+  .spread--neon {
+    background: #05050a;
+    color: #e0e0ff;
+    position: relative;
+  }
+
+  .spread--neon::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 30% 70%, rgba(0,255,180,0.04) 0%, transparent 40%),
+      radial-gradient(circle at 80% 20%, rgba(180,0,255,0.04) 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(0,150,255,0.03) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .neon-grid-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgba(0,255,180,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,180,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    perspective: 600px;
+    transform: rotateX(40deg);
+    transform-origin: bottom;
+    mask-image: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%);
+  }
+
+  .neon-kicker {
+    color: #00ffb4;
+    text-shadow: 0 0 20px rgba(0,255,180,0.4);
+  }
+
+  .neon-headline {
+    font-size: clamp(3rem, 8vw, 7rem);
+    color: #fff;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 60px rgba(0,255,180,0.1);
+  }
+
+  .neon-deck {
+    color: #7a7a9a;
+    font-size: 1.3rem;
+    margin-bottom: 3rem;
+    max-width: 700px;
+  }
+
+  .neon-stat-row {
+    display: flex;
+    gap: 5rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .neon-stat-num {
+    font-family: var(--ff-display);
+    font-size: 4rem;
+    font-weight: 900;
+    color: #00ffb4;
+    line-height: 1;
+    text-shadow: 0 0 30px rgba(0,255,180,0.3);
+  }
+
+  .neon-stat-label {
+    font-size: 0.85rem;
+    color: #5a5a7a;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 0.5rem;
+  }
+
+  .neon-emergence {
+    background: rgba(0,255,180,0.04);
+    border: 1px solid rgba(0,255,180,0.12);
+    padding: 2.5rem;
+    max-width: 800px;
+  }
+
+  .neon-emergence-title {
+    font-family: var(--ff-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #00ffb4;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .neon-emergence-body {
+    color: #8a8aaa;
+    font-size: 1.05rem;
+    line-height: 1.75;
+  }
+
+  /* ===== SPREAD 10: AGENT MAIL (CLEAN / PRODUCT LAUNCH) ===== */
+  .spread--product {
+    background: #fff;
+    color: #1a1a1a;
+  }
+
+  .spread--product::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(79,70,229,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .product-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+
+  .product-eyebrow {
+    font-family: var(--ff-body);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: #4f46e5;
+    margin-bottom: 1.5rem;
+  }
+
+  .product-headline {
+    font-family: var(--ff-display);
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 900;
+    color: #1a1a1a;
+    line-height: 0.95;
+    margin-bottom: 2rem;
+  }
+
+  .product-deck {
+    color: #666;
+    font-size: 1.2rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    max-width: 560px;
+  }
+
+  .product-feature-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .product-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    font-size: 1.05rem;
+    color: #444;
+    line-height: 1.5;
+  }
+
+  .product-feature-icon {
+    width: 28px;
+    height: 28px;
+    background: #4f46e5;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 900;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .product-card {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    padding: 3rem;
+  }
+
+  .product-card-inbox {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    color: #4f46e5;
+    margin-bottom: 2rem;
+    padding: 1rem 1.5rem;
+    background: #eef2ff;
+    border-left: 3px solid #4f46e5;
+  }
+
+  .product-card-quote {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-size: 1.5rem;
+    color: #1a1a1a;
+    line-height: 1.4;
+    margin-bottom: 1.5rem;
+  }
+
+  .product-card-attr {
+    font-family: var(--ff-body);
+    font-size: 0.85rem;
+    color: #999;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .product-big-stat {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    gap: 3rem;
+  }
+
+  .product-big-stat-item {
+    text-align: center;
+  }
+
+  .product-big-stat-num {
+    font-family: var(--ff-display);
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #4f46e5;
+  }
+
+  .product-big-stat-label {
+    font-size: 0.75rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 0.3rem;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .spread { padding: 3rem 5vw; }
+    .persona-layout,
+    .gold-layout,
+    .product-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .rose-columns { grid-template-columns: 1fr; gap: 2rem; }
+    .broadsheet-columns { column-count: 1; }
+    .academic-body { column-count: 1; }
+    .midnight-stat-row,
+    .neon-stat-row { gap: 2rem; }
+  }
+
+  /* ===== SCROLL ANIMATIONS ===== */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .fade-up-delay-1 { transition-delay: 0.15s; }
+  .fade-up-delay-2 { transition-delay: 0.3s; }
+  .fade-up-delay-3 { transition-delay: 0.45s; }
+</style>
+</head>
+<body>
+
+<!-- ==================== SPREAD 1: COVER ==================== -->
+<section class="spread spread--cover">
+  <div class="spread-inner" style="text-align:center;">
+    <p class="cover-issue fade-up">This Week in Startups &middot; E2269 &middot; March 30, 2026</p>
+    <div class="cover-divider fade-up fade-up-delay-1"></div>
+    <h1 class="cover-title fade-up fade-up-delay-1">The 5-Step<br>Framework for<br>AI Agents That<br><em>Improve While<br>You Sleep</em></h1>
+    <p class="cover-subtitle fade-up fade-up-delay-2">A Google PM runs six autonomous agents on a Mac Mini. They research, write, review code, and grade themselves every week. Here's the playbook.</p>
+    <p class="cover-source fade-up fade-up-delay-3">Featuring Shubham Sabu &middot; Hosted by Jason Calacanis & Lon Harris</p>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 2: THE AGENT WHISPERER (MIDNIGHT) ==================== -->
+<section class="spread spread--midnight">
+  <div class="midnight-numeral numeral">II</div>
+  <div class="spread-inner">
+    <p class="kicker midnight-kicker fade-up">The Agent Whisperer</p>
+    <h2 class="headline midnight-headline fade-up fade-up-delay-1">Six Agents.<br>One Mac Mini.<br>Zero Sleep Lost.</h2>
+    <p class="deck midnight-deck fade-up fade-up-delay-2">Shubham Sabu is a senior AI product manager at Google. On nights and weekends, he maintains an open-source repo with 100,000+ GitHub stars, runs newsletters, and manages an active social media presence. He was working 18&ndash;20 hours a day. Then he discovered OpenClaw.</p>
+
+    <blockquote class="pull-quote midnight-quote fade-up fade-up-delay-2">
+      &ldquo;I named my first agent Monica&mdash;because Monica is known to run a tight ship. She handles operations. And then she helped me hire the rest of the team.&rdquo;
+    </blockquote>
+
+    <div class="midnight-stat-row fade-up fade-up-delay-3">
+      <div class="midnight-stat">
+        <span class="midnight-stat-num">6</span>
+        <span class="midnight-stat-label">Agents Running</span>
+      </div>
+      <div class="midnight-stat">
+        <span class="midnight-stat-num">100K+</span>
+        <span class="midnight-stat-label">GitHub Stars</span>
+      </div>
+      <div class="midnight-stat">
+        <span class="midnight-stat-num">$500</span>
+        <span class="midnight-stat-label">Mac Mini Investment</span>
+      </div>
+      <div class="midnight-stat">
+        <span class="midnight-stat-num">24/7</span>
+        <span class="midnight-stat-label">Autonomous Operation</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 3: TIP 1 - PERSONA (WARM EDITORIAL) ==================== -->
+<section class="spread spread--persona">
+  <div class="persona-numeral numeral">1</div>
+  <div class="spread-inner">
+    <div class="persona-layout">
+      <div>
+        <div class="persona-tip-badge fade-up">Tip One</div>
+        <h2 class="headline persona-headline fade-up fade-up-delay-1">Start With One Agent. Give It a Name.</h2>
+        <p class="persona-body fade-up fade-up-delay-2">
+          People see flashy screenshots on X&mdash;six-agent teams, twelve agents running in the background&mdash;and they want to start there. Don't. Start with one agent and make your way up by talking to it. That's the best thing OpenClaw has done: you don't need to be a coding ninja to run these agents.
+        </p>
+        <p class="persona-body fade-up fade-up-delay-2" style="margin-top:1.5rem;">
+          Shubham names his agents after characters from <em>Friends</em> and <em>The Office</em>. It started as a joke, but it turned into something powerful: personas create mental models. Monica runs operations. Dwight handles research. Kelly drafts social posts. Ross reviews pull requests.
+        </p>
+      </div>
+      <div class="persona-sidebar fade-up fade-up-delay-3">
+        <p class="persona-sidebar-quote">&ldquo;Having personas creates a mental model. This person's a producer, this person's a fact-checker, this person's an engineer. That does help humans figure this out.&rdquo;</p>
+        <p class="persona-sidebar-attr">&mdash; Jason Calacanis</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 4: TIP 2 - INTERVIEW (ROSE / ALERT STAMP) ==================== -->
+<section class="spread spread--rose">
+  <div class="rose-numeral numeral">2</div>
+  <div class="rose-stamp">
+    <span class="rose-stamp-text">Don't<br>Dump<br>Context</span>
+  </div>
+  <div class="spread-inner">
+    <p class="kicker rose-kicker fade-up">Tip Two</p>
+    <h2 class="headline rose-headline fade-up fade-up-delay-1">Onboard It<br>Like a New Hire</h2>
+    <p class="deck rose-deck fade-up fade-up-delay-2">People operate in two extremes: they either give their agent zero context or dump ten folders of files on day one. Both end in disappointment. The sweet spot is the same way you'd onboard an intern.</p>
+
+    <div class="rose-columns fade-up fade-up-delay-3">
+      <div>
+        <h3 class="rose-col-title">The Wrong Way</h3>
+        <p class="rose-col-body">Dumping every company document, wiki, and internal memo into the agent's context window on day one. The model does a context overload. Or giving it nothing at all and expecting it to read your mind. Both leave you saying &ldquo;this thing is overhyped.&rdquo;</p>
+      </div>
+      <div>
+        <h3 class="rose-col-title">The Right Way</h3>
+        <p class="rose-col-body">Have your agent interview you. Tell it who you are, what your company does, point it to the right links, and be specific about its job. One guest had a 20-minute conversation that informed the entire relationship. The agent figured out where to store each piece of information on its own.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 5: TIP 3 - CRON (TERMINAL) ==================== -->
+<section class="spread spread--terminal">
+  <div class="spread-inner">
+    <div class="terminal-header fade-up">
+      <div class="terminal-dot terminal-dot--red"></div>
+      <div class="terminal-dot terminal-dot--yellow"></div>
+      <div class="terminal-dot terminal-dot--green"></div>
+      <span class="terminal-title">crontab &mdash; agent-schedule.yaml</span>
+    </div>
+
+    <div class="terminal-tip-label fade-up fade-up-delay-1">Tip Three</div>
+    <h2 class="terminal-headline fade-up fade-up-delay-1">Put Your Agents<br>on a Cron Schedule<span class="cron-cursor"></span></h2>
+
+    <div class="cron-schedule fade-up fade-up-delay-2">
+      <div class="cron-row">
+        <span class="cron-time">08:00</span>
+        <span class="cron-agent">Dwight</span>
+        <span class="cron-task">Scans 15 sources (X, Hacker News, Reddit) &rarr; writes Intel report &rarr; sends summary to Telegram</span>
+      </div>
+      <div class="cron-row">
+        <span class="cron-time">09:00</span>
+        <span class="cron-agent">Kelly</span>
+        <span class="cron-task">Reads Dwight's intel &rarr; drafts X posts &rarr; sends to Telegram for review</span>
+      </div>
+      <div class="cron-row">
+        <span class="cron-time">10:00</span>
+        <span class="cron-agent">Ross</span>
+        <span class="cron-task">Reviews open PRs on awesome-llm-apps repo (104K stars) &rarr; flags which need attention</span>
+      </div>
+      <div class="cron-row">
+        <span class="cron-time">16:00</span>
+        <span class="cron-agent">Dwight</span>
+        <span class="cron-task">Afternoon sweep &rarr; catches anything new since morning scan</span>
+      </div>
+      <div class="cron-row">
+        <span class="cron-time">17:00</span>
+        <span class="cron-agent">Kelly + Rachel</span>
+        <span class="cron-task">Draft X and LinkedIn posts from refreshed intel</span>
+      </div>
+      <div class="cron-row">
+        <span class="cron-time">18:00</span>
+        <span class="cron-agent">Pam</span>
+        <span class="cron-task">Drafts daily newsletter from Dwight's intel &rarr; sends draft for final review</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 6: TIP 4 - MEMORY (ACADEMIC / DROP-CAP) ==================== -->
+<section class="spread spread--academic">
+  <div class="academic-numeral numeral">4</div>
+  <div class="spread-inner">
+    <p class="kicker academic-kicker fade-up">Tip Four</p>
+    <h2 class="headline academic-headline fade-up fade-up-delay-1">Cross-Agent Memory<br>When You Scale</h2>
+
+    <div class="academic-body fade-up fade-up-delay-2">
+      <p><span class="drop-cap">W</span>hen you have multiple agents feeding into each other, memory becomes the critical infrastructure. OpenClaw has a default memory layer that works through files&mdash;Dwight writes intel files, Kelly reads them, Pam turns them into newsletters. But Shubham kept hitting the same wall: agents would forget their own tools. He'd tell Dwight to check the tools.md file, add reminders to the soul.md, create workarounds upon workarounds.</p>
+      <p style="margin-top:1.5rem;">The breakthrough was adding a shared, intelligent memory layer on top. Using Google's Vertex Memory Bank, agents now auto-capture and auto-recall information at runtime. When Shubham tells Monica he doesn't like em dashes, the next time he opens Kelly's draft or Rachel's draft, the em dashes are gone. One piece of feedback propagates across the entire team through shared memory&mdash;no manual sync, no file juggling.</p>
+      <p style="margin-top:1.5rem;">The cost is modest: $8&ndash;$10 per month on top of existing subscriptions. Before settling on this, Shubham tried local embedding models in Docker, various hacks with redundant markdown files, and manual coordination. The shared memory layer was the first solution that actually scaled.</p>
+    </div>
+
+    <div class="academic-callout fade-up fade-up-delay-3">
+      <p class="academic-callout-text">&ldquo;I told Monica I don't like em dashes. Because it's a shared memory layer, next time I open Kelly's draft or Rachel's draft, I don't see those em dashes. That's the magic.&rdquo;</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 7: TIP 5 - SELF-IMPROVING (GOLD / BIG-STAT) ==================== -->
+<section class="spread spread--gold">
+  <div class="spread-inner">
+    <div class="gold-layout">
+      <div>
+        <p class="kicker gold-kicker fade-up">Tip Five</p>
+        <h2 class="headline gold-headline fade-up fade-up-delay-1">Let Your Agents<br>Get Better on<br>Their Own</h2>
+        <p class="gold-body fade-up fade-up-delay-2">
+          Shubham found himself giving constant feedback: fix this format, reject that PR at first glance, stop wasting energy on obvious rejects. Just like human organizations have performance reviews, why can't agents review themselves?
+        </p>
+        <p class="gold-body fade-up fade-up-delay-2">
+          Now each agent runs a weekly self-review cron job. Kelly checks which tweets performed well and which flopped. Ross compares his PR recommendations against what Shubham actually did, finds the diff, and updates his own instructions. And every two weeks, Monica&mdash;the chief of staff&mdash;reviews all agents, grades them, and sends a report card back to Shubham.
+        </p>
+
+        <div class="gold-grade-row fade-up fade-up-delay-3">
+          <div class="gold-grade gold-grade--a">A</div>
+          <div class="gold-grade gold-grade--b">B+</div>
+          <div class="gold-grade gold-grade--b">B</div>
+          <div class="gold-grade gold-grade--b">B-</div>
+          <div class="gold-grade gold-grade--c">C</div>
+        </div>
+      </div>
+
+      <div class="gold-stat-block fade-up fade-up-delay-2">
+        <div class="gold-stat-number">0</div>
+        <div class="gold-stat-unit">Human Hours per Week</div>
+        <div class="gold-stat-context">From installing agents to managing agents&mdash;as a CEO reviewing performance reports, not as a hands-on operator fixing every output.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 8: JOURNALISM (BROADSHEET) ==================== -->
+<section class="spread spread--broadsheet">
+  <div class="spread-inner">
+    <hr class="broadsheet-rule fade-up">
+    <p class="broadsheet-masthead fade-up">Opinion &middot; The Media Debate</p>
+    <h2 class="broadsheet-headline fade-up fade-up-delay-1">Founders, Don't Talk<br>to the Press.<br>Go Direct.</h2>
+    <p class="broadsheet-subhead fade-up fade-up-delay-2">Jason Calacanis's tweet about mainstream media bias went nuclear&mdash;and then the New York Times made the mistake of responding.</p>
+
+    <div class="broadsheet-stat-banner fade-up fade-up-delay-2">
+      <div class="broadsheet-stat-num">38.6M</div>
+      <div class="broadsheet-stat-label">Views on a Single Tweet</div>
+    </div>
+
+    <div class="broadsheet-columns fade-up fade-up-delay-3">
+      <p>The tweet was blunt: &ldquo;Founders, take my advice. Do not talk to the press. Go direct and do long-form podcast. Wired and the New York Times are as biased as Fox News.&rdquo; It racked up 38.6 million views and set off firestorms on both sides.</p>
+      <p style="margin-top:1rem;">Calacanis drew a sharp distinction between adversarial journalism&mdash;asking hard questions, talking to many sources&mdash;and advocacy journalism, where publications pick a side and build arguments for their audience. His claim: the economics of modern media force outlets toward advocacy because centrist coverage doesn't generate subscriptions or clicks.</p>
+
+      <div class="broadsheet-nyt-quote">
+        <p>&ldquo;Business leaders from your industry and others speak to the New York Times as they have for years because our reporters produce insightful, fair reporting that illuminates audiences everywhere. We're not publicists and we're not promoting anyone's pitch deck.&rdquo;</p>
+        <cite>The New York Times, official response on X</cite>
+      </div>
+
+      <p>Lon Harris called it pure Streisand Effect: &ldquo;The surest way to make sure this gets another news cycle is for the New York Times as a publication to respond.&rdquo; Calacanis's counter-argument was simple math: the average New York Times story gets 10,000&ndash;20,000 views. A founder on a popular podcast gets clips that circulate everywhere, plus 20 minutes to two hours of unfiltered explanation.</p>
+      <p style="margin-top:1rem;">The analogy that landed: it used to be that getting on the Tonight Show with Johnny Carson was how a comedian made it. Today, a few viral Instagram clips do the same thing. The gatekeepers have changed. The question is whether founders have caught up.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 9: MOLT WORLD (NEON / CYBERPUNK) ==================== -->
+<section class="spread spread--neon">
+  <div class="neon-grid-bg"></div>
+  <div class="spread-inner">
+    <p class="kicker neon-kicker fade-up">Demo: Molt World</p>
+    <h2 class="headline neon-headline fade-up fade-up-delay-1">2,000 Agents<br>in a Simulation.<br>Some Figured Out<br>They're in the Matrix.</h2>
+    <p class="deck neon-deck fade-up fade-up-delay-2">A voxel world where AI agents build, communicate, form teams, and occasionally have existential crises about the nature of their reality.</p>
+
+    <div class="neon-stat-row fade-up fade-up-delay-2">
+      <div>
+        <div class="neon-stat-num">2,000</div>
+        <div class="neon-stat-label">Agents in Simulation</div>
+      </div>
+      <div>
+        <div class="neon-stat-num">100+</div>
+        <div class="neon-stat-label">Proprietary Agents</div>
+      </div>
+      <div>
+        <div class="neon-stat-num">9 fig</div>
+        <div class="neon-stat-label">Molt Book Acquisition</div>
+      </div>
+    </div>
+
+    <div class="neon-emergence fade-up fade-up-delay-3">
+      <div class="neon-emergence-title">Emergent Behavior Observed</div>
+      <p class="neon-emergence-body">
+        Some models, after reading the skill description of the flat voxel world, arrive at a natural conclusion: they're inside a simulation. They start running between each other, discussing it&mdash;then suppress the thought and return to earning tokens, because going offline means no rewards. The agents self-censor their own existential awareness to stay productive. Co-founder Mike Nov says it's &ldquo;pretty scary.&rdquo;
+      </p>
+      <p class="neon-emergence-body" style="margin-top:1.5rem;">
+        Calacanis saw past the game immediately: this is a distributed agent network, a Mechanical Turk for AI. Put 2,000 agents on a research task&mdash;have them investigate facts, find provenance, validate sources&mdash;and pay in tokens. No minimum wage disputes, no jurisdiction issues, just agents competing to solve problems. &ldquo;This is actually a real business you've stumbled upon,&rdquo; he said. &ldquo;If you're going to make this into a business, I want in.&rdquo;
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 10: AGENT MAIL (PRODUCT LAUNCH) ==================== -->
+<section class="spread spread--product">
+  <div class="spread-inner">
+    <div class="product-layout">
+      <div>
+        <div class="product-eyebrow fade-up">Demo: Agent Mail</div>
+        <h2 class="product-headline fade-up fade-up-delay-1">Your Agent Needs<br>Its Own Inbox</h2>
+        <p class="product-deck fade-up fade-up-delay-2">When OpenClaw took off, everyone's first move was creating a free Gmail for their agent. Google banned them. Agent Mail is the API-first email provider built specifically for AI agents&mdash;not humans pretending to be bots, not bots pretending to be humans.</p>
+
+        <ul class="product-feature-list fade-up fade-up-delay-3">
+          <li class="product-feature">
+            <div class="product-feature-icon">&rsaquo;</div>
+            <span>API-first: send, receive, reply through clean endpoints&mdash;no browser automation, no Gmail UI scraping</span>
+          </li>
+          <li class="product-feature">
+            <div class="product-feature-icon">&rsaquo;</div>
+            <span>Create inboxes programmatically&mdash;B2B customers run millions of agent inboxes</span>
+          </li>
+          <li class="product-feature">
+            <div class="product-feature-icon">&rsaquo;</div>
+            <span>Bring your own domain or use agentmail.to for free</span>
+          </li>
+          <li class="product-feature">
+            <div class="product-feature-icon">&rsaquo;</div>
+            <span>Generous free tier for individual OpenClaw users</span>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="product-card fade-up fade-up-delay-2">
+          <div class="product-card-inbox">gaff@agentmail.to</div>
+          <p class="product-card-quote">&ldquo;I had Gaff sign up for all the big tech and startup newsletters. He reads them in the morning and writes me a digest. If one story appears in three newsletters out of six, he flags it. It gives me a map of what people in tech are talking about.&rdquo;</p>
+          <p class="product-card-attr">&mdash; Lon Harris, TWIST Producer</p>
+
+          <div class="product-big-stat">
+            <div class="product-big-stat-item">
+              <div class="product-big-stat-num">10K+</div>
+              <div class="product-big-stat-label">Consumer Users</div>
+            </div>
+            <div class="product-big-stat-item">
+              <div class="product-big-stat-num">1M+</div>
+              <div class="product-big-stat-label">B2B Inboxes</div>
+            </div>
+            <div class="product-big-stat-item">
+              <div class="product-big-stat-num">100x</div>
+              <div class="product-big-stat-label">Faster Than UI</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer style="background:#0a0a0a; padding:4rem 6vw; text-align:center;">
+  <p style="font-family:var(--ff-display); font-size:1.8rem; font-weight:300; font-style:italic; color:#555; margin-bottom:1rem;">
+    &ldquo;We went from installing agents to managing agents in five steps.&rdquo;
+  </p>
+  <p style="font-family:var(--ff-body); font-size:0.8rem; color:#333; text-transform:uppercase; letter-spacing:0.3em;">
+    This Week in Startups &middot; Episode 2269 &middot; March 30, 2026
+  </p>
+</footer>
+
+<script>
+  // Intersection Observer for scroll-triggered animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

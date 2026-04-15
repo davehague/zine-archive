@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Co-Work Revolution — How I AI Magazine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; font-size: 1.1rem; line-height: 1.7; color: #1a1a1a; overflow-x: hidden; }
+
+/* Utility */
+.container { max-width: 1400px; margin: 0 auto; padding: 0 4rem; }
+@media (max-width: 900px) { .container { padding: 0 1.5rem; } }
+
+/* Animation base */
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-d1 { transition-delay: 0.1s; }
+.reveal-d2 { transition-delay: 0.2s; }
+.reveal-d3 { transition-delay: 0.35s; }
+.reveal-d4 { transition-delay: 0.5s; }
+.reveal-d5 { transition-delay: 0.65s; }
+
+/* ===================== SPREAD 1: COVER ===================== */
+.spread-cover {
+  min-height: 100vh;
+  background: #faf6f0;
+  background-image:
+    radial-gradient(ellipse at 20% 80%, rgba(200,160,100,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(180,140,90,0.06) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c8a064' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.spread-cover .bg-numeral {
+  position: absolute;
+  font-family: 'Fraunces', serif;
+  font-size: 28vw;
+  font-weight: 100;
+  color: rgba(180,150,100,0.06);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  line-height: 1;
+}
+.spread-cover .cover-content { position: relative; z-index: 2; }
+.spread-cover .kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #a07840;
+  margin-bottom: 1.5rem;
+}
+.spread-cover h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(3rem, 8vw, 8.5rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: #1a1410;
+  margin-bottom: 1.5rem;
+}
+.spread-cover h1 em {
+  font-style: italic;
+  font-weight: 300;
+  color: #8b6830;
+}
+.spread-cover .divider {
+  width: 80px;
+  height: 3px;
+  background: #c8a064;
+  margin: 2rem auto;
+}
+.spread-cover .deck {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: #5a4a35;
+  max-width: 640px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+.spread-cover .attribution {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  font-style: italic;
+  color: #8b7050;
+}
+.spread-cover .attribution strong { font-weight: 700; font-style: normal; color: #5a4020; }
+
+/* ===================== SPREAD 2: DARK/MIDNIGHT ===================== */
+.spread-dark {
+  min-height: 100vh;
+  background: #0d1117;
+  background-image:
+    radial-gradient(ellipse at 30% 70%, rgba(56,120,200,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 30%, rgba(80,140,220,0.05) 0%, transparent 40%);
+  color: #c9d1d9;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 0;
+}
+.spread-dark .bg-numeral {
+  position: absolute;
+  font-family: 'Fraunces', serif;
+  font-size: 22vw;
+  font-weight: 900;
+  color: rgba(56,120,200,0.04);
+  right: -3vw;
+  top: 10%;
+  pointer-events: none;
+}
+.spread-dark .kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #58a6ff;
+  margin-bottom: 1rem;
+}
+.spread-dark h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 5vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #f0f6fc;
+  margin-bottom: 2rem;
+}
+.spread-dark .stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin: 3rem 0;
+}
+@media (max-width: 900px) { .spread-dark .stat-row { grid-template-columns: 1fr; } }
+.spread-dark .stat-card {
+  background: rgba(56,120,200,0.06);
+  border: 1px solid rgba(56,120,200,0.15);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+}
+.spread-dark .stat-card .stat-number {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-weight: 900;
+  color: #58a6ff;
+  line-height: 1.1;
+}
+.spread-dark .stat-card .stat-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #8b949e;
+  margin-top: 0.5rem;
+}
+.spread-dark .body-text {
+  font-size: 1.15rem;
+  color: #a0aab5;
+  max-width: 780px;
+  line-height: 1.8;
+}
+.spread-dark .pull-quote {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  font-style: italic;
+  color: #e6edf5;
+  border-left: 3px solid #58a6ff;
+  padding-left: 1.5rem;
+  margin: 2.5rem 0;
+  max-width: 700px;
+}
+
+/* ===================== SPREAD 3: WARM EDITORIAL ===================== */
+.spread-warm {
+  min-height: 100vh;
+  background: #f5f0e6;
+  background-image:
+    linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px),
+    linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 0;
+}
+.spread-warm .bg-numeral {
+  position: absolute;
+  font-family: 'Fraunces', serif;
+  font-size: 30vw;
+  font-weight: 100;
+  color: rgba(140,110,70,0.04);
+  left: -5vw;
+  bottom: -5vh;
+  pointer-events: none;
+}
+.spread-warm .layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 3rem;
+  align-items: start;
+}
+@media (max-width: 900px) { .spread-warm .layout { grid-template-columns: 1fr; } }
+.spread-warm .kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #8b6830;
+  margin-bottom: 1rem;
+}
+.spread-warm h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #2a1f10;
+  margin-bottom: 1.5rem;
+}
+.spread-warm .body-text {
+  font-size: 1.15rem;
+  color: #4a3d2c;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+.spread-warm .sidebar-panel {
+  background: #2a1f10;
+  color: #f5f0e6;
+  padding: 2.5rem;
+  border-radius: 8px;
+}
+.spread-warm .sidebar-panel h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #e8d5b0;
+}
+.spread-warm .sidebar-panel p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #c8b89a;
+}
+.spread-warm .sidebar-panel .quote-attr {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #a08860;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+/* ===================== SPREAD 4: ROSE ALERT/STAMP ===================== */
+.spread-rose {
+  min-height: 100vh;
+  background: #13111a;
+  background-image:
+    radial-gradient(ellipse at 50% 50%, rgba(190,40,70,0.06) 0%, transparent 50%);
+  color: #e8dde8;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 0;
+}
+.spread-rose .stamp {
+  position: absolute;
+  right: 6vw;
+  top: 50%;
+  transform: translateY(-50%) rotate(-12deg);
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 4px solid rgba(220,60,80,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: rgba(220,60,80,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  pointer-events: none;
+}
+@media (max-width: 900px) { .spread-rose .stamp { display: none; } }
+.spread-rose .kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #dc3c50;
+  margin-bottom: 1rem;
+}
+.spread-rose h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #f8f0f2;
+  margin-bottom: 2rem;
+}
+.spread-rose .two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  max-width: 900px;
+}
+@media (max-width: 900px) { .spread-rose .two-col { grid-template-columns: 1fr; } }
+.spread-rose .col-head {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #dc3c50;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(220,60,80,0.3);
+}
+.spread-rose .col-body {
+  font-size: 1.1rem;
+  color: #b8a8b8;
+  line-height: 1.8;
+}
+.spread-rose .pull-quote {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-style: italic;
+  color: #f0dde2;
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(220,60,80,0.2);
+  max-width: 700px;
+}
+
+/* ===================== SPREAD 5: TERMINAL ===================== */
+.spread-terminal {
+  min-height: 100vh;
+  background: #0a0a0a;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 0;
+}
+.spread-terminal .terminal-window {
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  overflow: hidden;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+.spread-terminal .terminal-bar {
+  background: #1e1e1e;
+  padding: 0.8rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.spread-terminal .terminal-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.spread-terminal .terminal-dot.red { background: #ff5f57; }
+.spread-terminal .terminal-dot.yellow { background: #febc2e; }
+.spread-terminal .terminal-dot.green { background: #28c840; }
+.spread-terminal .terminal-bar .title {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: #666;
+  margin-left: 0.8rem;
+}
+.spread-terminal .terminal-body {
+  padding: 2rem 2.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 1.05rem;
+  color: #33ff33;
+  line-height: 2;
+}
+.spread-terminal .terminal-body .comment { color: #555; }
+.spread-terminal .terminal-body .cmd { color: #33ff33; }
+.spread-terminal .terminal-body .output { color: #aaa; }
+.spread-terminal .terminal-body .highlight { color: #ffcc00; }
+.spread-terminal .terminal-body .accent { color: #00ccff; }
+.spread-terminal .cursor {
+  display: inline-block;
+  width: 10px;
+  height: 1.2em;
+  background: #33ff33;
+  animation: blink 1s step-end infinite;
+  vertical-align: text-bottom;
+  margin-left: 2px;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.spread-terminal .kicker-above {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #33ff33;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.spread-terminal h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 900;
+  color: #f0f0f0;
+  text-align: center;
+  margin-bottom: 3rem;
+  line-height: 1.05;
+}
+
+/* ===================== SPREAD 6: ACADEMIC DROP-CAP ===================== */
+.spread-academic {
+  min-height: 100vh;
+  background: #0f1a2e;
+  background-image:
+    radial-gradient(ellipse at 60% 40%, rgba(70,110,170,0.08) 0%, transparent 50%);
+  color: #c0cde0;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 0;
+}
+.spread-academic .bg-numeral {
+  position: absolute;
+  font-family: 'Fraunces', serif;
+  font-size: 35vw;
+  font-weight: 100;
+  color: rgba(70,110,170,0.04);
+  right: -8vw;
+  top: -5vh;
+  pointer-events: none;
+}
+.spread-academic .kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #6ca0dc;
+  margin-bottom: 1rem;
+}
+.spread-academic h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #e8f0ff;
+  margin-bottom: 2.5rem;
+}
+.spread-academic .two-col-text {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 2.5rem;
+}
+@media (max-width: 900px) { .spread-academic .two-col-text { grid-template-columns: 1fr; } }
+.spread-academic .drop-cap::first-letter {
+  font-family: 'Fraunces', serif;
+  font-size: 5rem;
+  float: left;
+  line-height: 0.8;
+  padding-right: 0.6rem;
+  padding-top: 0.1rem;
+  color: #6ca0dc;
+  font-weight: 900;
+}
+.spread-academic .col-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #98a8c0;
+}
+.spread-academic .callout-box {
+  background: rgba(70,110,170,0.1);
+  border: 1px solid rgba(108,160,220,0.2);
+  border-radius: 8px;
+  padding: 2rem;
+  margin-top: 1rem;
+}
+.spread-academic .callout-box h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #6ca0dc;
+  margin-bottom: 0.5rem;
+}
+.spread-academic .callout-box p {
+  font-size: 1.05rem;
+  color: #8898b0;
+}
+
+/* ===================== SPREAD 7: BIG-STAT/GOLD ===================== */
+.spread-gold {
+  min-height: 100vh;
+  background: #111008;
+  background-image:
+    radial-gradient(ellipse at 40% 60%, rgba(200,160,50,0.06) 0%, transparent 50%);
+  color: #d4c49a;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 0;
+}
+.spread-gold .kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #c8a030;
+  margin-bottom: 1rem;
+}
+.spread-gold h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #f8f0d0;
+  margin-bottom: 2rem;
+}
+.spread-gold .hero-stat {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(6rem, 14vw, 14rem);
+  font-weight: 900;
+  color: #c8a030;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  margin: 2rem 0 1rem;
+  text-shadow: 0 0 80px rgba(200,160,50,0.15);
+}
+.spread-gold .stat-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #a08840;
+  margin-bottom: 2rem;
+}
+.spread-gold .badges {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+.spread-gold .badge {
+  background: rgba(200,160,50,0.08);
+  border: 1px solid rgba(200,160,50,0.2);
+  border-radius: 8px;
+  padding: 1.2rem 2rem;
+  text-align: center;
+}
+.spread-gold .badge .label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #a08840;
+}
+.spread-gold .badge .value {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #e8d090;
+  margin-top: 0.3rem;
+}
+.spread-gold .body-text {
+  font-size: 1.15rem;
+  color: #9a8a6a;
+  max-width: 780px;
+  line-height: 1.8;
+  margin-top: 2rem;
+}
+
+/* ===================== SPREAD 8: BROADSHEET ===================== */
+.spread-broadsheet {
+  min-height: 100vh;
+  background: #f8f4ec;
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 0;
+}
+.spread-broadsheet .inner {
+  border-top: 4px double #1a1a1a;
+  border-bottom: 4px double #1a1a1a;
+  padding: 3rem 0;
+}
+.spread-broadsheet .kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #8b4520;
+  margin-bottom: 0.8rem;
+}
+.spread-broadsheet h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+.spread-broadsheet .red-banner {
+  display: inline-block;
+  background: #c02020;
+  color: #fff;
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  padding: 0.4rem 1.2rem;
+  margin: 1rem 0 2rem;
+  letter-spacing: 0.02em;
+}
+.spread-broadsheet .three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2.5rem;
+  column-rule: 1px solid #ccc4b4;
+}
+@media (max-width: 900px) { .spread-broadsheet .three-col { grid-template-columns: 1fr; column-rule: none; } }
+.spread-broadsheet .three-col p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #3a3020;
+}
+.spread-broadsheet .three-col h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 0.8rem;
+}
+.spread-broadsheet .pull-quote {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  font-style: italic;
+  color: #2a2010;
+  text-align: center;
+  margin: 3rem auto 0;
+  max-width: 700px;
+  padding-top: 2rem;
+  border-top: 2px solid #c02020;
+}
+
+/* ===================== SPREAD 9: NEON/CYBERPUNK ===================== */
+.spread-neon {
+  min-height: 100vh;
+  background: #080810;
+  background-image:
+    linear-gradient(180deg, #080810 0%, #0a0a18 40%, #080810 100%);
+  color: #c0f0d0;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 0;
+}
+.spread-neon .grid-floor {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40vh;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(0,255,140,0.03) 100%),
+    repeating-linear-gradient(90deg, rgba(0,255,140,0.06) 0px, transparent 1px, transparent 80px),
+    repeating-linear-gradient(0deg, rgba(0,255,140,0.06) 0px, transparent 1px, transparent 80px);
+  transform: perspective(500px) rotateX(45deg);
+  transform-origin: bottom center;
+  pointer-events: none;
+}
+.spread-neon .kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #00ff8c;
+  margin-bottom: 1rem;
+}
+.spread-neon h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #e0ffe8;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 40px rgba(0,255,140,0.1);
+}
+.spread-neon .emergence-boxes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  position: relative;
+  z-index: 2;
+}
+@media (max-width: 900px) { .spread-neon .emergence-boxes { grid-template-columns: 1fr; } }
+.spread-neon .e-box {
+  background: rgba(0,255,140,0.03);
+  border: 1px solid rgba(0,255,140,0.15);
+  border-radius: 8px;
+  padding: 2rem;
+}
+.spread-neon .e-box h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #00ff8c;
+  margin-bottom: 0.8rem;
+}
+.spread-neon .e-box p {
+  font-size: 1.05rem;
+  color: #7aa890;
+  line-height: 1.7;
+}
+.spread-neon .pull-quote {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-style: italic;
+  color: #b0ffc8;
+  margin-top: 3rem;
+  max-width: 700px;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 0 30px rgba(0,255,140,0.08);
+}
+
+/* ===================== SPREAD 10: CLEAN PRODUCT ===================== */
+.spread-clean {
+  min-height: 100vh;
+  background: #ffffff;
+  background-image:
+    radial-gradient(ellipse at 50% 80%, rgba(80,60,200,0.03) 0%, transparent 50%);
+  color: #1a1a2e;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 0;
+}
+.spread-clean .kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #5040c0;
+  margin-bottom: 1rem;
+}
+.spread-clean h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 5vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #1a1a2e;
+  margin-bottom: 1.5rem;
+}
+.spread-clean .deck {
+  font-size: 1.25rem;
+  color: #555;
+  max-width: 700px;
+  margin-bottom: 3rem;
+}
+.spread-clean .cta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+@media (max-width: 900px) { .spread-clean .cta-grid { grid-template-columns: 1fr; } }
+.spread-clean .cta-card {
+  background: #f8f6ff;
+  border: 1px solid #e0dcf0;
+  border-radius: 12px;
+  padding: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.spread-clean .cta-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(80,64,192,0.1);
+}
+.spread-clean .cta-card .card-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+.spread-clean .cta-card h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2a2850;
+  margin-bottom: 0.6rem;
+}
+.spread-clean .cta-card p {
+  font-size: 1rem;
+  color: #6a6590;
+  line-height: 1.6;
+}
+.spread-clean .closer-quote {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 400;
+  font-style: italic;
+  color: #2a2850;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding-top: 3rem;
+  border-top: 3px solid #5040c0;
+}
+.spread-clean .closer-quote .attr {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-style: normal;
+  color: #5040c0;
+  margin-top: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<!-- ====== SPREAD 1: COVER ====== -->
+<section class="spread-cover">
+  <div class="bg-numeral">I</div>
+  <div class="cover-content container">
+    <div class="kicker reveal">How I AI &bull; Season 2026</div>
+    <h1 class="reveal reveal-d1">The<br>Co-Work <em>Revolution</em></h1>
+    <div class="divider reveal reveal-d2"></div>
+    <p class="deck reveal reveal-d3">How non-engineers are building daily operating systems, orchestrating AI agents, and becoming superheros at work &mdash; without writing a single line of code.</p>
+    <p class="attribution reveal reveal-d4">Featuring <strong>JJ Englert</strong> of Tenex &amp; <strong>Claire Vo</strong> &bull; How I AI Podcast</p>
+  </div>
+</section>
+
+<!-- ====== SPREAD 2: DARK/MIDNIGHT — The Skeptic Converts ====== -->
+<section class="spread-dark">
+  <div class="bg-numeral">II</div>
+  <div class="container">
+    <div class="kicker reveal">The Conversion</div>
+    <h2 class="reveal reveal-d1">From Skeptic<br>to Believer</h2>
+    <p class="body-text reveal reveal-d2">When Claude Co-work first launched, Claire Vo wrote a provocative article that blew up on Twitter: &ldquo;Who is Co-work for anyway?&rdquo; It seemed like a UI slapped on top of Claude Code. But product keeps shipping, week after week, and the non-technical crowd kept whispering the same thing&hellip;</p>
+    <div class="pull-quote reveal reveal-d3">&ldquo;I just kept hearing more and more from my non-technical friends: Oh my god, co-work&rsquo;s amazing. I use co-work to do everything in my job now.&rdquo;<br><span style="font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;color:#58a6ff;letter-spacing:0.1em;text-transform:uppercase;font-style:normal;">&mdash; Claire Vo</span></div>
+    <div class="stat-row reveal reveal-d4">
+      <div class="stat-card">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Modes in Claude Desktop<br>Chat &bull; Co-Work &bull; Code</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">1-Click</div>
+        <div class="stat-label">Connector setup for<br>Gmail, Slack, Notion &amp; more</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">Zero</div>
+        <div class="stat-label">Lines of code required<br>to build your operating system</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SPREAD 3: WARM EDITORIAL — Projects & The Brain ====== -->
+<section class="spread-warm">
+  <div class="bg-numeral">III</div>
+  <div class="container">
+    <div class="layout">
+      <div>
+        <div class="kicker reveal">The Foundation</div>
+        <h2 class="reveal reveal-d1">A Project Is Just a Folder</h2>
+        <p class="body-text reveal reveal-d2">The concepts sound intimidating &mdash; projects, skills, workspaces. But JJ strips it down: a project is literally a folder on your computer. A skill is literally a file that describes what you want to do. That&rsquo;s it. You organize your Google Drive or your Notion by folders. Exact same concept, except this time Claude can go in and actually do some work alongside you.</p>
+        <p class="body-text reveal reveal-d3">JJ starts every project the same way: create a folder, open it in Co-work, and point Claude at it. Inside, the most important file is what he calls &ldquo;my brain&rdquo; &mdash; an MD file packed with working preferences, team members, communication style, and goals. Once Claude reads it, every conversation starts from a place of deep context instead of zero.</p>
+        <p class="body-text reveal reveal-d4">The unlock isn&rsquo;t AI magic. It&rsquo;s that you&rsquo;re not starting over every time. You&rsquo;re starting from a really good place where Co-work already knows about you, your preferences, all of that &mdash; and then it starts doing stuff with you as a partner.</p>
+      </div>
+      <div class="sidebar-panel reveal reveal-d3">
+        <h3>&ldquo;With co-work, you&rsquo;re not starting over from the start.&rdquo;</h3>
+        <p>If you build up these projects, you&rsquo;re starting from a really good place where co-work already knows about you, your preferences, all that kind of stuff, and then it just starts doing stuff with you as a partner.</p>
+        <p class="quote-attr">&mdash; JJ Englert</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SPREAD 4: ROSE ALERT — Workspace Maps & Navigation ====== -->
+<section class="spread-rose">
+  <div class="stamp">Workspace<br>Map<br>Protocol</div>
+  <div class="container">
+    <div class="kicker reveal">Navigation Intelligence</div>
+    <h2 class="reveal reveal-d1">Let Claude Map<br>Your World</h2>
+    <div class="two-col reveal reveal-d2">
+      <div>
+        <div class="col-head">Without a Map</div>
+        <p class="col-body">Claude has to ingest every file in your folder on each prompt. More tokens consumed. Muddier results. Slower response times. When you just need help with a Twitter post, Claude is wading through your newsletter drafts, meeting notes, and career plans.</p>
+      </div>
+      <div>
+        <div class="col-head">With a Map</div>
+        <p class="col-body">Claude reads the workspace map and instantly navigates to the right subfolder. Need a tweet? It goes to your Twitter folder and uses your prepared skill. The prompts run faster, save tokens, and deliver focused, consistent results every time.</p>
+      </div>
+    </div>
+    <div class="pull-quote reveal reveal-d3">&ldquo;Hey Claude, create a workspace map for me. It&rsquo;s going to map everything out and create it for you. It is much faster at browsing files and figuring out what&rsquo;s going on in there than I am.&rdquo;<br><span style="font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;color:#dc3c50;letter-spacing:0.1em;text-transform:uppercase;font-style:normal;">&mdash; JJ Englert</span></div>
+  </div>
+</section>
+
+<!-- ====== SPREAD 5: TERMINAL — Connectors System ====== -->
+<section class="spread-terminal">
+  <div class="container">
+    <div class="kicker-above reveal">Spread V &bull; One-Click Integration</div>
+    <h2 class="reveal reveal-d1">Connectors:<br>Your Digital Nervous System</h2>
+    <div class="terminal-window reveal reveal-d2">
+      <div class="terminal-bar">
+        <div class="terminal-dot red"></div>
+        <div class="terminal-dot yellow"></div>
+        <div class="terminal-dot green"></div>
+        <span class="title">co-work &mdash; connectors &mdash; daily-operating-system</span>
+      </div>
+      <div class="terminal-body">
+        <div class="comment"># Connected services for JJ's daily operating system</div>
+        <br>
+        <div class="cmd">$ cowork connectors --list</div>
+        <div class="output">&nbsp;&nbsp;<span class="accent">[active]</span> Gmail &mdash; read, draft, search emails</div>
+        <div class="output">&nbsp;&nbsp;<span class="accent">[active]</span> Google Calendar &mdash; read events, check conflicts</div>
+        <div class="output">&nbsp;&nbsp;<span class="accent">[active]</span> Google Drive &mdash; browse, read, create docs</div>
+        <div class="output">&nbsp;&nbsp;<span class="accent">[active]</span> Notion &mdash; read, write, update pages</div>
+        <div class="output">&nbsp;&nbsp;<span class="accent">[active]</span> Slack &mdash; read channels, draft messages</div>
+        <br>
+        <div class="comment"># Each connector has granular permissions:</div>
+        <div class="cmd">$ cowork connector gmail --permissions</div>
+        <div class="output">&nbsp;&nbsp;read_email: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight">ALWAYS ALLOW</span></div>
+        <div class="output">&nbsp;&nbsp;create_draft: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight">ALWAYS ALLOW</span></div>
+        <div class="output">&nbsp;&nbsp;send_email: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="accent">ASK PERMISSION</span></div>
+        <div class="output">&nbsp;&nbsp;delete_email: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#ff5f57;">NEVER ALLOW</span></div>
+        <br>
+        <div class="comment"># Project instruction lock-in:</div>
+        <div class="cmd">$ cat instructions.md</div>
+        <div class="output">&nbsp;&nbsp;<span class="highlight">"Never send emails on my behalf.</span></div>
+        <div class="output">&nbsp;&nbsp;<span class="highlight">&nbsp;Only write them as drafts for me to review."</span></div>
+        <br>
+        <div class="cmd">$ <span class="cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SPREAD 6: ACADEMIC — Skills Deep Dive ====== -->
+<section class="spread-academic">
+  <div class="bg-numeral">VI</div>
+  <div class="container">
+    <div class="kicker reveal">The Skill System</div>
+    <h2 class="reveal reveal-d1">Build Once,<br>Invoke Forever</h2>
+    <div class="two-col-text">
+      <div class="col-text drop-cap reveal reveal-d2">Skills are the secret weapon of the daily operating system. Think of a skill as a very detailed, reusable prompt stored as a file. Instead of telling Claude everything about your newsletter format each time, you build the skill once &mdash; covering subject lines, body segments, voice, evaluation criteria &mdash; and then just say &ldquo;write the newsletter.&rdquo; Claude invokes the skill and follows the instructions automatically. JJ has a skill for everything: Twitter, LinkedIn, YouTube, podcasting, newsletter writing. Each one captures his exact preferences so the output is consistent, high-quality, and distinctly his.</div>
+      <div class="col-text reveal reveal-d3">The email writing skill is a perfect example of the pattern. JJ tells Claude to analyze 46 sent emails from the last 30 days, extract his writing style, tone, and structure, then save it as a reusable voice profile. Now every email draft sounds like JJ wrote it personally. Claire describes the same approach for her newsletter: a slash command triggers a multi-step skill that reads the changelog, writes in her voice, formats for the platform, and pushes via API. She does a couple of edits and moves on with her life. The anti-to-do list concept captures the philosophy: identify things you never want to do again, then build skills to handle them.</div>
+    </div>
+    <div class="callout-box reveal reveal-d4">
+      <h4>The Anti-To-Do List</h4>
+      <p>&ldquo;Come up with a list of things you just never want to do again. I never want to have to first draft my emails again. I never want to show up to a meeting late because there&rsquo;s a conflict on my calendar. Just burn down your anti-to-do list and build skills on all those.&rdquo; &mdash; Claire Vo</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SPREAD 7: BIG-STAT/GOLD — Sub-Advisory Board ====== -->
+<section class="spread-gold">
+  <div class="container">
+    <div class="kicker reveal">Multi-Agent Feedback</div>
+    <h2 class="reveal reveal-d1">Your Personal<br>Advisory Board</h2>
+    <div class="hero-stat reveal reveal-d2">3&times;</div>
+    <div class="stat-desc reveal reveal-d3">Independent agent perspectives reviewing every piece of work before it ships</div>
+    <div class="badges reveal reveal-d3">
+      <div class="badge">
+        <div class="label">Agent 1</div>
+        <div class="value">Your ICP</div>
+      </div>
+      <div class="badge">
+        <div class="label">Agent 2</div>
+        <div class="value">Your Boss</div>
+      </div>
+      <div class="badge">
+        <div class="label">Agent 3</div>
+        <div class="value">The Skeptic</div>
+      </div>
+    </div>
+    <p class="body-text reveal reveal-d4">JJ&rsquo;s sub-advisory skill spins up three separate agents, each with a fresh context window and a defined persona. One represents the AI builder. Another is a security-conscious executive. A third is a concerned parent. Each reviews your work from their unique perspective and brings feedback back to you &mdash; before you ship it to the real audience. For product managers: put your boss, your engineering partner, and your customer in there. For marketers: populate it with your ICP segments. The agents research who these people are, simulate their perspective, and deliver honest critique.</p>
+  </div>
+</section>
+
+<!-- ====== SPREAD 8: BROADSHEET — Scheduled Tasks & Morning Debrief ====== -->
+<section class="spread-broadsheet">
+  <div class="container">
+    <div class="inner">
+      <div class="kicker reveal">The Morning Ritual</div>
+      <h2 class="reveal reveal-d1">Your Day, Planned<br>Before You Arrive</h2>
+      <div class="red-banner reveal reveal-d2">Scheduled Task &bull; Daily at 7:30 AM</div>
+      <div class="three-col reveal reveal-d3">
+        <div>
+          <h4>Email Triage</h4>
+          <p>The morning debrief agent reads every email that arrived overnight. It surfaces what needs attention, drafts responses for routine messages, and flags anything urgent &mdash; all waiting for you when you open your laptop.</p>
+        </div>
+        <div>
+          <h4>Calendar Prep</h4>
+          <p>It scans your calendar for the day, identifies back-to-back conflicts, prepares meeting briefs from shared documents, and ensures you never walk into a room unprepared. Think of it as your chief of staff.</p>
+        </div>
+        <div>
+          <h4>Slack Intelligence</h4>
+          <p>The agent reviews your Slack channels and DMs, summarizes threads you missed, suggests responses to teammates, and highlights decisions that need your input &mdash; distilled into a plan of action for the day.</p>
+        </div>
+      </div>
+      <div class="pull-quote reveal reveal-d4">&ldquo;If the internet could come to me, as opposed to me having to go to the internet, what would I want the internet to come to me with?&rdquo;<br><span style="font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;color:#c02020;letter-spacing:0.1em;text-transform:uppercase;font-style:normal;">&mdash; Claire Vo</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SPREAD 9: NEON — Progressive Trust ====== -->
+<section class="spread-neon">
+  <div class="grid-floor"></div>
+  <div class="container">
+    <div class="kicker reveal">The Trust Spectrum</div>
+    <h2 class="reveal reveal-d1">Progressive Trust:<br>Your Pace, Your Rules</h2>
+    <div class="emergence-boxes">
+      <div class="e-box reveal reveal-d1">
+        <h4>Level 1: Draft Mode</h4>
+        <p>AI drafts your emails but never sends. You review every word. The instruction is explicit: &ldquo;Never send emails on my behalf. Only write them as drafts for me to review.&rdquo;</p>
+      </div>
+      <div class="e-box reveal reveal-d2">
+        <h4>Level 2: Read Access</h4>
+        <p>You let AI read your inbox, calendar, and Slack. It ingests your patterns, builds your voice profile, and starts understanding your world &mdash; but still only acts with permission.</p>
+      </div>
+      <div class="e-box reveal reveal-d3">
+        <h4>Level 3: Autonomous Agent</h4>
+        <p>Scheduled tasks run before you wake up. Sub-agents review your work independently. Your morning debrief is ready at 7:30 AM with a full plan of action, drafted replies, and meeting prep.</p>
+      </div>
+      <div class="e-box reveal reveal-d4">
+        <h4>Level 4: Shadow You</h4>
+        <p>&ldquo;A shadow JJ that actually just operates completely independent of you and you&rsquo;re in the Bahamas hanging out and agent JJ is actually doing your job for you.&rdquo; The far edge of the spectrum.</p>
+      </div>
+    </div>
+    <div class="pull-quote reveal reveal-d5">&ldquo;It&rsquo;s a trade of information for productivity. You give the AI a little bit of information, it can help you be very, very productive. You&rsquo;ve got to figure out where you feel comfortable on that spectrum.&rdquo;<br><span style="font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;color:#00ff8c;letter-spacing:0.1em;text-transform:uppercase;font-style:normal;">&mdash; Claire Vo</span></div>
+  </div>
+</section>
+
+<!-- ====== SPREAD 10: CLEAN PRODUCT — The Sky's the Limit ====== -->
+<section class="spread-clean">
+  <div class="container">
+    <div class="kicker reveal">The Invitation</div>
+    <h2 class="reveal reveal-d1">Spread Your Wings</h2>
+    <p class="deck reveal reveal-d2">Co-work isn&rsquo;t just for tech workers and podcast hosts. It&rsquo;s for anyone ready to do more with AI. Here&rsquo;s where to start.</p>
+    <div class="cta-grid">
+      <div class="cta-card reveal reveal-d2">
+        <div class="card-icon">&#x1F3E0;</div>
+        <h4>House Maintenance</h4>
+        <p>Air filter reminders, seasonal prep checklists, remodel project tracking. Put your whole household in a Co-work project and let Claude help you stay on top of it.</p>
+      </div>
+      <div class="cta-card reveal reveal-d3">
+        <div class="card-icon">&#x1F48D;</div>
+        <h4>Wedding Planning</h4>
+        <p>Find vendors. Write emails. Compare quotes. Track RSVPs. JJ calls it his next business: AI-driven wedding planning. It can go find the vendors for you, write the emails, all of it.</p>
+      </div>
+      <div class="cta-card reveal reveal-d4">
+        <div class="card-icon">&#x1F4CB;</div>
+        <h4>Hiring &amp; Recruiting</h4>
+        <p>Job descriptions, sourcing outreach, interview prep, onboarding docs. One project contains the entire recruiting pipeline. Co-work becomes your talent ops co-pilot.</p>
+      </div>
+    </div>
+    <div class="closer-quote reveal reveal-d5">
+      &ldquo;The sky&rsquo;s the limit here. You just got to tell Claude what to do and it&rsquo;s going to go do it for you.&rdquo;
+      <span class="attr">&mdash; JJ Englert, Tenex</span>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+})();
+</script>
+
+</body>
+</html>

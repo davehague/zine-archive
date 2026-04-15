@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All of AI's New Models and Tools — AI Daily Brief Magazine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ff-display: 'Fraunces', serif;
+    --ff-body: 'Inter', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body { background: #0d0d0d; color: #e8e4df; overflow-x: hidden; }
+
+  .spread {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .spread-inner {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 4rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .kicker {
+    font-family: var(--ff-body);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .headline {
+    font-family: var(--ff-display);
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+  }
+
+  .deck {
+    font-family: var(--ff-body);
+    font-size: 1.25rem;
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 680px;
+  }
+
+  .body-text {
+    font-family: var(--ff-body);
+    font-size: 1.15rem;
+    font-weight: 400;
+    line-height: 1.8;
+  }
+
+  .pull-quote {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .fade-up.d1 { transition-delay: 0.1s; }
+  .fade-up.d2 { transition-delay: 0.2s; }
+  .fade-up.d3 { transition-delay: 0.35s; }
+  .fade-up.d4 { transition-delay: 0.5s; }
+  .fade-up.d5 { transition-delay: 0.65s; }
+
+  /* ===== SPREAD 1: COVER ===== */
+  .spread-cover {
+    background: #f5f0e8;
+    color: #1a1714;
+    text-align: center;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  .spread-cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(180,140,90,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 80%, rgba(120,80,40,0.08) 0%, transparent 50%);
+    z-index: 1;
+  }
+  .cover-rule {
+    width: 120px;
+    height: 3px;
+    background: #8b6f47;
+    margin: 2rem auto;
+  }
+  .cover-title {
+    font-size: clamp(3.5rem, 10vw, 9rem);
+    color: #1a1714;
+    margin-bottom: 0.5rem;
+  }
+  .cover-subtitle {
+    font-family: var(--ff-body);
+    font-size: 1.3rem;
+    font-weight: 300;
+    color: #5a4f3f;
+    letter-spacing: 0.04em;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  .cover-source {
+    font-family: var(--ff-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8b6f47;
+    margin-top: 3rem;
+  }
+  .cover-date {
+    font-family: var(--ff-display);
+    font-size: 1.1rem;
+    color: #a08b6b;
+    margin-top: 0.5rem;
+  }
+  .cover-numeral {
+    position: absolute;
+    font-family: var(--ff-display);
+    font-size: 28rem;
+    font-weight: 100;
+    color: rgba(139,111,71,0.06);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 0;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  /* ===== SPREAD 2: DARK/MIDNIGHT — Spud ===== */
+  .spread-spud {
+    background: #0d1117;
+    color: #c9d1d9;
+  }
+  .spread-spud::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(56,139,253,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 70%, rgba(139,92,246,0.06) 0%, transparent 50%);
+    z-index: 1;
+  }
+  .spread-spud .kicker { color: #58a6ff; }
+  .spread-spud .headline {
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    color: #f0f6fc;
+    margin-bottom: 2rem;
+  }
+  .spud-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 2rem;
+  }
+  .spud-quote-card {
+    background: rgba(56,139,253,0.06);
+    border: 1px solid rgba(56,139,253,0.15);
+    border-radius: 8px;
+    padding: 2rem;
+  }
+  .spud-quote-card .pull-quote {
+    font-size: 1.35rem;
+    color: #f0f6fc;
+    margin-bottom: 1rem;
+  }
+  .spud-quote-card .attribution {
+    font-family: var(--ff-body);
+    font-size: 0.9rem;
+    color: #58a6ff;
+    font-weight: 600;
+  }
+  .spud-numeral {
+    position: absolute;
+    font-family: var(--ff-display);
+    font-size: 22rem;
+    font-weight: 100;
+    color: rgba(56,139,253,0.04);
+    right: -2rem;
+    top: 10%;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .spud-correction {
+    background: rgba(139,92,246,0.1);
+    border-left: 4px solid #8b5cf6;
+    padding: 1.5rem 2rem;
+    margin-top: 2rem;
+    border-radius: 0 8px 8px 0;
+  }
+  .spud-correction .body-text { color: #d2a8ff; }
+
+  /* ===== SPREAD 3: WARM EDITORIAL — Perplexity ===== */
+  .spread-perplexity {
+    background: #f8f3eb;
+    color: #2c2416;
+  }
+  .spread-perplexity::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(90deg, transparent, transparent 99px, rgba(0,0,0,0.03) 99px, rgba(0,0,0,0.03) 100px),
+      repeating-linear-gradient(0deg, transparent, transparent 99px, rgba(0,0,0,0.03) 99px, rgba(0,0,0,0.03) 100px);
+    z-index: 1;
+  }
+  .perp-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 3rem;
+    align-items: start;
+  }
+  .perp-sidebar {
+    background: #1a1714;
+    color: #f5f0e8;
+    padding: 2.5rem;
+    border-radius: 4px;
+  }
+  .perp-sidebar .pull-quote {
+    font-size: 1.5rem;
+    color: #e8c87a;
+    margin-bottom: 1.5rem;
+  }
+  .perp-sidebar .attribution {
+    font-family: var(--ff-body);
+    font-size: 0.85rem;
+    color: #a08b6b;
+    font-weight: 600;
+  }
+  .spread-perplexity .kicker { color: #8b6f47; }
+  .spread-perplexity .headline {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    color: #1a1714;
+    margin-bottom: 1.5rem;
+  }
+  .perp-stats {
+    display: flex;
+    gap: 2rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+  }
+  .perp-stat {
+    background: #1a1714;
+    color: #f5f0e8;
+    padding: 1.5rem 2rem;
+    border-radius: 4px;
+    text-align: center;
+    flex: 1;
+    min-width: 140px;
+  }
+  .perp-stat .stat-num {
+    font-family: var(--ff-display);
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #e8c87a;
+  }
+  .perp-stat .stat-label {
+    font-family: var(--ff-body);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 0.3rem;
+    color: #a08b6b;
+  }
+  .perp-numeral {
+    position: absolute;
+    font-family: var(--ff-display);
+    font-size: 20rem;
+    font-weight: 100;
+    color: rgba(139,111,71,0.05);
+    left: -3rem;
+    bottom: 5%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ===== SPREAD 4: ROSE ALERT/STAMP — GitHub ===== */
+  .spread-github {
+    background: #12111a;
+    color: #e0d8d0;
+  }
+  .spread-github::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(200,40,60,0.06) 0%, transparent 60%);
+    z-index: 1;
+  }
+  .github-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  .spread-github .kicker { color: #e8485c; }
+  .spread-github .headline {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    color: #fff;
+    margin-bottom: 1.5rem;
+  }
+  .github-stamp {
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    border: 4px solid #e8485c;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    position: relative;
+    transform: rotate(-8deg);
+  }
+  .github-stamp::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    border: 2px dashed rgba(232,72,92,0.4);
+  }
+  .github-stamp .stamp-num {
+    font-family: var(--ff-display);
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: #e8485c;
+    line-height: 1;
+  }
+  .github-stamp .stamp-label {
+    font-family: var(--ff-body);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #e8485c;
+    text-align: center;
+    max-width: 180px;
+    margin-top: 0.5rem;
+  }
+  .github-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .github-comp-card {
+    background: rgba(232,72,92,0.08);
+    border: 1px solid rgba(232,72,92,0.2);
+    padding: 1.5rem;
+    border-radius: 6px;
+    text-align: center;
+  }
+  .github-comp-card .comp-year {
+    font-family: var(--ff-body);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #e8485c;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .github-comp-card .comp-num {
+    font-family: var(--ff-display);
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0.5rem 0 0.3rem;
+  }
+  .github-comp-card .comp-label {
+    font-family: var(--ff-body);
+    font-size: 0.85rem;
+    color: #a09890;
+  }
+  .github-numeral {
+    position: absolute;
+    font-family: var(--ff-display);
+    font-size: 24rem;
+    font-weight: 100;
+    color: rgba(232,72,92,0.04);
+    right: 5%;
+    top: 5%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ===== SPREAD 5: TERMINAL — Anthropic vs Pentagon ===== */
+  .spread-pentagon {
+    background: #0a0a0a;
+    color: #33ff33;
+    font-family: 'Courier New', monospace;
+  }
+  .spread-pentagon::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(51,255,51,0.02) 2px, rgba(51,255,51,0.02) 4px);
+    z-index: 1;
+  }
+  .terminal-chrome {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+  }
+  .terminal-bar {
+    background: #2a2a2a;
+    padding: 0.8rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .terminal-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+  .terminal-dot.red { background: #ff5f57; }
+  .terminal-dot.yellow { background: #febc2e; }
+  .terminal-dot.green { background: #28c840; }
+  .terminal-bar-title {
+    font-family: var(--ff-body);
+    font-size: 0.8rem;
+    color: #888;
+    margin-left: 1rem;
+  }
+  .terminal-body {
+    padding: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+  .terminal-body .t-prompt { color: #33ff33; }
+  .terminal-body .t-cmd { color: #fff; }
+  .terminal-body .t-output { color: #aaa; }
+  .terminal-body .t-warn { color: #febc2e; }
+  .terminal-body .t-error { color: #ff5f57; }
+  .terminal-body .t-highlight { color: #33ff33; font-weight: bold; }
+  .terminal-cursor {
+    display: inline-block;
+    width: 10px;
+    height: 1.2em;
+    background: #33ff33;
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
+    margin-left: 2px;
+  }
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+  .terminal-section { margin-bottom: 1.5rem; }
+  .spread-pentagon .headline {
+    font-family: var(--ff-display);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    color: #33ff33;
+    margin-bottom: 1.5rem;
+  }
+  .spread-pentagon .kicker {
+    font-family: 'Courier New', monospace;
+    color: #febc2e;
+  }
+  .pentagon-numeral {
+    position: absolute;
+    font-family: var(--ff-display);
+    font-size: 20rem;
+    font-weight: 100;
+    color: rgba(51,255,51,0.03);
+    left: 5%;
+    bottom: 5%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ===== SPREAD 6: ACADEMIC DROP-CAP — Muse Spark ===== */
+  .spread-muse {
+    background: #0c1629;
+    color: #d4dae4;
+  }
+  .spread-muse::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 60% 20%, rgba(79,140,255,0.07) 0%, transparent 50%),
+      radial-gradient(ellipse at 30% 80%, rgba(200,160,100,0.05) 0%, transparent 40%);
+    z-index: 1;
+  }
+  .spread-muse .kicker { color: #7aadff; }
+  .spread-muse .headline {
+    font-size: clamp(2.5rem, 5.5vw, 5rem);
+    color: #f0f4fc;
+    margin-bottom: 2rem;
+  }
+  .muse-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 2rem;
+  }
+  .muse-dropcap::first-letter {
+    font-family: var(--ff-display);
+    font-size: 5rem;
+    float: left;
+    line-height: 0.8;
+    margin-right: 0.8rem;
+    margin-top: 0.2rem;
+    color: #7aadff;
+    font-weight: 900;
+  }
+  .muse-callout {
+    background: rgba(79,140,255,0.1);
+    border: 1px solid rgba(79,140,255,0.2);
+    padding: 2rem;
+    border-radius: 6px;
+    margin-top: 2rem;
+  }
+  .muse-callout .callout-title {
+    font-family: var(--ff-body);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #7aadff;
+    margin-bottom: 0.8rem;
+  }
+  .muse-bench {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .muse-bench-item {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(79,140,255,0.06);
+    border-radius: 4px;
+  }
+  .muse-bench-item .bench-score {
+    font-family: var(--ff-display);
+    font-size: 2rem;
+    font-weight: 800;
+    color: #f0f4fc;
+  }
+  .muse-bench-item .bench-label {
+    font-family: var(--ff-body);
+    font-size: 0.75rem;
+    color: #7aadff;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.3rem;
+  }
+  .muse-numeral {
+    position: absolute;
+    font-family: var(--ff-display);
+    font-size: 26rem;
+    font-weight: 100;
+    color: rgba(79,140,255,0.03);
+    right: -5%;
+    top: 10%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ===== SPREAD 7: BIG-STAT/GOLD — GLM 5.1 ===== */
+  .spread-glm {
+    background: #111008;
+    color: #e8dcc8;
+  }
+  .spread-glm::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 40% 40%, rgba(218,175,80,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 70%, rgba(180,140,60,0.05) 0%, transparent 40%);
+    z-index: 1;
+  }
+  .spread-glm .kicker { color: #dab050; }
+  .spread-glm .headline {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  .glm-hero-stat {
+    text-align: center;
+    margin: 3rem 0;
+  }
+  .glm-hero-stat .stat-number {
+    font-family: var(--ff-display);
+    font-size: clamp(5rem, 12vw, 10rem);
+    font-weight: 900;
+    color: #dab050;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .glm-hero-stat .stat-context {
+    font-family: var(--ff-body);
+    font-size: 1.3rem;
+    color: #a09070;
+    margin-top: 0.5rem;
+  }
+  .glm-badges {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 2rem 0;
+  }
+  .glm-badge {
+    background: rgba(218,176,80,0.1);
+    border: 1px solid rgba(218,176,80,0.3);
+    padding: 1.2rem 2rem;
+    border-radius: 6px;
+    text-align: center;
+    min-width: 160px;
+  }
+  .glm-badge .badge-score {
+    font-family: var(--ff-display);
+    font-size: 2rem;
+    font-weight: 800;
+    color: #dab050;
+  }
+  .glm-badge .badge-label {
+    font-family: var(--ff-body);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #a09070;
+    margin-top: 0.3rem;
+  }
+  .glm-quote-block {
+    max-width: 800px;
+    margin: 2.5rem auto 0;
+    text-align: center;
+  }
+  .glm-quote-block .pull-quote {
+    font-size: 1.6rem;
+    color: #f0e8d8;
+  }
+  .glm-quote-block .attribution {
+    font-family: var(--ff-body);
+    font-size: 0.9rem;
+    color: #dab050;
+    font-weight: 600;
+    margin-top: 1rem;
+  }
+  .glm-numeral {
+    position: absolute;
+    font-family: var(--ff-display);
+    font-size: 24rem;
+    font-weight: 100;
+    color: rgba(218,176,80,0.03);
+    left: -3%;
+    top: 8%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ===== SPREAD 8: BROADSHEET — Claude Managed Agents ===== */
+  .spread-managed {
+    background: #f5f0e3;
+    color: #1a1714;
+  }
+  .spread-managed::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.02) 0%, transparent 70%);
+    z-index: 1;
+  }
+  .broadsheet-border {
+    border: 3px double #1a1714;
+    padding: 3rem;
+  }
+  .spread-managed .kicker { color: #c0392b; }
+  .spread-managed .headline {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    color: #1a1714;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+  .broadsheet-rule {
+    height: 2px;
+    background: #1a1714;
+    margin: 1.5rem 0;
+  }
+  .broadsheet-rule.double {
+    height: 1px;
+    border-bottom: 2px solid #1a1714;
+    margin: 1rem 0 2rem;
+  }
+  .broadsheet-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+  }
+  .broadsheet-col {
+    border-right: 1px solid rgba(26,23,20,0.15);
+    padding-right: 2rem;
+  }
+  .broadsheet-col:last-child { border-right: none; padding-right: 0; }
+  .broadsheet-banner {
+    background: #c0392b;
+    color: #fff;
+    padding: 1rem 2rem;
+    text-align: center;
+    margin: 2rem 0;
+  }
+  .broadsheet-banner .banner-text {
+    font-family: var(--ff-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .broadsheet-pullquote {
+    border-top: 2px solid #1a1714;
+    border-bottom: 2px solid #1a1714;
+    padding: 1.5rem 0;
+    margin: 1.5rem 0;
+  }
+  .broadsheet-pullquote .pull-quote {
+    font-size: 1.3rem;
+    color: #1a1714;
+  }
+  .managed-numeral {
+    position: absolute;
+    font-family: var(--ff-display);
+    font-size: 20rem;
+    font-weight: 100;
+    color: rgba(26,23,20,0.04);
+    right: 2%;
+    bottom: 5%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ===== SPREAD 9: NEON/CYBERPUNK — Google Notebooks ===== */
+  .spread-notebooks {
+    background: #080a0f;
+    color: #d0ffd0;
+  }
+  .spread-notebooks::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 100%, rgba(0,255,200,0.06) 0%, transparent 50%),
+      linear-gradient(180deg, transparent 60%, rgba(0,255,200,0.03) 100%);
+    z-index: 1;
+  }
+  .spread-notebooks::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background:
+      repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(0,255,200,0.04) 79px, rgba(0,255,200,0.04) 80px),
+      repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(0,255,200,0.04) 79px, rgba(0,255,200,0.04) 80px);
+    transform: perspective(500px) rotateX(45deg);
+    transform-origin: bottom;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .spread-notebooks .kicker { color: #00ffc8; }
+  .spread-notebooks .headline {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    color: #fff;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 40px rgba(0,255,200,0.15);
+  }
+  .notebook-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  .notebook-emergence {
+    background: rgba(0,255,200,0.05);
+    border: 1px solid rgba(0,255,200,0.2);
+    padding: 2rem;
+    border-radius: 4px;
+    position: relative;
+  }
+  .notebook-emergence::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 4px;
+    background: linear-gradient(135deg, rgba(0,255,200,0.15) 0%, transparent 50%);
+    z-index: -1;
+    pointer-events: none;
+  }
+  .notebook-emergence .emergence-title {
+    font-family: var(--ff-body);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #00ffc8;
+    margin-bottom: 1rem;
+  }
+  .spread-notebooks .body-text { color: #a0c8b8; }
+  .spread-notebooks .pull-quote {
+    font-size: 1.5rem;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(0,255,200,0.1);
+  }
+  .notebook-numeral {
+    position: absolute;
+    font-family: var(--ff-display);
+    font-size: 22rem;
+    font-weight: 100;
+    color: rgba(0,255,200,0.03);
+    right: -2%;
+    top: 5%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ===== SPREAD 10: CLEAN PRODUCT — Closer ===== */
+  .spread-closer {
+    background: #fefefe;
+    color: #1e1b4b;
+  }
+  .spread-closer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 30%, rgba(79,70,229,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(129,140,248,0.03) 0%, transparent 40%);
+    z-index: 1;
+  }
+  .spread-closer .kicker { color: #6366f1; }
+  .spread-closer .headline {
+    font-size: clamp(2.5rem, 6vw, 5.5rem);
+    color: #1e1b4b;
+    margin-bottom: 2rem;
+  }
+  .closer-center {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .closer-big-quote {
+    font-family: var(--ff-display);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 400;
+    font-style: italic;
+    color: #312e81;
+    line-height: 1.3;
+    margin: 3rem 0 1.5rem;
+  }
+  .closer-attribution {
+    font-family: var(--ff-body);
+    font-size: 1.1rem;
+    color: #6366f1;
+    font-weight: 600;
+  }
+  .closer-features {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .closer-feature {
+    background: #f0efff;
+    border: 1px solid rgba(99,102,241,0.15);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+  .closer-feature .feature-icon {
+    font-size: 2rem;
+    margin-bottom: 0.8rem;
+  }
+  .closer-feature .feature-name {
+    font-family: var(--ff-body);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #4f46e5;
+    margin-bottom: 0.5rem;
+  }
+  .closer-feature .feature-desc {
+    font-family: var(--ff-body);
+    font-size: 1rem;
+    color: #4b5563;
+    line-height: 1.5;
+  }
+  .closer-rule {
+    width: 80px;
+    height: 3px;
+    background: #6366f1;
+    margin: 3rem auto 1.5rem;
+  }
+  .closer-sign-off {
+    font-family: var(--ff-body);
+    font-size: 1.1rem;
+    color: #6b7280;
+    text-align: center;
+  }
+  .closer-numeral {
+    position: absolute;
+    font-family: var(--ff-display);
+    font-size: 24rem;
+    font-weight: 100;
+    color: rgba(99,102,241,0.04);
+    left: -5%;
+    top: 10%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .spread-inner { padding: 2.5rem 1.5rem; }
+    .spud-grid,
+    .perp-layout,
+    .github-layout,
+    .muse-columns,
+    .broadsheet-columns,
+    .notebook-layout,
+    .closer-features {
+      grid-template-columns: 1fr;
+    }
+    .github-comparison { grid-template-columns: 1fr 1fr; }
+    .muse-bench { grid-template-columns: 1fr 1fr; }
+    .perp-sidebar { margin-top: 2rem; }
+    .cover-numeral,
+    .spud-numeral,
+    .perp-numeral,
+    .github-numeral,
+    .pentagon-numeral,
+    .muse-numeral,
+    .glm-numeral,
+    .managed-numeral,
+    .notebook-numeral,
+    .closer-numeral {
+      font-size: 12rem;
+    }
+    .github-stamp { width: 200px; height: 200px; }
+    .github-stamp .stamp-num { font-size: 3rem; }
+    .broadsheet-border { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SPREAD 1: COVER -->
+<section class="spread spread-cover">
+  <div class="cover-numeral">I</div>
+  <div class="spread-inner" style="text-align:center;">
+    <div class="kicker fade-up" style="color:#8b6f47;">AI Daily Brief &mdash; April 2026</div>
+    <div class="cover-rule fade-up d1"></div>
+    <h1 class="headline cover-title fade-up d2">All of AI's<br>New Models<br>&amp; Tools</h1>
+    <div class="cover-rule fade-up d3"></div>
+    <p class="cover-subtitle fade-up d3">Meta's Muse Spark enters the fray. Z.AI open-sources a frontier model. Anthropic launches Managed Agents. Google rethinks Gemini. And the new status symbol? Making a model too powerful to release.</p>
+    <p class="cover-source fade-up d4">Source: The AI Daily Brief Podcast</p>
+    <p class="cover-date fade-up d5">Spring 2026</p>
+  </div>
+</section>
+
+<!-- SPREAD 2: DARK/MIDNIGHT — Spud -->
+<section class="spread spread-spud">
+  <div class="spud-numeral">II</div>
+  <div class="spread-inner">
+    <div class="kicker fade-up">The Model You Can't Have</div>
+    <h2 class="headline fade-up d1">OpenAI's Spud:<br>Too Hot to Ship?</h2>
+    <p class="deck fade-up d2" style="color:#8b949e;margin-bottom:2rem;">Axios reported that OpenAI planned a staggered rollout of their new model due to cybersecurity risks&mdash;only to walk it back hours later. The episode revealed more about competitive dynamics than actual danger.</p>
+    <div class="spud-grid">
+      <div class="spud-quote-card fade-up d3">
+        <p class="pull-quote">&ldquo;The new status symbol is making a model so powerful you can't release it.&rdquo;</p>
+        <p class="attribution">Dan Shipper</p>
+      </div>
+      <div class="spud-quote-card fade-up d4">
+        <p class="pull-quote">&ldquo;Dario forced their hand, total anthropic victory.&rdquo;</p>
+        <p class="attribution">Daniel Mack</p>
+      </div>
+    </div>
+    <div class="spud-correction fade-up d5">
+      <p class="body-text"><strong>Correction in real-time:</strong> Dan Shipper later clarified that the Axios story conflated two things. OpenAI does have a cyber product in testing with a trusted tester group, but it is not the same thing as Spud. The Axios story was updated accordingly.</p>
+    </div>
+    <div class="spud-quote-card fade-up d5" style="margin-top:1.5rem;max-width:600px;">
+      <p class="pull-quote" style="font-size:1.15rem;">&ldquo;We're all just caught between these two companies.&rdquo;</p>
+      <p class="attribution">DAX, Open Code</p>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 3: WARM EDITORIAL — Perplexity -->
+<section class="spread spread-perplexity">
+  <div class="perp-numeral">III</div>
+  <div class="spread-inner">
+    <div class="perp-layout">
+      <div>
+        <div class="kicker fade-up">Revenue Goes Parabolic</div>
+        <h2 class="headline fade-up d1">Perplexity Computer<br>Changes the Game</h2>
+        <p class="body-text fade-up d2" style="margin-top:1.5rem;">Between usage-based pricing and the February launch of Computer, Perplexity's revenue effectively doubled in a single quarter. The finance space in particular has embraced the AI agent product.</p>
+        <div class="perp-stats fade-up d3">
+          <div class="perp-stat">
+            <div class="stat-num">100M</div>
+            <div class="stat-label">Monthly Active Users</div>
+          </div>
+          <div class="perp-stat">
+            <div class="stat-num">$450M</div>
+            <div class="stat-label">Annual Recurring Revenue</div>
+          </div>
+        </div>
+        <p class="body-text fade-up d4" style="margin-top:1rem;">Financial Times reported tens of thousands of enterprise clients adopting the platform, with AI demand showing no signs of slowing down.</p>
+      </div>
+      <div class="perp-sidebar fade-up d3">
+        <p class="pull-quote">&ldquo;Perplexity back in the race with a single product launch is like a baseball team batting around the order twice and putting up 10 runs in the sixth inning.&rdquo;</p>
+        <p class="attribution">Chris Brown, Inspired Capital</p>
+        <div style="margin-top:2rem;border-top:1px solid rgba(255,255,255,0.1);padding-top:1.5rem;">
+          <p class="pull-quote" style="font-size:1.2rem;color:#ccc;">&ldquo;AI demand is still accelerating. Nobody is ready for the compute we need.&rdquo;</p>
+          <p class="attribution" style="margin-top:0.8rem;">Geiger Capital</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 4: ROSE ALERT/STAMP — GitHub -->
+<section class="spread spread-github">
+  <div class="github-numeral">IV</div>
+  <div class="spread-inner">
+    <div class="github-layout">
+      <div>
+        <div class="kicker fade-up">Infrastructure Under Siege</div>
+        <h2 class="headline fade-up d1">GitHub Strains Under the Agentic Wave</h2>
+        <p class="body-text fade-up d2" style="margin-top:1.5rem;color:#c0b8b0;">As AI-enhanced coding explodes, GitHub's infrastructure is buckling. Commits to public repos from Claude Code alone have swelled 25x in six months, reaching 2.5 million in a single week.</p>
+        <div class="github-comparison fade-up d3">
+          <div class="github-comp-card">
+            <div class="comp-year">2025 (Full Year)</div>
+            <div class="comp-num">1B</div>
+            <div class="comp-label">Total Commits</div>
+          </div>
+          <div class="github-comp-card">
+            <div class="comp-year">2026 (Projected)</div>
+            <div class="comp-num">14B</div>
+            <div class="comp-label">Total Commits</div>
+          </div>
+        </div>
+        <div style="margin-top:2rem;" class="fade-up d4">
+          <p class="pull-quote" style="font-size:1.2rem;color:#fff;font-style:italic;">&ldquo;I keep hitting quota limits from GitHub's API. This hasn't been designed with agents in mind.&rdquo;</p>
+          <p style="font-family:var(--ff-body);font-size:0.85rem;color:#e8485c;font-weight:600;margin-top:0.5rem;">Peter Steinberger, OpenClock</p>
+        </div>
+      </div>
+      <div class="fade-up d3" style="display:flex;flex-direction:column;align-items:center;gap:2rem;">
+        <div class="github-stamp">
+          <div class="stamp-num">275M</div>
+          <div class="stamp-label">Commits Per Week &mdash; Current Pace</div>
+        </div>
+        <div style="max-width:300px;text-align:center;">
+          <p class="pull-quote" style="font-size:1.15rem;color:#fff;font-style:italic;">&ldquo;Since January every month every week almost now has some new peak stat for the highest usage rate ever.&rdquo;</p>
+          <p style="font-family:var(--ff-body);font-size:0.85rem;color:#e8485c;font-weight:600;margin-top:0.5rem;">Kyle Daigle, GitHub CEO</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 5: TERMINAL — Anthropic vs Pentagon -->
+<section class="spread spread-pentagon">
+  <div class="pentagon-numeral">V</div>
+  <div class="spread-inner">
+    <div class="kicker fade-up">CASE NO. 2026-DC-AI-0417</div>
+    <h2 class="headline fade-up d1">Anthropic vs. The Pentagon</h2>
+    <div class="terminal-chrome fade-up d2" style="margin-top:2rem;">
+      <div class="terminal-bar">
+        <div class="terminal-dot red"></div>
+        <div class="terminal-dot yellow"></div>
+        <div class="terminal-dot green"></div>
+        <span class="terminal-bar-title">case_tracker.sh &mdash; DC Circuit Appeals Court</span>
+      </div>
+      <div class="terminal-body">
+        <div class="terminal-section">
+          <span class="t-prompt">$</span> <span class="t-cmd">cat ruling_summary.txt</span><br>
+          <span class="t-output">&gt; Federal appeals court DENIED Anthropic's application</span><br>
+          <span class="t-output">&gt; to suspend supply chain risk designation</span><br>
+          <span class="t-warn">&gt; STATUS: Designation stands pending full hearing</span>
+        </div>
+        <div class="terminal-section">
+          <span class="t-prompt">$</span> <span class="t-cmd">grep "key_quote" court_order.txt</span><br>
+          <span class="t-output">&gt; "On one side is a relatively contained risk of</span><br>
+          <span class="t-output">&gt; financial harm to a single private company.</span><br>
+          <span class="t-output">&gt; On the other side is judicial management of how</span><br>
+          <span class="t-output">&gt; the Department of War secures vital AI technology</span><br>
+          <span class="t-output">&gt; during an active military conflict."</span>
+        </div>
+        <div class="terminal-section">
+          <span class="t-prompt">$</span> <span class="t-cmd">cat timeline.log</span><br>
+          <span class="t-highlight">&gt; [MAR] California court grants injunction (non-Pentagon)</span><br>
+          <span class="t-error">&gt; [APR] DC Circuit denies emergency stay (Pentagon)</span><br>
+          <span class="t-warn">&gt; [MAY] Oral arguments scheduled mid-May</span><br>
+          <span class="t-output">&gt; [???] Final order possible within 6 weeks</span>
+        </div>
+        <div class="terminal-section">
+          <span class="t-prompt">$</span> <span class="t-cmd">echo $PREDICTION</span><br>
+          <span class="t-output">&gt; "Anthropic would probably succeed at the Supreme Court"</span><br>
+          <span class="t-output">&gt; &mdash; Charlie Bullock, Institute for Law and AI</span>
+        </div>
+        <div>
+          <span class="t-prompt">$</span> <span class="terminal-cursor"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 6: ACADEMIC DROP-CAP — Muse Spark -->
+<section class="spread spread-muse">
+  <div class="muse-numeral">VI</div>
+  <div class="spread-inner">
+    <div class="kicker fade-up">Meta Super Intelligence Lab</div>
+    <h2 class="headline fade-up d1">Muse Spark:<br>Welcome Back to the Party</h2>
+    <div class="muse-columns fade-up d2">
+      <div>
+        <p class="body-text muse-dropcap" style="color:#c0cce0;">Meta's first new model release in over a year comes from their Super Intelligence Labs division, assembled under Alexander Wang through the $14 billion partial acquisition of Scale. Muse Spark is natively multimodal, ditching the Llama name entirely for a new architecture similar to Google's Gemini. The model supports tool use, visual chain of thought, and multi-agent orchestration.</p>
+        <p class="body-text" style="color:#c0cce0;margin-top:1.5rem;">Unlike competitors focusing on coding and enterprise, Muse Spark targets personal agents. Mark Zuckerberg wrote that it's particularly strong in &ldquo;visual understanding, health, social content, shopping, games, and more.&rdquo; It runs in three modes: instant, thinking, and contemplating (deep research).</p>
+      </div>
+      <div>
+        <div class="muse-callout">
+          <div class="callout-title">Benchmark Snapshot</div>
+          <div class="muse-bench">
+            <div class="muse-bench-item">
+              <div class="bench-score">52.4</div>
+              <div class="bench-label">SWE Bench Pro</div>
+            </div>
+            <div class="muse-bench-item">
+              <div class="bench-score">42.8</div>
+              <div class="bench-label">Humanity's Last Exam</div>
+            </div>
+            <div class="muse-bench-item">
+              <div class="bench-score">86.4</div>
+              <div class="bench-label">CharVick Reasoning</div>
+            </div>
+          </div>
+          <p class="body-text" style="color:#8898b0;margin-top:1.2rem;font-size:1rem;">CharVick score is state-of-the-art, beating Gemini 3.1 Pro by six points. In the mix, but not leading the pack on text benchmarks.</p>
+        </div>
+        <div style="margin-top:2rem;padding:1.5rem;border-left:3px solid #7aadff;">
+          <p class="pull-quote" style="font-size:1.2rem;color:#f0f4fc;">&ldquo;After playing with it a bit, Meta's Muse Spark thinking is fine so far but really doesn't match the current Big Three models. It is also a bit weird.&rdquo;</p>
+          <p style="font-family:var(--ff-body);font-size:0.85rem;color:#7aadff;font-weight:600;margin-top:0.8rem;">Ethan Molek</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 7: BIG-STAT/GOLD — GLM 5.1 -->
+<section class="spread spread-glm">
+  <div class="glm-numeral">VII</div>
+  <div class="spread-inner" style="text-align:center;">
+    <div class="kicker fade-up">Open Source Strikes Back</div>
+    <h2 class="headline fade-up d1">Z.AI's GLM 5.1</h2>
+    <p class="deck fade-up d2" style="color:#a09070;margin:0 auto;">The first open-source model to overtake leading Western models on coding benchmarks. 754 billion parameters. Trained entirely on Huawei chips. Full commercial license.</p>
+    <div class="glm-hero-stat fade-up d3">
+      <div class="stat-number">58.4</div>
+      <div class="stat-context">SWE Bench Pro &mdash; beating GPT 5.4 (57.7) and Opus 4.6 (57.3)</div>
+    </div>
+    <div class="glm-badges fade-up d4">
+      <div class="glm-badge">
+        <div class="badge-score">754B</div>
+        <div class="badge-label">Parameters</div>
+      </div>
+      <div class="glm-badge">
+        <div class="badge-score">1,700</div>
+        <div class="badge-label">Autonomous Steps</div>
+      </div>
+      <div class="glm-badge">
+        <div class="badge-score">8hrs</div>
+        <div class="badge-label">Autonomous Execution</div>
+      </div>
+      <div class="glm-badge">
+        <div class="badge-score">600+</div>
+        <div class="badge-label">Optimization Iterations</div>
+      </div>
+    </div>
+    <div class="glm-quote-block fade-up d5">
+      <p class="pull-quote">&ldquo;Agents could do about 20 steps by the end of last year. GLM 5.1 can do 1,700 right now. Autonomous work time may be the most important curve after scaling laws.&rdquo;</p>
+      <p class="attribution">Lou, Z.AI</p>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 8: BROADSHEET — Claude Managed Agents -->
+<section class="spread spread-managed">
+  <div class="managed-numeral">VIII</div>
+  <div class="spread-inner">
+    <div class="broadsheet-border">
+      <div class="kicker fade-up" style="text-align:center;">Anthropic Platform Launch</div>
+      <h2 class="headline fade-up d1">Claude Managed Agents</h2>
+      <div class="broadsheet-rule fade-up d1"></div>
+      <div class="broadsheet-banner fade-up d2">
+        <p class="banner-text">16 million views on the announcement tweet. From prototype to launch in days.</p>
+      </div>
+      <div class="broadsheet-columns fade-up d3">
+        <div class="broadsheet-col">
+          <p class="body-text" style="color:#2c2416;">Anthropic announced everything you need to build and deploy agents at scale. The platform pairs an agent harness tuned for performance with production infrastructure, including sandboxed environments, autonomous cloud execution, and toggleable permissions.</p>
+          <div class="broadsheet-pullquote">
+            <p class="pull-quote">&ldquo;There is a notable gap between what Anthropic's models are capable of and what businesses are using them for.&rdquo;</p>
+            <p style="font-family:var(--ff-body);font-size:0.85rem;color:#8b6f47;font-weight:600;margin-top:0.5rem;">Angela Jiang, Head of Product, Claude Platform</p>
+          </div>
+        </div>
+        <div class="broadsheet-col">
+          <p class="body-text" style="font-weight:600;color:#1a1714;margin-bottom:1rem;">Common Agent Patterns:</p>
+          <p class="body-text" style="color:#2c2416;margin-bottom:0.8rem;"><strong>Event-Triggered:</strong> A system flags a bug, the managed agent writes the patch and opens the PR. No human in the loop.</p>
+          <p class="body-text" style="color:#2c2416;margin-bottom:0.8rem;"><strong>Scheduled:</strong> Daily briefs of X/Twitter activity, GitHub activity, what a team of agents is working on.</p>
+          <p class="body-text" style="color:#2c2416;"><strong>Fire &amp; Forget:</strong> Humans trigger via Slack or Teams; long-horizon autonomous research tasks.</p>
+        </div>
+        <div class="broadsheet-col">
+          <p class="body-text" style="color:#2c2416;">&ldquo;You no longer need an engineer to run an overnight marketing analysis. You need one sharp operator and an afternoon. Set the schedule, set the guardrails, and walk away.&rdquo;</p>
+          <p style="font-family:var(--ff-body);font-size:0.85rem;color:#8b6f47;font-weight:600;margin-top:0.5rem;">Jared Orkin</p>
+          <div style="margin-top:1.5rem;padding:1.2rem;background:rgba(192,57,43,0.08);border-radius:4px;">
+            <p class="body-text" style="color:#2c2416;font-size:1rem;"><strong>The catch:</strong> &ldquo;Someone still has to tune the prompt every Friday and act on the brief by 9am Monday. That's a job. The agent writes the brief, the operator runs the day.&rdquo;</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 9: NEON/CYBERPUNK — Google Notebooks -->
+<section class="spread spread-notebooks">
+  <div class="notebook-numeral">IX</div>
+  <div class="spread-inner">
+    <div class="kicker fade-up">Google Gemini</div>
+    <h2 class="headline fade-up d1">Notebooks:<br>Your Second Brain</h2>
+    <div class="notebook-layout">
+      <div>
+        <p class="body-text fade-up d2">It seems small at first, but Notebooks may be the biggest quality-of-life upgrade for Gemini users this year. Google has introduced personal knowledge bases shared across Google products, bringing the resource management power of NotebookLM directly into Gemini.</p>
+        <p class="body-text fade-up d3" style="margin-top:1.5rem;">Users can organize documents, context, and custom instruction sets per project&mdash;effectively making every door into Google's AI lead to the same room. It consolidates the transportability of features across Google's sprawling surface areas.</p>
+        <div class="fade-up d4" style="margin-top:2rem;padding:1.5rem;border-left:3px solid #00ffc8;">
+          <p class="pull-quote">&ldquo;Most AI chatbots give you basic projects. Gemini just built you a second brain.&rdquo;</p>
+          <p style="font-family:var(--ff-body);font-size:0.85rem;color:#00ffc8;font-weight:600;margin-top:0.8rem;">Josh Woodward, Google</p>
+        </div>
+      </div>
+      <div>
+        <div class="notebook-emergence fade-up d3">
+          <div class="emergence-title">What Changed</div>
+          <p class="body-text" style="font-size:1.05rem;">Google's previous &ldquo;Gems&rdquo; feature was an unintuitive, partial version of projects. Notebooks replaces this with direct project management: collated resources, per-project custom instructions, and cross-product portability.</p>
+        </div>
+        <div class="notebook-emergence fade-up d4" style="margin-top:1.5rem;">
+          <div class="emergence-title">The Bigger Picture</div>
+          <p class="body-text" style="font-size:1.05rem;">Even if people like Google's models, the product suite is so spread across surface areas that it becomes overwhelming. Notebooks begins to consolidate&mdash;not the products themselves, but the features across them.</p>
+          <p class="pull-quote" style="font-size:1.2rem;margin-top:1rem;">&ldquo;This will be an even bigger improvement than if they had released Gemini 3.3.&rdquo;</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 10: CLEAN PRODUCT — Closer -->
+<section class="spread spread-closer">
+  <div class="closer-numeral">X</div>
+  <div class="spread-inner">
+    <div class="closer-center">
+      <div class="kicker fade-up">The State of Play</div>
+      <h2 class="headline fade-up d1">The Race That<br>Never Pauses</h2>
+      <div class="closer-big-quote fade-up d2">&ldquo;The new status symbol is making a model so powerful you can't release it.&rdquo;</div>
+      <p class="closer-attribution fade-up d3">Dan Shipper</p>
+      <div class="closer-features fade-up d4">
+        <div class="closer-feature">
+          <div class="feature-icon">&middot;</div>
+          <div class="feature-name">Meta</div>
+          <div class="feature-desc">Muse Spark returns Meta to frontier competition, personal agents first</div>
+        </div>
+        <div class="closer-feature">
+          <div class="feature-icon">&middot;</div>
+          <div class="feature-name">Z.AI</div>
+          <div class="feature-desc">GLM 5.1 puts open source at the frontier for coding, 754B params</div>
+        </div>
+        <div class="closer-feature">
+          <div class="feature-icon">&middot;</div>
+          <div class="feature-name">Anthropic</div>
+          <div class="feature-desc">Managed Agents closes the gap between model capability and business usage</div>
+        </div>
+        <div class="closer-feature">
+          <div class="feature-icon">&middot;</div>
+          <div class="feature-name">Google</div>
+          <div class="feature-desc">Notebooks brings NotebookLM's power directly into Gemini</div>
+        </div>
+      </div>
+      <div class="closer-rule fade-up d5"></div>
+      <p class="closer-sign-off fade-up d5">The AI Daily Brief &mdash; Appreciate you listening or watching, as always, and until next time, peace.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hard Truths About Building in the AI Era — Keith Rabois</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { overflow-x: hidden; background: #0d1117; color: #e6e1d6; }
+
+/* Utility */
+.container { max-width: 1400px; margin: 0 auto; padding: 0 4rem; }
+.kicker { font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 1rem; }
+.deck { font-family: 'Inter', sans-serif; font-size: 1.25rem; line-height: 1.7; font-weight: 300; max-width: 680px; }
+.body-text { font-family: 'Inter', sans-serif; font-size: 1.1rem; line-height: 1.85; font-weight: 400; }
+.pull-quote { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; }
+.headline { font-family: 'Fraunces', serif; font-weight: 900; line-height: 0.92; letter-spacing: -0.03em; }
+
+/* Animation base */
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-d1 { transition-delay: 0.1s; }
+.reveal-d2 { transition-delay: 0.25s; }
+.reveal-d3 { transition-delay: 0.4s; }
+.reveal-d4 { transition-delay: 0.55s; }
+.reveal-d5 { transition-delay: 0.7s; }
+
+/* ========== SPREAD 1: COVER ========== */
+.spread-cover {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  background: #f5f0e8;
+  color: #1a1a18;
+  overflow: hidden;
+}
+.spread-cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 20%, rgba(200, 160, 80, 0.12) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 80%, rgba(180, 120, 60, 0.08) 0%, transparent 50%);
+}
+.spread-cover .cover-inner { position: relative; z-index: 1; padding: 4rem 2rem; }
+.spread-cover .cover-rule { width: 80px; height: 3px; background: #b8860b; margin: 0 auto 2.5rem; }
+.spread-cover .cover-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(3.2rem, 8vw, 8rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: #1a1a18;
+  margin-bottom: 1.5rem;
+}
+.spread-cover .cover-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-weight: 300;
+  color: #5a5548;
+  letter-spacing: 0.04em;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+.spread-cover .cover-attribution {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #b8860b;
+  letter-spacing: 0.02em;
+}
+.spread-cover .cover-meta {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #8a8478;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 0.75rem;
+}
+.spread-cover .bg-numeral {
+  position: absolute;
+  font-family: 'Fraunces', serif;
+  font-size: 38vw;
+  font-weight: 900;
+  color: rgba(184, 134, 11, 0.04);
+  bottom: -8%;
+  right: -5%;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ========== SPREAD 2: DARK/MIDNIGHT — Barrels & Ammunition ========== */
+.spread-barrels {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: #0d1117;
+  color: #c9d1d9;
+  position: relative;
+  overflow: hidden;
+}
+.spread-barrels::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(56, 139, 253, 0.07) 0%, transparent 55%),
+              radial-gradient(ellipse at 80% 30%, rgba(136, 100, 255, 0.05) 0%, transparent 50%);
+}
+.spread-barrels .bg-numeral {
+  position: absolute;
+  font-family: 'Fraunces', serif;
+  font-size: 30vw;
+  font-weight: 900;
+  color: rgba(56, 139, 253, 0.04);
+  top: -5%;
+  left: -3%;
+  line-height: 1;
+  pointer-events: none;
+}
+.spread-barrels .content-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+.spread-barrels .headline {
+  font-size: clamp(3rem, 6vw, 7rem);
+  color: #e6edf3;
+  margin-bottom: 1.5rem;
+}
+.spread-barrels .kicker { color: #388bfd; }
+.spread-barrels .stat-row {
+  display: flex;
+  gap: 3rem;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+.spread-barrels .stat-item {}
+.spread-barrels .stat-number {
+  font-family: 'Fraunces', serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #388bfd;
+  line-height: 1;
+}
+.spread-barrels .stat-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #8b949e;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 0.4rem;
+}
+.spread-barrels .body-text { color: #8b949e; }
+.spread-barrels .pull-quote {
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  color: #c9d1d9;
+  line-height: 1.4;
+  border-left: 3px solid #388bfd;
+  padding-left: 1.5rem;
+}
+
+/* ========== SPREAD 3: WARM EDITORIAL — Talent ========== */
+.spread-talent {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: #f0ebe0;
+  color: #2c2a25;
+  position: relative;
+  overflow: hidden;
+}
+.spread-talent::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, transparent, transparent 99px, rgba(0,0,0,0.03) 99px, rgba(0,0,0,0.03) 100px),
+              repeating-linear-gradient(0deg, transparent, transparent 99px, rgba(0,0,0,0.03) 99px, rgba(0,0,0,0.03) 100px);
+}
+.spread-talent .content-layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 4rem;
+  align-items: start;
+}
+.spread-talent .headline {
+  font-size: clamp(3rem, 5.5vw, 6rem);
+  color: #1a1a18;
+  margin-bottom: 1.5rem;
+}
+.spread-talent .kicker { color: #8b6914; }
+.spread-talent .sidebar-panel {
+  background: #1a1a18;
+  color: #f0ebe0;
+  padding: 2.5rem;
+  position: relative;
+}
+.spread-talent .sidebar-panel .panel-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #b8860b;
+  margin-bottom: 1.2rem;
+}
+.spread-talent .sidebar-panel .body-text { color: #c9c3b5; font-size: 1rem; }
+.spread-talent .pull-quote {
+  font-size: 1.8rem;
+  color: #3d3a33;
+  margin: 2rem 0;
+  padding: 1.5rem 0;
+  border-top: 2px solid #b8860b;
+  border-bottom: 2px solid #b8860b;
+  line-height: 1.4;
+}
+.spread-talent .bg-numeral {
+  position: absolute;
+  font-family: 'Fraunces', serif;
+  font-size: 35vw;
+  font-weight: 900;
+  color: rgba(0,0,0,0.03);
+  bottom: -10%;
+  right: -5%;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* ========== SPREAD 4: ROSE/STAMP — Customer Feedback ========== */
+.spread-customers {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: #131118;
+  color: #e6e1d6;
+  position: relative;
+  overflow: hidden;
+}
+.spread-customers::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 75% 25%, rgba(200, 50, 80, 0.08) 0%, transparent 55%);
+}
+.spread-customers .content-layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+.spread-customers .headline {
+  font-size: clamp(2.8rem, 5vw, 5.5rem);
+  color: #f5f0e8;
+  margin-bottom: 1.5rem;
+}
+.spread-customers .kicker { color: #e0455a; }
+.spread-customers .stamp {
+  width: 220px;
+  height: 220px;
+  border: 4px solid #e0455a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 2rem auto;
+  transform: rotate(-12deg);
+  padding: 1.5rem;
+}
+.spread-customers .stamp-text {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #e0455a;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+}
+.spread-customers .comparison-col h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  color: #e0455a;
+}
+.spread-customers .comparison-col .body-text { color: #9e99a3; font-size: 1.05rem; }
+.spread-customers .pull-quote {
+  font-size: 1.6rem;
+  color: #e6e1d6;
+  margin-top: 2rem;
+  line-height: 1.45;
+}
+.spread-customers .bg-numeral {
+  position: absolute;
+  font-family: 'Fraunces', serif;
+  font-size: 32vw;
+  font-weight: 900;
+  color: rgba(224, 69, 90, 0.03);
+  top: -5%;
+  left: -2%;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* ========== SPREAD 5: TERMINAL — AI & The Future of Roles ========== */
+.spread-terminal {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: #0a0a0a;
+  color: #33ff33;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Courier New', monospace;
+}
+.spread-terminal .window-chrome {
+  position: relative;
+  z-index: 1;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.spread-terminal .window-bar {
+  background: #222;
+  padding: 0.75rem 1rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.spread-terminal .dot { width: 12px; height: 12px; border-radius: 50%; }
+.spread-terminal .dot-red { background: #ff5f56; }
+.spread-terminal .dot-yellow { background: #ffbd2e; }
+.spread-terminal .dot-green { background: #27c93f; }
+.spread-terminal .window-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  color: #888;
+  margin-left: 1rem;
+}
+.spread-terminal .terminal-body { padding: 2.5rem; }
+.spread-terminal .terminal-headline {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 900;
+  color: #33ff33;
+  margin-bottom: 2rem;
+  line-height: 1.1;
+}
+.spread-terminal .terminal-line {
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: #33ff33;
+  margin-bottom: 0.3rem;
+  font-family: 'Courier New', monospace;
+}
+.spread-terminal .terminal-line .prompt { color: #888; }
+.spread-terminal .terminal-line .accent { color: #66ff66; font-weight: bold; }
+.spread-terminal .cursor {
+  display: inline-block;
+  width: 10px;
+  height: 1.2em;
+  background: #33ff33;
+  animation: blink 1s step-end infinite;
+  vertical-align: text-bottom;
+  margin-left: 4px;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.spread-terminal .terminal-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border: 1px solid #2a2a2a;
+  background: rgba(51, 255, 51, 0.02);
+}
+.spread-terminal .terminal-section-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 1rem;
+}
+
+/* ========== SPREAD 6: ACADEMIC DROP-CAP — Legal Origins ========== */
+.spread-legal {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: #0f1729;
+  color: #c5cdd8;
+  position: relative;
+  overflow: hidden;
+}
+.spread-legal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(100, 140, 200, 0.06) 0%, transparent 50%);
+}
+.spread-legal .content-layout {
+  position: relative;
+  z-index: 1;
+}
+.spread-legal .headline {
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  color: #e6edf3;
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+.spread-legal .kicker { color: #7aa2d4; text-align: center; display: block; }
+.spread-legal .two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  margin-top: 2rem;
+}
+.spread-legal .drop-cap::first-letter {
+  font-family: 'Fraunces', serif;
+  font-size: 5rem;
+  font-weight: 900;
+  float: left;
+  line-height: 0.85;
+  margin-right: 0.6rem;
+  color: #7aa2d4;
+}
+.spread-legal .callout-box {
+  background: rgba(122, 162, 212, 0.08);
+  border-left: 3px solid #7aa2d4;
+  padding: 1.5rem 2rem;
+  margin: 2rem 0;
+}
+.spread-legal .callout-box .body-text { color: #a8b8cc; }
+.spread-legal .bg-numeral {
+  position: absolute;
+  font-family: 'Fraunces', serif;
+  font-size: 28vw;
+  font-weight: 900;
+  color: rgba(122, 162, 212, 0.03);
+  bottom: -8%;
+  left: 50%;
+  transform: translateX(-50%);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* ========== SPREAD 7: BIG STAT/GOLD — Speed ========== */
+.spread-speed {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: #111008;
+  color: #e6e1d6;
+  position: relative;
+  overflow: hidden;
+}
+.spread-speed::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, rgba(218, 165, 32, 0.06) 0%, transparent 55%);
+}
+.spread-speed .content-layout {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+.spread-speed .kicker { color: #daa520; }
+.spread-speed .big-stat {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(8rem, 18vw, 16rem);
+  font-weight: 900;
+  color: #daa520;
+  line-height: 0.85;
+  margin: 1rem 0;
+  letter-spacing: -0.04em;
+}
+.spread-speed .big-stat-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #8b7a3e;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 2.5rem;
+}
+.spread-speed .headline {
+  font-size: clamp(2rem, 4vw, 4rem);
+  color: #f5f0e8;
+  margin-bottom: 1.5rem;
+}
+.spread-speed .grade-badges {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+.spread-speed .badge {
+  background: rgba(218, 165, 32, 0.1);
+  border: 1px solid rgba(218, 165, 32, 0.3);
+  padding: 1.5rem 2rem;
+  text-align: center;
+  min-width: 200px;
+}
+.spread-speed .badge-title {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: #daa520;
+}
+.spread-speed .badge-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: #8b8478;
+  margin-top: 0.5rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ========== SPREAD 8: BROADSHEET — Complacency ========== */
+.spread-complacency {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: #f5f0e8;
+  color: #1a1a18;
+  position: relative;
+  overflow: hidden;
+}
+.spread-complacency .broadsheet {
+  position: relative;
+  z-index: 1;
+  border: 3px double #1a1a18;
+  padding: 3.5rem;
+}
+.spread-complacency .broadsheet-header {
+  text-align: center;
+  border-bottom: 2px solid #1a1a18;
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+}
+.spread-complacency .headline {
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  color: #1a1a18;
+}
+.spread-complacency .kicker { color: #8b6914; text-align: center; display: block; }
+.spread-complacency .three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2.5rem;
+}
+.spread-complacency .col { border-right: 1px solid rgba(0,0,0,0.12); padding-right: 2.5rem; }
+.spread-complacency .col:last-child { border-right: none; padding-right: 0; }
+.spread-complacency .red-banner {
+  background: #c41230;
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  text-align: center;
+  margin: 2rem 0;
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+.spread-complacency .body-text { color: #3d3a33; }
+.spread-complacency .pull-quote {
+  font-size: 1.5rem;
+  color: #1a1a18;
+  margin: 1.5rem 0;
+  padding: 1rem 0;
+  border-top: 1px solid #1a1a18;
+  line-height: 1.4;
+}
+
+/* ========== SPREAD 9: NEON/CYBERPUNK — AI Content Future ========== */
+.spread-aicontent {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: #0a0a0e;
+  color: #00ffa3;
+  position: relative;
+  overflow: hidden;
+}
+.spread-aicontent::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 255, 163, 0.02) 100%);
+  transform: perspective(500px) rotateX(45deg);
+  transform-origin: bottom;
+}
+.spread-aicontent::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(0, 255, 163, 0.03) 79px, rgba(0, 255, 163, 0.03) 80px),
+              repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(0, 255, 163, 0.03) 79px, rgba(0, 255, 163, 0.03) 80px);
+  mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%);
+}
+.spread-aicontent .content-layout {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+.spread-aicontent .headline {
+  font-size: clamp(2.5rem, 5vw, 5.5rem);
+  color: #00ffa3;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 40px rgba(0, 255, 163, 0.15);
+}
+.spread-aicontent .kicker { color: #00cc82; }
+.spread-aicontent .emergence-box {
+  border: 1px solid rgba(0, 255, 163, 0.2);
+  background: rgba(0, 255, 163, 0.03);
+  padding: 2rem;
+  margin: 1.5rem 0;
+}
+.spread-aicontent .emergence-box .box-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #00ffa3;
+  margin-bottom: 1rem;
+}
+.spread-aicontent .body-text { color: #6b9e85; }
+.spread-aicontent .pull-quote {
+  font-size: 1.6rem;
+  color: #b0ffe0;
+  line-height: 1.4;
+}
+.spread-aicontent .bg-numeral {
+  position: absolute;
+  font-family: 'Fraunces', serif;
+  font-size: 30vw;
+  font-weight: 900;
+  color: rgba(0, 255, 163, 0.02);
+  top: -5%;
+  right: -5%;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* ========== SPREAD 10: CLEAN PRODUCT / CLOSER — No Days Off ========== */
+.spread-closer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+  color: #1a1a2e;
+  position: relative;
+  overflow: hidden;
+}
+.spread-closer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(79, 70, 229, 0.04) 0%, transparent 60%);
+}
+.spread-closer .content-layout {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.spread-closer .kicker { color: #4f46e5; }
+.spread-closer .headline {
+  font-size: clamp(4rem, 9vw, 9rem);
+  color: #1a1a2e;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.05em;
+}
+.spread-closer .deck { color: #5a5870; margin: 0 auto 3rem; }
+.spread-closer .feature-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  text-align: left;
+  margin-bottom: 3rem;
+}
+.spread-closer .feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #fff;
+  border: 1px solid #e8e6f0;
+}
+.spread-closer .feature-icon {
+  font-family: 'Fraunces', serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #4f46e5;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.spread-closer .feature-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
+  color: #3d3a4e;
+  line-height: 1.6;
+}
+.spread-closer .feature-text strong { color: #1a1a2e; font-weight: 700; }
+.spread-closer .final-quote {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 600;
+  color: #4f46e5;
+  line-height: 1.35;
+  margin-top: 2rem;
+  font-style: italic;
+}
+.spread-closer .quote-attr {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #8a8498;
+  margin-top: 0.8rem;
+  letter-spacing: 0.1em;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 900px) {
+  .container { padding: 0 2rem; }
+  .spread-barrels .content-grid,
+  .spread-talent .content-layout,
+  .spread-customers .content-layout,
+  .spread-legal .two-col,
+  .spread-aicontent .content-layout {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .spread-complacency .three-col {
+    grid-template-columns: 1fr;
+  }
+  .spread-complacency .col { border-right: none; padding-right: 0; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 2rem; }
+  .spread-complacency .col:last-child { border-bottom: none; }
+  .spread-closer .feature-list { grid-template-columns: 1fr; }
+  .spread-complacency .broadsheet { padding: 2rem; }
+  .spread-terminal .terminal-body { padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- SPREAD 1: COVER -->
+<section class="spread-cover">
+  <div class="bg-numeral">KR</div>
+  <div class="cover-inner">
+    <div class="cover-rule reveal"></div>
+    <div class="kicker reveal reveal-d1" style="color: #8b6914;">Lenny's Podcast &middot; Khosla Ventures</div>
+    <h1 class="cover-title reveal reveal-d2">Hard Truths About Building in the AI Era</h1>
+    <p class="cover-subtitle reveal reveal-d3">On barrels and ammunition, undiscovered talent, the death of the PM, why talking to customers is dangerous, and the relentless application of force.</p>
+    <div class="cover-rule reveal reveal-d3"></div>
+    <p class="cover-attribution reveal reveal-d4">Keith Rabois</p>
+    <p class="cover-meta reveal reveal-d5">Managing Director, Khosla Ventures &middot; Former COO, Square &middot; PayPal Mafia</p>
+  </div>
+</section>
+
+<!-- SPREAD 2: DARK — Barrels & Ammunition -->
+<section class="spread-barrels">
+  <div class="bg-numeral">II</div>
+  <div class="container">
+    <div class="content-grid">
+      <div>
+        <div class="kicker reveal">Framework</div>
+        <h2 class="headline reveal reveal-d1">Barrels &amp; Ammunition</h2>
+        <p class="body-text reveal reveal-d2">Most companies raise money, hire aggressively, and then the CEO gets frustrated: burn rate climbs but output stays flat. The fundamental driver is that the number of people who can independently drive an initiative from inception to success is extremely limited.</p>
+        <div class="stat-row reveal reveal-d3">
+          <div class="stat-item">
+            <div class="stat-number">254</div>
+            <div class="stat-label">People at PayPal</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">12-17</div>
+            <div class="stat-label">Barrels identified</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">2</div>
+            <div class="stat-label">Barrels at Lattice</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <blockquote class="pull-quote reveal reveal-d2">"There's a hill over there. Get us over that hill. Come hell or high water, this person is going to deliver that outcome. That's a barrel."</blockquote>
+        <p class="body-text reveal reveal-d3" style="margin-top: 2rem;">The ratio of barrels to ammunition dictates the number of important initiatives that can be pursued simultaneously. Hiring more people without expanding your barrel count just stacks bodies behind the same projects&mdash;increasing your collaboration tax while producing less.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 3: WARM EDITORIAL — Talent -->
+<section class="spread-talent">
+  <div class="bg-numeral">III</div>
+  <div class="container">
+    <div class="content-layout">
+      <div>
+        <div class="kicker reveal">First Principles</div>
+        <h2 class="headline reveal reveal-d1">The Team You Build Is the Company You Build</h2>
+        <p class="body-text reveal reveal-d2" style="margin-bottom: 1.5rem;">Vinod Khosla told Rabois at Square: the team you build is the company you build. People get distracted with the market, customers, product, technology&mdash;ultimately it's the team. If you have the right people, everything else will be easy.</p>
+        <blockquote class="pull-quote reveal reveal-d3">"If a founder shows the ability early in his or her career to assess talent ruthlessly and accurately, he or she can go very far with no other abilities whatsoever."</blockquote>
+        <p class="body-text reveal reveal-d4" style="margin-top: 1.5rem;">Hiring is a muscle. You need to exercise it, learn what worked, what didn't, what you missed and why. Tony Xu at DoorDash does 20 references on every single senior hire. Greylock's rule: you haven't exhausted referencing until you hit a negative reference.</p>
+      </div>
+      <div class="sidebar-panel reveal reveal-d3">
+        <div class="panel-title">Undiscovered Talent</div>
+        <p class="body-text" style="margin-bottom: 1.2rem;">Peter Thiel taught Rabois on a jog around the Stanford campus: you've got to find undiscovered talent&mdash;that's the only way to scale against large incumbents with infinite money.</p>
+        <p class="body-text" style="margin-bottom: 1.2rem;">The net effect is you wind up skewing younger&mdash;not because you need young people, but because younger people have fewer data points. The black-box hiring machine can't process them accurately, which is where the alpha lives.</p>
+        <p class="body-text" style="font-style: italic; color: #b8860b;">It's like a salary cap. When you're a startup, you probably have one-tenth the salary cap of the people you're competing with.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 4: ROSE/STAMP — Don't Talk to Customers -->
+<section class="spread-customers">
+  <div class="bg-numeral">IV</div>
+  <div class="container">
+    <div class="content-layout">
+      <div>
+        <div class="kicker reveal">Contrarian Take</div>
+        <h2 class="headline reveal reveal-d1">Stop Talking to Your Customers</h2>
+        <p class="body-text reveal reveal-d2" style="color: #9e99a3; margin-bottom: 1.5rem;">For consumer and SMB products, customer feedback is not just unhelpful&mdash;it's actively harmful. Customers don't know what they want. Purchase decisions are subconscious, and when people try to consciously explain a subconscious decision, they give misleading information.</p>
+        <blockquote class="pull-quote reveal reveal-d3">"Ask anybody who drives a Porsche or a Lamborghini why they bought the car. 99% of the time they will tell you every reason except the real reason."</blockquote>
+        <div class="stamp reveal reveal-d4">
+          <div class="stamp-text">Directionally Dangerous for Sub-Mid Market</div>
+        </div>
+      </div>
+      <div>
+        <div class="comparison-col reveal reveal-d2">
+          <h3>When it works</h3>
+          <p class="body-text" style="margin-bottom: 2rem;">Hardcore enterprise customer development&mdash;where there's a decision maker making a utilitarian decision. If you have 30 must-win accounts, you can talk to all 30 and influence the CEO at each one. That is a useful exercise.</p>
+        </div>
+        <div class="comparison-col reveal reveal-d3">
+          <h3>When it destroys</h3>
+          <p class="body-text">If you're targeting a billion people on the planet, you are not getting representative feedback. Once you hear customer feedback, you can't take it out of your brain. Every subsequent meeting is polluted.</p>
+        </div>
+        <p class="body-text reveal reveal-d4" style="color: #9e99a3; margin-top: 2rem; font-style: italic;">Everything important you need to learn about humans was written by Shakespeare. Just read Shakespeare. That's better than all the customer research.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 5: TERMINAL — AI & The Future of Roles -->
+<section class="spread-terminal">
+  <div class="container">
+    <div class="window-chrome reveal">
+      <div class="window-bar">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+        <span class="window-title">future_of_work.sh &mdash; khosla_ventures</span>
+      </div>
+      <div class="terminal-body">
+        <div class="terminal-headline reveal reveal-d1">The PM Is Dead.<br>Long Live the CEO-Builder.<span class="cursor"></span></div>
+        <div class="terminal-line reveal reveal-d2"><span class="prompt">$ </span>query --role "product_manager" --future</div>
+        <div class="terminal-line reveal reveal-d2"><span class="accent">> </span>The idea of a PM makes no sense in the future.</div>
+        <div class="terminal-line reveal reveal-d2"><span class="accent">> </span>The skill is more like being a CEO now:</div>
+        <div class="terminal-line reveal reveal-d2"><span class="accent">> </span>What are we building and why?</div>
+
+        <div class="terminal-section reveal reveal-d3">
+          <div class="terminal-section-title">Token consumption report</div>
+          <div class="terminal-line"><span class="prompt">#1 </span><span class="accent">CMO</span> &mdash; largest consumer of tokens in best organizations</div>
+          <div class="terminal-line"><span class="prompt">   </span>They don't need deputies and deputies to get actual work product.</div>
+          <div class="terminal-line"><span class="prompt">   </span>They're shipping campaigns, analytics, insights&mdash;directly.</div>
+        </div>
+
+        <div class="terminal-section reveal reveal-d4">
+          <div class="terminal-section-title">Shopify Protocol (Active 2+ years)</div>
+          <div class="terminal-line"><span class="prompt">$ </span>policy --org shopify --presentations</div>
+          <div class="terminal-line"><span class="accent">> </span>No PowerPoint/Keynote on product. Every presentation = workable demo.</div>
+          <div class="terminal-line"><span class="accent">> </span>PMs expected to create the products. Execs refuse static mocks.</div>
+        </div>
+
+        <div class="terminal-section reveal reveal-d5">
+          <div class="terminal-section-title">The Engineering Director at Ramp</div>
+          <div class="terminal-line"><span class="prompt">$ </span>stat --output "personal_code" --vs "IC_baseline"</div>
+          <div class="terminal-line"><span class="accent">> </span>Ships as much code personally as he did as an IC</div>
+          <div class="terminal-line"><span class="accent">> </span>While managing a team of 20 people</div>
+          <div class="terminal-line"><span class="accent">> </span>Using AI as a second team: "You do this, you do this, stitch together, check."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 6: ACADEMIC DROP-CAP — The Litigator's Mind -->
+<section class="spread-legal">
+  <div class="bg-numeral">VI</div>
+  <div class="container">
+    <div class="content-layout">
+      <div class="kicker reveal">Origin Story</div>
+      <h2 class="headline reveal reveal-d1">The Litigator Who Learned to Stop Counting Hours</h2>
+      <div class="two-col">
+        <div>
+          <p class="body-text drop-cap reveal reveal-d2">Before PayPal, before Square, before Khosla Ventures, Keith Rabois spent four and a half years as a law clerk and litigator. The training shaped his mind in ways both useful and dangerous. Law school exams are fundamentally about issue spotting&mdash;you get credit for identifying everything that can go wrong. Moderately useful, but not useful as an entrepreneur. As a lawyer, your productivity is measured by hours billed. It took Rabois nearly two years after switching to tech to stop writing down every half hour of every meeting in his notebook.</p>
+          <div class="callout-box reveal reveal-d3">
+            <p class="body-text">Peter Thiel was smart enough to quit after five months and four days. David Sacks never practiced at all&mdash;"maybe even smarter than both of us."</p>
+          </div>
+        </div>
+        <div>
+          <p class="body-text reveal reveal-d2" style="margin-bottom: 2rem;">But the legal training gave Rabois something most VCs lack: the ability to assess legal and regulatory risk in his own brain. It's no accident that many of his best investments&mdash;YouTube, Stripe, Square, Ramp&mdash;operate in heavily regulated sectors where that risk assessment creates an edge.</p>
+          <blockquote class="pull-quote reveal reveal-d3" style="font-size: 1.5rem; color: #c5cdd8; border-left: 3px solid #7aa2d4; padding-left: 1.5rem; line-height: 1.4;">"The hardest part of writing a brief&mdash;all the art and all the magic&mdash;was the first paragraph. I might spend the first week walking around the office thinking through how to nail the first three sentences. Once I figured that out, I could write 30 pages in two days."</blockquote>
+          <p class="body-text reveal reveal-d4" style="margin-top: 1.5rem; color: #8a99ad;">He sees AI writing the same way: the power-through-the-rest-of-the-brief works well. You still need the first three sentences.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 7: BIG STAT/GOLD — Speed -->
+<section class="spread-speed">
+  <div class="container">
+    <div class="content-layout">
+      <div class="kicker reveal">Signal</div>
+      <div class="big-stat reveal reveal-d1">3mo</div>
+      <div class="big-stat-label reveal reveal-d2">Ramp shipped cards in 3 months. Industry standard: 9-12 months.</div>
+      <h2 class="headline reveal reveal-d3">Speed Is the Subtle Signal</h2>
+      <p class="deck reveal reveal-d3" style="margin: 0 auto 2rem; text-align: center; color: #8b8478;">The operating tempo of a successful company develops very early in its trajectory. Roelof Botha told Rabois at Square: "I haven't seen this kind of tempo since our PayPal days"&mdash;and he'd been a VC for nine years.</p>
+      <div class="grade-badges">
+        <div class="badge reveal reveal-d3">
+          <div class="badge-title">Speed</div>
+          <div class="badge-desc">Operating tempo from board meeting to shipped solutions</div>
+        </div>
+        <div class="badge reveal reveal-d4">
+          <div class="badge-title">Density</div>
+          <div class="badge-desc">Talent gets deeper and better between check-ins</div>
+        </div>
+        <div class="badge reveal reveal-d5">
+          <div class="badge-title">Internal</div>
+          <div class="badge-desc">Skip hiring senior&mdash;promote from within as strategy</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 8: BROADSHEET — Complacency -->
+<section class="spread-complacency">
+  <div class="container">
+    <div class="broadsheet">
+      <div class="broadsheet-header">
+        <div class="kicker reveal" style="color: #8b6914;">Leadership</div>
+        <h2 class="headline reveal reveal-d1">The Relentless Application of Force</h2>
+      </div>
+      <div class="red-banner reveal reveal-d2">The better you're doing, the more the CEO should push.</div>
+      <div class="three-col">
+        <div class="col">
+          <p class="body-text reveal reveal-d2">A friend of mine asked Mike Moritz: what's the most common denominator of the best CEOs ever? His answer: the relentless application of force. People eventually get comfortable, complacent. The more success you have, the more complacent the organization tends to get.</p>
+          <blockquote class="pull-quote reveal reveal-d3">"It's kind of like winning a Super Bowl. Last four quarters were wonderful. You got to come back next year and start your record zero-zero again."</blockquote>
+        </div>
+        <div class="col">
+          <p class="body-text reveal reveal-d3">When a company's struggling, Rabois is actually a very non-critical coach and supporter&mdash;because the founder already knows they're struggling. Being critical doesn't help solve problems. But when the company's thriving, it's really important to be critical and isolate things that will eventually be problems.</p>
+          <p class="body-text reveal reveal-d4" style="margin-top: 1rem;">It's like a really good sports coach. When you're winning is when to polish everything and master the details.</p>
+        </div>
+        <div class="col">
+          <p class="body-text reveal reveal-d3">Really talented people are like superb athletes. When things are going well and people are coasting, they're not happy. They have an internal tempo. They want to create things and drive value.</p>
+          <blockquote class="pull-quote reveal reveal-d4">"The morale actually does go down for the best people in the world when people are skating."</blockquote>
+          <p class="body-text reveal reveal-d5" style="margin-top: 1rem; font-style: italic; color: #5a5548;">Brian Chesky was the same way: pedal to the metal no matter what. And when the team had little breaks, morale actually went down.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 9: NEON — AI Content & The Future -->
+<section class="spread-aicontent">
+  <div class="bg-numeral">IX</div>
+  <div class="container">
+    <div class="content-layout">
+      <div>
+        <div class="kicker reveal">Forecast</div>
+        <h2 class="headline reveal reveal-d1">The Binary Sort of Content</h2>
+        <p class="body-text reveal reveal-d2">AI content surpassing human content is inevitable. On Chinese TikTok, it's already all AI videos&mdash;and people actually enjoy watching them. But Rabois predicts a bifurcation.</p>
+        <div class="emergence-box reveal reveal-d3">
+          <div class="box-title">Two Poles</div>
+          <p class="body-text" style="color: #6b9e85;"><strong style="color: #00ffa3;">Curation:</strong> A curated experience with a premium on provenance. This piece of art is a Warhol. Anybody could create it now in high fidelity, but there's still an appreciation that it was created by Andy Warhol.</p>
+          <p class="body-text" style="color: #6b9e85; margin-top: 1rem;"><strong style="color: #00ffa3;">Algorithm:</strong> A rank filtering of what's the best content, regardless of whether it's AI-generated or not.</p>
+        </div>
+      </div>
+      <div>
+        <blockquote class="pull-quote reveal reveal-d2">"The alpha is in design. Just like in marketing, it's not the tools, the channels, the metrics&mdash;it's the storytelling. How do you cut through the clutter in the snappiest, most compelling possible way."</blockquote>
+        <div class="emergence-box reveal reveal-d3">
+          <div class="box-title">The Expanding Middle</div>
+          <p class="body-text" style="color: #6b9e85;">As AI makes it easier to build, it expands from the middle out. What remains: figuring out what to build on one end, and distribution&mdash;getting anyone to pay attention&mdash;on the other.</p>
+        </div>
+        <div class="emergence-box reveal reveal-d4">
+          <div class="box-title">The Ugly Baby Thesis</div>
+          <p class="body-text" style="color: #6b9e85;">When making a seed investment, Rabois wants half of his VC friends to laugh at him. If they're laughing, it's an ugly baby&mdash;and ugly babies are where the real alpha lives. A 30-40% hit rate is golden. By definition, 60-70% fail.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 10: CLEAN CLOSER — No Days Off -->
+<section class="spread-closer">
+  <div class="container">
+    <div class="content-layout">
+      <div class="kicker reveal">Mantra</div>
+      <h1 class="headline reveal reveal-d1">No Days Off.</h1>
+      <p class="deck reveal reveal-d2">Keith Rabois has missed seven workouts in seven years. Last year, he missed none. It's not about fitness. It's a proxy for something deeper.</p>
+      <div class="feature-list">
+        <div class="feature-item reveal reveal-d2">
+          <div class="feature-icon">&rarr;</div>
+          <div class="feature-text"><strong>No excuses.</strong> That includes illness, international travel, weddings, time zones. Every day, typically more than once.</div>
+        </div>
+        <div class="feature-item reveal reveal-d3">
+          <div class="feature-icon">&rarr;</div>
+          <div class="feature-text"><strong>Intellectual curiosity.</strong> The way to thrive in a rapidly emerging technology world is to be intellectually curious. Future-proof yourself by learning new things.</div>
+        </div>
+        <div class="feature-item reveal reveal-d3">
+          <div class="feature-icon">&rarr;</div>
+          <div class="feature-text"><strong>Stress is fuel.</strong> His top book recommendation: "The Upside of Stress" by Kelly McGonigal. If you want to be happy, healthy, or wealthy&mdash;you need more stress, not less.</div>
+        </div>
+        <div class="feature-item reveal reveal-d4">
+          <div class="feature-icon">&rarr;</div>
+          <div class="feature-text"><strong>iPad only.</strong> No computer since September 2010. Everything from phone, watch, or iPad. Inspired by Jack Dorsey at Square.</div>
+        </div>
+      </div>
+      <blockquote class="final-quote reveal reveal-d4">"High performance machines don't have psychological safety. They're about winning."</blockquote>
+      <p class="quote-attr reveal reveal-d5">&mdash; Keith Rabois, Managing Director, Khosla Ventures</p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+})();
+</script>
+</body>
+</html>

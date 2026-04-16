@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Architecture of Joy — Dr. Arthur Brooks on Building Lasting Happiness</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --fraunces: 'Fraunces', serif;
+  --inter: 'Inter', sans-serif;
+}
+
+html { scroll-behavior: smooth; font-size: 18px; }
+body { font-family: var(--inter); line-height: 1.6; overflow-x: hidden; }
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ========== SPREAD 1: Cover — Deep Midnight ========== */
+.spread-1 {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #0a0a1a 0%, #1a1035 40%, #0d1b2a 100%);
+  color: #f0e6d3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.spread-1::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 30%, rgba(251, 191, 36, 0.06) 0%, transparent 50%);
+  animation: aurora 20s ease-in-out infinite alternate;
+}
+@keyframes aurora {
+  0% { transform: rotate(0deg) scale(1); }
+  100% { transform: rotate(3deg) scale(1.05); }
+}
+.spread-1 .kicker {
+  font-family: var(--inter);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(251, 191, 36, 0.8);
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+.spread-1 h1 {
+  font-family: var(--fraunces);
+  font-size: clamp(3.5rem, 10vw, 9rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 1.5rem;
+}
+.spread-1 h1 span {
+  display: block;
+  background: linear-gradient(135deg, #f0e6d3, #fbbf24, #f0e6d3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.spread-1 .subtitle {
+  font-family: var(--inter);
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: rgba(240, 230, 211, 0.6);
+  max-width: 600px;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 3rem;
+}
+.spread-1 .byline {
+  font-family: var(--fraunces);
+  font-style: italic;
+  font-size: 1rem;
+  color: rgba(240, 230, 211, 0.5);
+  position: relative;
+  z-index: 1;
+}
+.spread-1 .scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(240, 230, 211, 0.3);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.7; } }
+
+/* ========== SPREAD 2: Warm Editorial — The Macronutrients ========== */
+.spread-2 {
+  min-height: 100vh;
+  background: #faf6f0;
+  color: #2a2118;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  position: relative;
+}
+@media (max-width: 768px) { .spread-2 { grid-template-columns: 1fr; } }
+.spread-2 .left-col {
+  padding: 6rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-right: 1px solid rgba(42, 33, 24, 0.1);
+}
+.spread-2 .right-col {
+  padding: 6rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #f5ede0;
+}
+.spread-2 .section-num {
+  font-family: var(--fraunces);
+  font-size: 6rem;
+  font-weight: 100;
+  color: rgba(42, 33, 24, 0.08);
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+.spread-2 h2 {
+  font-family: var(--fraunces);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.05;
+  margin-bottom: 1.5rem;
+  color: #1a1108;
+}
+.spread-2 .body-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #4a3f32;
+  max-width: 520px;
+}
+.macro-card {
+  background: white;
+  border-radius: 2px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.04);
+}
+.macro-card:nth-child(1) { border-color: #e76f51; }
+.macro-card:nth-child(2) { border-color: #2a9d8f; }
+.macro-card:nth-child(3) { border-color: #264653; }
+.macro-card h3 {
+  font-family: var(--fraunces);
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.macro-card p {
+  font-size: 0.95rem;
+  color: #6b5e50;
+  line-height: 1.7;
+}
+
+/* ========== SPREAD 3: Terminal Green — The Brain ========== */
+.spread-3 {
+  min-height: 100vh;
+  background: #0a0f0a;
+  color: #33ff33;
+  padding: 6rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  font-family: 'Courier New', monospace;
+}
+.spread-3::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 0, 0.03) 2px,
+    rgba(0, 255, 0, 0.03) 4px
+  );
+  pointer-events: none;
+}
+.spread-3 .terminal-header {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: #1a7a1a;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 1;
+}
+.spread-3 h2 {
+  font-family: var(--fraunces);
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 900;
+  color: #33ff33;
+  line-height: 0.95;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 0 30px rgba(51, 255, 51, 0.3);
+}
+.spread-3 .brain-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+}
+.brain-part {
+  border: 1px solid rgba(51, 255, 51, 0.2);
+  padding: 2rem;
+  position: relative;
+}
+.brain-part::before {
+  content: '>';
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  color: #1a7a1a;
+  font-size: 0.8rem;
+}
+.brain-part h3 {
+  font-family: var(--fraunces);
+  font-size: 1.4rem;
+  margin-bottom: 0.75rem;
+  color: #66ff66;
+}
+.brain-part p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #22aa22;
+}
+.brain-part .age {
+  font-size: 0.75rem;
+  color: #1a7a1a;
+  margin-top: 0.75rem;
+  border-top: 1px solid rgba(51, 255, 51, 0.1);
+  padding-top: 0.5rem;
+}
+
+/* ========== SPREAD 4: Broadsheet Newspaper — The Four Idols ========== */
+.spread-4 {
+  min-height: 100vh;
+  background: #f5f0e8;
+  color: #1a1a1a;
+  padding: 4rem 3rem;
+  position: relative;
+}
+.spread-4 .masthead {
+  text-align: center;
+  border-bottom: 4px double #1a1a1a;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+.spread-4 .masthead h2 {
+  font-family: var(--fraunces);
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+.spread-4 .masthead .date {
+  font-family: var(--inter);
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #888;
+  margin-top: 0.5rem;
+}
+.spread-4 .idol-columns {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  border-top: 1px solid #ccc;
+  padding-top: 2rem;
+}
+@media (max-width: 900px) { .spread-4 .idol-columns { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 500px) { .spread-4 .idol-columns { grid-template-columns: 1fr; } }
+.idol-col {
+  border-right: 1px solid #ddd;
+  padding-right: 1.5rem;
+}
+.idol-col:last-child { border-right: none; }
+.idol-col h3 {
+  font-family: var(--fraunces);
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.idol-col .idol-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  filter: grayscale(0.5);
+}
+.idol-col p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #444;
+  font-family: var(--inter);
+}
+.spread-4 .pull-quote-news {
+  margin-top: 2.5rem;
+  padding: 2rem;
+  border-top: 2px solid #1a1a1a;
+  border-bottom: 2px solid #1a1a1a;
+  text-align: center;
+}
+.spread-4 .pull-quote-news p {
+  font-family: var(--fraunces);
+  font-style: italic;
+  font-size: 1.6rem;
+  line-height: 1.4;
+  color: #1a1a1a;
+}
+
+/* ========== SPREAD 5: Neon Cyberpunk — The Matrix / Screens ========== */
+.spread-5 {
+  min-height: 100vh;
+  background: #0d0015;
+  color: #e0d0ff;
+  padding: 6rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.spread-5::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(139, 0, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(139, 0, 255, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+.spread-5::after {
+  content: '';
+  position: absolute;
+  top: 20%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 0, 128, 0.15), transparent 70%);
+  filter: blur(60px);
+}
+.spread-5 h2 {
+  font-family: var(--fraunces);
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 900;
+  line-height: 0.95;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #ff006e, #8b00ff, #00d4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.spread-5 .cyber-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 3rem;
+}
+.cyber-stat {
+  border: 1px solid rgba(139, 0, 255, 0.3);
+  padding: 2rem;
+  background: rgba(13, 0, 21, 0.8);
+  backdrop-filter: blur(10px);
+}
+.cyber-stat .number {
+  font-family: var(--fraunces);
+  font-size: 3.5rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #ff006e, #8b00ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.cyber-stat .label {
+  font-size: 0.85rem;
+  color: rgba(224, 208, 255, 0.6);
+  line-height: 1.5;
+}
+.spread-5 .neon-quote {
+  font-family: var(--fraunces);
+  font-size: 1.8rem;
+  font-style: italic;
+  line-height: 1.4;
+  position: relative;
+  z-index: 1;
+  padding-left: 2rem;
+  border-left: 3px solid #ff006e;
+  color: rgba(224, 208, 255, 0.85);
+  max-width: 700px;
+}
+
+/* ========== SPREAD 6: Burnt Orange — The Striver's Curse ========== */
+.spread-6 {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #7f1d1d 0%, #b45309 50%, #92400e 100%);
+  color: #fef3c7;
+  padding: 6rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.spread-6 .kicker {
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(254, 243, 199, 0.5);
+  margin-bottom: 2rem;
+}
+.spread-6 h2 {
+  font-family: var(--fraunces);
+  font-size: clamp(3rem, 9vw, 8rem);
+  font-weight: 900;
+  line-height: 0.9;
+  margin-bottom: 2rem;
+  text-shadow: 0 4px 60px rgba(0,0,0,0.3);
+}
+.spread-6 .equation {
+  font-family: var(--fraunces);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 300;
+  margin: 2rem 0;
+  padding: 2rem 3rem;
+  border: 1px solid rgba(254, 243, 199, 0.2);
+  background: rgba(0,0,0,0.15);
+  display: inline-block;
+}
+.spread-6 .equation em {
+  font-weight: 700;
+  font-style: italic;
+}
+.spread-6 .body-text {
+  max-width: 640px;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: rgba(254, 243, 199, 0.8);
+  margin-top: 2rem;
+}
+
+/* ========== SPREAD 7: Cool Slate — Meaning of Life ========== */
+.spread-7 {
+  min-height: 100vh;
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 6rem 4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+@media (max-width: 768px) { .spread-7 { grid-template-columns: 1fr; padding: 4rem 2rem; } }
+.spread-7 h2 {
+  font-family: var(--fraunces);
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 900;
+  line-height: 0.95;
+  margin-bottom: 1.5rem;
+  color: #f8fafc;
+}
+.meaning-question {
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  background: rgba(255,255,255,0.04);
+  border-radius: 4px;
+  border-left: 3px solid;
+}
+.meaning-question:nth-child(1) { border-color: #38bdf8; }
+.meaning-question:nth-child(2) { border-color: #a78bfa; }
+.meaning-question:nth-child(3) { border-color: #fb923c; }
+.meaning-question h3 {
+  font-family: var(--fraunces);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.meaning-question .concept {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(226, 232, 240, 0.5);
+  margin-bottom: 0.5rem;
+}
+.meaning-question p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #94a3b8;
+}
+
+/* ========== SPREAD 8: Cream & Forest — Protocols for Living ========== */
+.spread-8 {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f0fdf4 0%, #ecfdf5 100%);
+  color: #14532d;
+  padding: 6rem 4rem;
+}
+.spread-8 h2 {
+  font-family: var(--fraunces);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+.protocol-timeline {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  padding-left: 3rem;
+}
+.protocol-timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #16a34a, #15803d, #166534);
+}
+.protocol-step {
+  position: relative;
+  padding: 1.5rem 0 2.5rem 2rem;
+}
+.protocol-step::before {
+  content: '';
+  position: absolute;
+  left: -3.35rem;
+  top: 1.8rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #16a34a;
+  border: 3px solid #f0fdf4;
+}
+.protocol-step .time {
+  font-family: var(--fraunces);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #166534;
+  margin-bottom: 0.25rem;
+}
+.protocol-step h3 {
+  font-family: var(--fraunces);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #14532d;
+  margin-bottom: 0.5rem;
+}
+.protocol-step p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #365a3b;
+  max-width: 560px;
+}
+
+/* ========== SPREAD 9: Inky Blue — Love & Relationships ========== */
+.spread-9 {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #0c1445 0%, #1e1b4b 50%, #312e81 100%);
+  color: #c7d2fe;
+  padding: 6rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.spread-9 h2 {
+  font-family: var(--fraunces);
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 900;
+  line-height: 0.9;
+  color: #e0e7ff;
+  margin-bottom: 3rem;
+}
+.love-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+.love-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(199, 210, 254, 0.1);
+  padding: 2rem;
+  border-radius: 4px;
+}
+.love-card .num {
+  font-family: var(--fraunces);
+  font-size: 3rem;
+  font-weight: 100;
+  color: rgba(199, 210, 254, 0.2);
+  margin-bottom: 0.5rem;
+}
+.love-card h3 {
+  font-family: var(--fraunces);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #e0e7ff;
+  margin-bottom: 0.5rem;
+}
+.love-card p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #818cf8;
+}
+.spread-9 .closing-quote {
+  font-family: var(--fraunces);
+  font-size: 1.6rem;
+  font-style: italic;
+  line-height: 1.5;
+  max-width: 650px;
+  color: rgba(224, 231, 255, 0.7);
+  padding-left: 2rem;
+  border-left: 3px solid rgba(129, 140, 248, 0.4);
+}
+
+/* ========== SPREAD 10: Warm Closing — The Algorithm ========== */
+.spread-10 {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #1c1917 0%, #292524 50%, #1c1917 100%);
+  color: #d6d3d1;
+  padding: 6rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.spread-10 .kicker {
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #78716c;
+  margin-bottom: 2rem;
+}
+.spread-10 h2 {
+  font-family: var(--fraunces);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 3rem;
+  color: #fafaf9;
+}
+.algo-steps {
+  display: flex;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.algo-step {
+  flex: 0 0 220px;
+  text-align: center;
+}
+.algo-step .step-num {
+  font-family: var(--fraunces);
+  font-size: 5rem;
+  font-weight: 100;
+  color: rgba(214, 211, 209, 0.1);
+  line-height: 1;
+}
+.algo-step h3 {
+  font-family: var(--fraunces);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 0.5rem;
+}
+.algo-step p {
+  font-size: 0.9rem;
+  color: #a8a29e;
+  line-height: 1.6;
+}
+.spread-10 .final-quote {
+  font-family: var(--fraunces);
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  font-style: italic;
+  line-height: 1.5;
+  max-width: 700px;
+  color: rgba(250, 250, 249, 0.7);
+  margin-bottom: 2rem;
+}
+.spread-10 .pillars {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.spread-10 .pillar {
+  font-family: var(--fraunces);
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  color: #fbbf24;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.spread-10 .colophon {
+  margin-top: 4rem;
+  font-size: 0.75rem;
+  color: #57534e;
+  line-height: 1.8;
+}
+</style>
+</head>
+<body>
+
+<!-- SPREAD 1: Cover -->
+<section class="spread-1">
+  <div class="fade-up">
+    <p class="kicker">A Conversation with Dr. Arthur Brooks</p>
+    <h1><span>The<br>Architecture<br>of Joy</span></h1>
+    <p class="subtitle">Harvard professor, social scientist, and bestselling author on the neuroscience of happiness, the four idols that beguile us, and why your life needs macronutrients of meaning.</p>
+    <p class="byline">Based on an interview with Dr. Rhonda Patrick &middot; Found My Fitness</p>
+  </div>
+  <div class="scroll-hint">Scroll to begin &darr;</div>
+</section>
+
+<!-- SPREAD 2: The Three Macronutrients -->
+<section class="spread-2">
+  <div class="left-col">
+    <div class="fade-up">
+      <div class="section-num">01</div>
+      <h2>The Macronutrients of Happiness</h2>
+      <p class="body-text">Feelings of happiness are evidence of the actual phenomenon &mdash; like the smell of the turkey, not the turkey itself. To get happier, Brooks argues, you need to understand its component parts just like you understand protein, carbohydrates, and fat. There are three macronutrients of human happiness, and you need them in balance and abundance.</p>
+    </div>
+  </div>
+  <div class="right-col">
+    <div class="fade-up">
+      <div class="macro-card">
+        <h3>Enjoyment</h3>
+        <p>A prefrontal cortex phenomenon. Unlike pleasure, which happens automatically in the limbic system, enjoyment is managed, shared, and made permanent through people and memory. "If you're doing it alone, you're probably doing it wrong."</p>
+      </div>
+      <div class="macro-card">
+        <h3>Satisfaction</h3>
+        <p>Achieving something with struggle. Only humans want to struggle. Satisfaction equals what you have divided by what you want. "Don't always work the numerator &mdash; manage your wants, because when your wants go down, your satisfaction rises and stays high."</p>
+      </div>
+      <div class="macro-card">
+        <h3>Meaning</h3>
+        <p>The answer to three questions: Why do things happen? Why am I doing what I'm doing? Why does my life matter and to whom? The crisis of our time &mdash; the #1 predictor of depression and anxiety is saying "my life feels meaningless."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 3: The Triune Brain -->
+<section class="spread-3">
+  <div class="fade-up">
+    <div class="terminal-header">// NEURAL_ARCHITECTURE &mdash; THE TRIUNE BRAIN MODEL</div>
+    <h2>The Dark Matter Between Our Ears</h2>
+    <div class="brain-grid">
+      <div class="brain-part">
+        <h3>Reptilian Brain</h3>
+        <p>Brainstem + cerebellum. Gathers data below your level of awareness: lights, air temperature, ambient signals. Shared with snakes and lizards.</p>
+        <p class="age">~40 million years old</p>
+      </div>
+      <div class="brain-part">
+        <h3>Limbic System</h3>
+        <p>Translates raw data into emotions &mdash; signals of threat or opportunity. Negative emotions (fear, anger, disgust, sadness) and positive emotions are not "bad" or "good." There is literally more tissue devoted to negative emotions than to positive.</p>
+        <p class="age">2&ndash;40 million years old</p>
+      </div>
+      <div class="brain-part">
+        <h3>Prefrontal Cortex</h3>
+        <p>The C-suite. 30% of your brain by weight. Takes emotional signals and &mdash; if you're mature &mdash; lets you decide how to act. This is where enjoyment lives. Pleasure is limbic; enjoyment is prefrontal.</p>
+        <p class="age">~2 million years old</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 4: The Four Idols -->
+<section class="spread-4">
+  <div class="fade-up">
+    <div class="masthead">
+      <h2>The Four Idols</h2>
+      <p class="date">After Thomas Aquinas &middot; Summa Theologiae &middot; 1265</p>
+    </div>
+    <div class="idol-columns">
+      <div class="idol-col">
+        <div class="idol-icon">&#9670;</div>
+        <h3>Money</h3>
+        <p>Resources and wealth. People from real poverty develop this idol from fear of going back. People from real wealth develop it because that's how they understand themselves. The least likely: those indistinctly in the middle.</p>
+      </div>
+      <div class="idol-col">
+        <div class="idol-icon">&#9733;</div>
+        <h3>Power</h3>
+        <p>Influence over other people. Not inherently evil &mdash; but when it becomes an intrinsic motivation, it changes how you relate to the people you care about most. It always leads to regret.</p>
+      </div>
+      <div class="idol-col">
+        <div class="idol-icon">&#9829;</div>
+        <h3>Pleasure</h3>
+        <p>Not just feeling good &mdash; also comfort, security. Checking your stock portfolio every day is the same circuit as the comfy covers instead of the gym. "A lot of people are like, 'I don't care about pleasure. Let's see how rich I am today.' It's the same thing."</p>
+      </div>
+      <div class="idol-col">
+        <div class="idol-icon">&#9650;</div>
+        <h3>Fame</h3>
+        <p>Honor, admiration, prestige. The desire to be liked and accepted by the right people. The admiration of strangers has neurochemical benefits rooted in our Pleistocene brains. "Makes you insane."</p>
+      </div>
+    </div>
+    <div class="pull-quote-news">
+      <p>"Everybody is most beguiled by one. And when they know what their weakness is, they have pure strength."</p>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 5: The Matrix — Screens & Boredom -->
+<section class="spread-5">
+  <div class="fade-up">
+    <h2>Life in the Matrix</h2>
+    <div class="cyber-stats">
+      <div class="cyber-stat">
+        <div class="number">4&ndash;7</div>
+        <div class="label">Minutes per day the average child under 12 spends in nature</div>
+      </div>
+      <div class="cyber-stat">
+        <div class="number">4&ndash;7</div>
+        <div class="label">Hours per day the average child spends behind a screen</div>
+      </div>
+      <div class="cyber-stat">
+        <div class="number">2/3</div>
+        <div class="label">Of men who chose to painfully shock themselves rather than sit bored for 15 minutes (Dan Gilbert's experiments at Harvard)</div>
+      </div>
+      <div class="cyber-stat">
+        <div class="number">190</div>
+        <div class="label">Times one participant shocked himself in 15 minutes rather than be bored</div>
+      </div>
+    </div>
+    <div class="neon-quote">"If you're in the Matrix all day long, you're sitting on the left side of your brain and you're not even considering questions of meaning and your life is going to be bereft of the things that really matter. That's why you're depressed."</div>
+  </div>
+</section>
+
+<!-- SPREAD 6: The Striver's Curse -->
+<section class="spread-6">
+  <div class="fade-up">
+    <p class="kicker">The Hedonic Treadmill</p>
+    <h2>The Striver's Curse</h2>
+    <div class="equation"><em>Satisfaction</em> = Haves &divide; Wants</div>
+    <p class="body-text">Most Olympic athletes who win a medal experience clinical depression in the wake of their victory. We're wired for progress, not arrival. When the goalpost keeps moving, you get diminishing satisfaction. The antidote isn't having more &mdash; it's wanting less. Brooks practices a "reverse bucket list": naming attachments and ambitions, then crossing them out. "Easy come, easy go. I'm going to be better than fine. I'm free."</p>
+  </div>
+</section>
+
+<!-- SPREAD 7: Meaning — The Three Questions -->
+<section class="spread-7">
+  <div class="fade-up">
+    <h2>The Meaning of Your Life</h2>
+    <p style="font-size:1.1rem; color:#94a3b8; line-height:1.8; margin-top:1rem;">The meaning of life is the answer to three questions. Big problems are just a bunch of little problems. If AI can answer your question, it's not a meaning question. Ask it "Why am I alive? For what would I die?" and it gives you nothing &mdash; because you can't answer it. You can only live with it.</p>
+  </div>
+  <div class="fade-up">
+    <div class="meaning-question">
+      <div class="concept">Coherence</div>
+      <h3>Why do things happen the way they do?</h3>
+      <p>When people fall into conspiracy theories, it's a cry for coherence &mdash; they don't have a sense of meaning. Don't throw data at them. Provide a better way to find coherence as an act of love.</p>
+    </div>
+    <div class="meaning-question">
+      <div class="concept">Purpose</div>
+      <h3>Why am I doing what I'm doing?</h3>
+      <p>We're made for progress, not to arrive at a goal. 30% of people on strong diets who hit their goal weight develop an eating disorder because they want the scale to keep going down. Direction matters more than destination.</p>
+    </div>
+    <div class="meaning-question">
+      <div class="concept">Significance</div>
+      <h3>Why does my life matter &mdash; and to whom?</h3>
+      <p>The love problem. You need an explanation for the universe, goals and direction, and love. Those things together are the macros of meaning.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 8: Protocols for Living -->
+<section class="spread-8">
+  <div class="fade-up">
+    <h2>Brooks' Morning Protocol</h2>
+    <div class="protocol-timeline">
+      <div class="protocol-step">
+        <div class="time">4:30 AM</div>
+        <h3>Rise in the Brahma Muhurta</h3>
+        <p>An hour and 36 minutes before dawn &mdash; "the creator's time" in Sanskrit. Research shows being conscious while the sun rises improves productivity, creativity, focus, and happiness.</p>
+      </div>
+      <div class="protocol-step">
+        <div class="time">4:45&ndash;5:45</div>
+        <h3>Physical Fitness</h3>
+        <p>Seven days a week. Zone 2 cardio, resistance training, structured to protect joints for decades ahead. Manages high negative affect from the first moment of the day.</p>
+      </div>
+      <div class="protocol-step">
+        <div class="time">6:30&ndash;7:00</div>
+        <h3>Metaphysical Fitness</h3>
+        <p>Daily mass, combined with Vipassana meditation and Stoic philosophy. "Everybody's got to find their thing &mdash; a form of transcendence, focused on things greater than yourself every single day."</p>
+      </div>
+      <div class="protocol-step">
+        <div class="time">~7:00</div>
+        <h3>Caffeine &amp; Fuel</h3>
+        <p>350mg caffeine as a bolus, 2.5 hours after waking to clear adenosine. Then 60g protein in first meal &mdash; Greek yogurt, rich in tryptophan. Creatine monohydrate (10g) in electrolytes pre-workout.</p>
+      </div>
+      <div class="protocol-step">
+        <div class="time">~8:00</div>
+        <h3>3.5 Hours of Creative Work</h3>
+        <p>"I can't write for 3.5 hours unless I set my day up in a particular way and I'm not unbearable to live with because my negative affect has been managed."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 9: Love & Relationships -->
+<section class="spread-9">
+  <div class="fade-up">
+    <h2>Happiness Is Love,<br>Full Stop.</h2>
+    <div class="love-grid">
+      <div class="love-card">
+        <div class="num">01</div>
+        <h3>Eye Contact</h3>
+        <p>Women get three times as much oxytocin from eye contact. When men are cooling in a marriage, they look at you less. "The marriage microwave."</p>
+      </div>
+      <div class="love-card">
+        <div class="num">02</div>
+        <h3>Always Be Touching</h3>
+        <p>More important for men than they understand. Casual, non-sexual touch produces vasopressin &mdash; defense and strength. When women are cooling, they touch less. ABT.</p>
+      </div>
+      <div class="love-card">
+        <div class="num">03</div>
+        <h3>Have Fun Together</h3>
+        <p>Negative emotionality can be drowned in shared positive emotionality. Go ride bikes, walk the beach, watch a movie. Joy covers a multitude of sins.</p>
+      </div>
+      <div class="love-card">
+        <div class="num">04</div>
+        <h3>Pray Together</h3>
+        <p>Joint metacognition fuses right hemispheres. Reading poetry to each other is "almost narcotic for people who love each other." More intimate than anything else.</p>
+      </div>
+    </div>
+    <div class="closing-quote">"We bond deeply to somebody who completes us, not who copies us. You want somebody who really makes you bigger and better. That's not dating yourself &mdash; that's narcissism, not hotness."</div>
+  </div>
+</section>
+
+<!-- SPREAD 10: The Algorithm -->
+<section class="spread-10">
+  <div class="fade-up">
+    <p class="kicker">The Path Forward</p>
+    <h2>Understand It. Practice It. Share It.</h2>
+    <div class="algo-steps">
+      <div class="algo-step">
+        <div class="step-num">1</div>
+        <h3>Learn</h3>
+        <p>Understand the science. Psychology is biology. The knowledge is accessible &mdash; not reserved for PhDs.</p>
+      </div>
+      <div class="algo-step">
+        <div class="step-num">2</div>
+        <h3>Live</h3>
+        <p>Change your habits. This is not self-improvement that gives you an epiphany that burns off. It's leg day for the soul.</p>
+      </div>
+      <div class="algo-step">
+        <div class="step-num">3</div>
+        <h3>Share</h3>
+        <p>Talk about it with family. Teach it. The secret to making happy people is making happiness teachers.</p>
+      </div>
+    </div>
+    <div class="final-quote">"If you start talking about the science of happiness, everybody wants to have dinner with you. Everybody wants to be happy."</div>
+    <div class="pillars">
+      <div class="pillar">Jump</div>
+      <div class="pillar">Serve</div>
+      <div class="pillar">Worship</div>
+      <div class="pillar">Connect</div>
+    </div>
+    <div style="margin-top:3rem; font-size:1rem; color:#78716c; line-height:1.8; max-width:600px;">
+      <p style="margin-bottom:1rem;">Gratitude exercise: Write five things you're grateful for on Sunday. Meditate on each one nightly before bed. Update weekly. After 10 weeks, on average, people are 12% happier.</p>
+      <p style="font-family:var(--fraunces); font-style:italic; color:#a8a29e;">"Moral aspiration is leg day."</p>
+    </div>
+    <div class="colophon">
+      Dr. Arthur Brooks &middot; Professor, Harvard Business School &middot; Author of <em>From Strength to Strength</em>, <em>Build the Life You Want</em>, and <em>The Meaning of Your Life</em><br>
+      Interview source: Found My Fitness with Dr. Rhonda Patrick<br>
+      All quotes extracted directly from the conversation. No fabrications.
+    </div>
+  </div>
+</section>
+
+<script>
+// Scroll-triggered fade-up animations via IntersectionObserver
+document.addEventListener('DOMContentLoaded', () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -60px 0px'
+  });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+});
+</script>
+
+</body>
+</html>

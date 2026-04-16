@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dopamine Kids — A Science-Based Plan to Rewire Your Child's Brain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body { font-family: 'Inter', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+  .spread { min-height: 100vh; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .container { max-width: 1400px; width: 100%; margin: 0 auto; padding: 4rem; position: relative; z-index: 2; }
+
+  .fade-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+  .fade-up.d1 { transition-delay: 0.1s; }
+  .fade-up.d2 { transition-delay: 0.2s; }
+  .fade-up.d3 { transition-delay: 0.35s; }
+  .fade-up.d4 { transition-delay: 0.5s; }
+  .fade-up.d5 { transition-delay: 0.65s; }
+
+  .kicker {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  /* ===== SPREAD 1: COVER ===== */
+  .spread-cover {
+    background: #f5f0e8;
+    background-image:
+      radial-gradient(ellipse at 20% 80%, rgba(180,140,100,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(120,80,60,0.08) 0%, transparent 50%);
+    text-align: center;
+    flex-direction: column;
+  }
+  .spread-cover .bg-numeral {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    font-family: 'Fraunces', serif; font-size: 40vw; font-weight: 900;
+    color: rgba(180,150,110,0.06); pointer-events: none; z-index: 1; line-height: 1;
+  }
+  .spread-cover .cover-rule {
+    width: 80px; height: 3px; background: #8b6914; margin: 2rem auto; border-radius: 2px;
+  }
+  .spread-cover h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(3rem, 7vw, 7rem);
+    font-weight: 900;
+    line-height: 1.05;
+    color: #1a1008;
+    letter-spacing: -0.03em;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .spread-cover .subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+    font-weight: 400;
+    color: #6b5a3e;
+    max-width: 640px;
+    margin: 1.5rem auto 0;
+    line-height: 1.6;
+  }
+  .spread-cover .attribution {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #a08a5c;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 3rem;
+  }
+  .spread-cover .attribution span {
+    display: block;
+    font-weight: 400;
+    font-size: 0.8rem;
+    margin-top: 0.4rem;
+    letter-spacing: 0.05em;
+    text-transform: none;
+    color: #b5a07a;
+  }
+
+  /* ===== SPREAD 2: DARK/MIDNIGHT ===== */
+  .spread-dark {
+    background: #0d1117;
+    background-image:
+      radial-gradient(ellipse at 30% 70%, rgba(56,120,200,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 30%, rgba(100,60,200,0.06) 0%, transparent 40%);
+    color: #c9d1d9;
+  }
+  .spread-dark .bg-numeral {
+    position: absolute; top: -5%; right: -5%;
+    font-family: 'Fraunces', serif; font-size: 35vw; font-weight: 900;
+    color: rgba(56,120,200,0.04); pointer-events: none; z-index: 1; line-height: 1;
+  }
+  .spread-dark h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.8rem, 6vw, 6rem);
+    font-weight: 800;
+    color: #e6edf3;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+  }
+  .spread-dark .kicker { color: #58a6ff; }
+  .spread-dark .body-text {
+    font-size: 1.15rem; line-height: 1.75; color: #8b949e; max-width: 680px;
+  }
+  .spread-dark .stat-row {
+    display: flex; gap: 3rem; margin-top: 3rem; flex-wrap: wrap;
+  }
+  .spread-dark .stat-item .stat-number {
+    font-family: 'Fraunces', serif; font-size: clamp(2.5rem, 4vw, 4rem);
+    font-weight: 900; color: #58a6ff;
+  }
+  .spread-dark .stat-item .stat-label {
+    font-size: 0.9rem; font-weight: 500; color: #6e7681; margin-top: 0.3rem;
+    letter-spacing: 0.05em; text-transform: uppercase;
+  }
+
+  /* ===== SPREAD 3: WARM EDITORIAL ===== */
+  .spread-warm {
+    background: #f8f3ea;
+    background-image:
+      repeating-linear-gradient(90deg, transparent, transparent 99px, rgba(0,0,0,0.03) 99px, rgba(0,0,0,0.03) 100px),
+      radial-gradient(ellipse at 80% 90%, rgba(200,160,80,0.1) 0%, transparent 50%);
+    color: #2c1e0e;
+  }
+  .spread-warm .bg-numeral {
+    position: absolute; bottom: -10%; left: -5%;
+    font-family: 'Fraunces', serif; font-size: 30vw; font-weight: 900;
+    color: rgba(160,120,60,0.05); pointer-events: none; z-index: 1; line-height: 1;
+  }
+  .spread-warm .grid-layout {
+    display: grid; grid-template-columns: 1fr 380px; gap: 3rem; align-items: start;
+  }
+  .spread-warm h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    font-weight: 800; line-height: 1.1; color: #1a1008; margin-bottom: 1.5rem;
+  }
+  .spread-warm .kicker { color: #8b6914; }
+  .spread-warm .body-text {
+    font-size: 1.15rem; line-height: 1.8; color: #5c4a30;
+  }
+  .spread-warm .sidebar {
+    background: #1a1008; color: #f5f0e8; padding: 2.5rem; border-radius: 4px;
+  }
+  .spread-warm .sidebar .pull-quote {
+    font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 600;
+    font-style: italic; line-height: 1.4; margin-bottom: 1.5rem;
+  }
+  .spread-warm .sidebar .quote-attr {
+    font-size: 0.85rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #a08a5c;
+  }
+
+  /* ===== SPREAD 4: ROSE ALERT ===== */
+  .spread-rose {
+    background: #13090e;
+    background-image:
+      radial-gradient(ellipse at 50% 50%, rgba(180,40,60,0.1) 0%, transparent 60%);
+    color: #e8d0d6;
+  }
+  .spread-rose .bg-numeral {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    font-family: 'Fraunces', serif; font-size: 50vw; font-weight: 900;
+    color: rgba(180,40,60,0.04); pointer-events: none; z-index: 1; line-height: 1;
+  }
+  .spread-rose h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.5rem, 5vw, 5.5rem);
+    font-weight: 800; line-height: 1.08; color: #f5e8ec; margin-bottom: 1.5rem;
+  }
+  .spread-rose .kicker { color: #e05070; }
+  .spread-rose .two-col {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 2.5rem;
+  }
+  .spread-rose .col-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(224,80,112,0.2);
+    padding: 2rem; border-radius: 6px;
+  }
+  .spread-rose .col-card h3 {
+    font-family: 'Fraunces', serif; font-size: 1.6rem; font-weight: 700;
+    color: #e05070; margin-bottom: 1rem;
+  }
+  .spread-rose .col-card p {
+    font-size: 1.1rem; line-height: 1.7; color: #c0a0aa;
+  }
+  .spread-rose .stamp {
+    position: absolute; top: 2rem; right: 3rem;
+    width: 120px; height: 120px; border-radius: 50%;
+    border: 3px solid #e05070; display: flex; align-items: center;
+    justify-content: center; transform: rotate(-12deg);
+    font-family: 'Fraunces', serif; font-size: 0.9rem; font-weight: 800;
+    color: #e05070; text-transform: uppercase; text-align: center;
+    letter-spacing: 0.08em; line-height: 1.2; z-index: 3;
+  }
+
+  /* ===== SPREAD 5: TERMINAL ===== */
+  .spread-terminal {
+    background: #0a0a0a;
+    background-image:
+      linear-gradient(rgba(0,255,65,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,65,0.015) 1px, transparent 1px);
+    background-size: 30px 30px;
+    color: #00ff41;
+    font-family: 'Courier New', monospace;
+  }
+  .spread-terminal .window-chrome {
+    display: flex; gap: 8px; margin-bottom: 2rem;
+  }
+  .spread-terminal .window-chrome span {
+    width: 14px; height: 14px; border-radius: 50%;
+  }
+  .spread-terminal .dot-red { background: #ff5f56; }
+  .spread-terminal .dot-yellow { background: #ffbd2e; }
+  .spread-terminal .dot-green { background: #27c93f; }
+  .spread-terminal h2 {
+    font-family: 'Courier New', monospace;
+    font-size: clamp(1.8rem, 3.5vw, 3.5rem);
+    font-weight: 700; margin-bottom: 2rem; color: #00ff41;
+  }
+  .spread-terminal .terminal-block {
+    background: rgba(0,255,65,0.03); border: 1px solid rgba(0,255,65,0.15);
+    padding: 2rem; border-radius: 4px; margin-bottom: 1.5rem;
+    font-size: 1.1rem; line-height: 1.8;
+  }
+  .spread-terminal .terminal-block .prompt { color: #00aa28; }
+  .spread-terminal .terminal-block .comment { color: #4a7a4a; }
+  .spread-terminal .cursor {
+    display: inline-block; width: 10px; height: 1.2em;
+    background: #00ff41; animation: blink 1s step-end infinite;
+    vertical-align: text-bottom; margin-left: 4px;
+  }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+  /* ===== SPREAD 6: ACADEMIC DROP-CAP ===== */
+  .spread-academic {
+    background: #0b1628;
+    background-image:
+      radial-gradient(ellipse at 10% 90%, rgba(60,90,160,0.12) 0%, transparent 50%);
+    color: #c5cfe0;
+  }
+  .spread-academic .bg-numeral {
+    position: absolute; top: 5%; right: 5%;
+    font-family: 'Fraunces', serif; font-size: 25vw; font-weight: 900;
+    color: rgba(60,90,160,0.05); pointer-events: none; z-index: 1; line-height: 1;
+  }
+  .spread-academic h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    font-weight: 800; line-height: 1.08; color: #e0e8f5; margin-bottom: 2rem;
+  }
+  .spread-academic .kicker { color: #6b8fd4; }
+  .spread-academic .two-col-text {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+  }
+  .spread-academic .drop-cap::first-letter {
+    font-family: 'Fraunces', serif; float: left;
+    font-size: 5.5rem; font-weight: 900; line-height: 0.8;
+    color: #6b8fd4; margin-right: 0.6rem; margin-top: 0.1rem;
+  }
+  .spread-academic .body-text {
+    font-size: 1.1rem; line-height: 1.8; color: #8a9bba;
+  }
+  .spread-academic .callout-box {
+    background: rgba(107,143,212,0.1); border-left: 4px solid #6b8fd4;
+    padding: 1.5rem 2rem; margin-top: 2rem; border-radius: 0 4px 4px 0;
+  }
+  .spread-academic .callout-box p {
+    font-family: 'Fraunces', serif; font-size: 1.3rem; font-style: italic;
+    line-height: 1.5; color: #c5cfe0;
+  }
+
+  /* ===== SPREAD 7: BIG-STAT/GOLD ===== */
+  .spread-gold {
+    background: #110e08;
+    background-image:
+      radial-gradient(ellipse at 50% 40%, rgba(200,160,40,0.08) 0%, transparent 50%);
+    color: #d4c8a0;
+    text-align: center;
+  }
+  .spread-gold .bg-numeral {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    font-family: 'Fraunces', serif; font-size: 45vw; font-weight: 900;
+    color: rgba(200,160,40,0.04); pointer-events: none; z-index: 1; line-height: 1;
+  }
+  .spread-gold h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    font-weight: 800; line-height: 1.08; color: #f5e8c0; margin-bottom: 1rem;
+  }
+  .spread-gold .kicker { color: #c8a028; }
+  .spread-gold .big-stat {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(5rem, 12vw, 9rem);
+    font-weight: 900; color: #c8a028; line-height: 1;
+    margin: 2rem 0 0.5rem;
+  }
+  .spread-gold .stat-desc {
+    font-size: 1.3rem; color: #a09060; max-width: 600px; margin: 0 auto 3rem;
+    line-height: 1.6;
+  }
+  .spread-gold .badge-row {
+    display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;
+  }
+  .spread-gold .badge {
+    background: rgba(200,160,40,0.08); border: 1px solid rgba(200,160,40,0.2);
+    padding: 1.5rem 2rem; border-radius: 8px; min-width: 200px;
+  }
+  .spread-gold .badge h4 {
+    font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700;
+    color: #c8a028; margin-bottom: 0.5rem;
+  }
+  .spread-gold .badge p {
+    font-size: 1rem; color: #8a7a50; line-height: 1.5;
+  }
+
+  /* ===== SPREAD 8: BROADSHEET ===== */
+  .spread-broadsheet {
+    background: #f5f0e4;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(0,0,0,0.04) 59px, rgba(0,0,0,0.04) 60px);
+    color: #1a1a1a;
+    border-top: 6px double #1a1a1a;
+    border-bottom: 6px double #1a1a1a;
+  }
+  .spread-broadsheet .bg-numeral {
+    position: absolute; bottom: 0; left: -2%;
+    font-family: 'Fraunces', serif; font-size: 35vw; font-weight: 900;
+    color: rgba(0,0,0,0.03); pointer-events: none; z-index: 1; line-height: 1;
+  }
+  .spread-broadsheet h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.5rem, 5.5vw, 5.5rem);
+    font-weight: 900; line-height: 1.05; color: #1a1008;
+    border-bottom: 3px solid #1a1a1a; padding-bottom: 1rem; margin-bottom: 1.5rem;
+  }
+  .spread-broadsheet .kicker { color: #8b1a1a; }
+  .spread-broadsheet .three-col {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem;
+    column-rule: 1px solid rgba(0,0,0,0.12);
+  }
+  .spread-broadsheet .body-text {
+    font-size: 1.1rem; line-height: 1.75; color: #3a3020;
+  }
+  .spread-broadsheet .red-banner {
+    background: #8b1a1a; color: #fff; padding: 1rem 1.5rem;
+    margin: 1.5rem 0; border-radius: 2px;
+    font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 700;
+    text-align: center;
+  }
+
+  /* ===== SPREAD 9: NEON/CYBERPUNK ===== */
+  .spread-neon {
+    background: #08080c;
+    background-image:
+      linear-gradient(180deg, #08080c 60%, rgba(0,255,170,0.03) 100%),
+      repeating-linear-gradient(90deg, transparent, transparent 99px, rgba(0,255,170,0.04) 99px, rgba(0,255,170,0.04) 100px);
+    color: #b0ffdd;
+  }
+  .spread-neon .perspective-grid {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 40%;
+    background:
+      repeating-linear-gradient(90deg, rgba(0,255,170,0.06) 0px, transparent 1px, transparent 60px),
+      repeating-linear-gradient(0deg, rgba(0,255,170,0.06) 0px, transparent 1px, transparent 60px);
+    transform: perspective(400px) rotateX(45deg);
+    transform-origin: bottom;
+    z-index: 1;
+  }
+  .spread-neon h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    font-weight: 800; line-height: 1.08; color: #e0fff0;
+    text-shadow: 0 0 40px rgba(0,255,170,0.3);
+    margin-bottom: 1.5rem;
+  }
+  .spread-neon .kicker { color: #00ffaa; }
+  .spread-neon .emergence-boxes {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;
+  }
+  .spread-neon .ebox {
+    background: rgba(0,255,170,0.04); border: 1px solid rgba(0,255,170,0.15);
+    padding: 2rem; border-radius: 4px;
+  }
+  .spread-neon .ebox h3 {
+    font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 700;
+    color: #00ffaa; margin-bottom: 0.8rem;
+  }
+  .spread-neon .ebox p {
+    font-size: 1.1rem; line-height: 1.7; color: #70b898;
+  }
+
+  /* ===== SPREAD 10: CLEAN PRODUCT ===== */
+  .spread-clean {
+    background: #ffffff;
+    background-image:
+      radial-gradient(ellipse at 80% 20%, rgba(79,70,229,0.04) 0%, transparent 50%);
+    color: #1e1b4b;
+  }
+  .spread-clean .bg-numeral {
+    position: absolute; bottom: -5%; right: -3%;
+    font-family: 'Fraunces', serif; font-size: 35vw; font-weight: 900;
+    color: rgba(79,70,229,0.04); pointer-events: none; z-index: 1; line-height: 1;
+  }
+  .spread-clean h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.5rem, 5.5vw, 5.5rem);
+    font-weight: 900; line-height: 1.05; color: #1e1b4b; margin-bottom: 1rem;
+  }
+  .spread-clean .kicker { color: #4f46e5; }
+  .spread-clean .body-text {
+    font-size: 1.2rem; line-height: 1.75; color: #4a4572; max-width: 700px;
+  }
+  .spread-clean .feature-list {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 3rem;
+  }
+  .spread-clean .feature-item {
+    display: flex; gap: 1rem; align-items: flex-start;
+    background: #f8f7ff; padding: 1.5rem; border-radius: 8px;
+    border: 1px solid rgba(79,70,229,0.1);
+  }
+  .spread-clean .feature-icon {
+    flex-shrink: 0; width: 48px; height: 48px; border-radius: 12px;
+    background: #4f46e5; display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; color: #fff;
+  }
+  .spread-clean .feature-item h4 {
+    font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 700;
+    color: #1e1b4b; margin-bottom: 0.3rem;
+  }
+  .spread-clean .feature-item p {
+    font-size: 1rem; line-height: 1.5; color: #6b6590;
+  }
+  .spread-clean .cta-block {
+    margin-top: 3rem; text-align: center;
+  }
+  .spread-clean .cta-block .big-quote {
+    font-family: 'Fraunces', serif; font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 700; font-style: italic; color: #4f46e5;
+    line-height: 1.3; max-width: 800px; margin: 0 auto;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .container { padding: 2.5rem 1.5rem; }
+    .spread-warm .grid-layout,
+    .spread-rose .two-col,
+    .spread-academic .two-col-text,
+    .spread-neon .emergence-boxes,
+    .spread-clean .feature-list,
+    .spread-broadsheet .three-col {
+      grid-template-columns: 1fr;
+    }
+    .spread-dark .stat-row { flex-direction: column; gap: 1.5rem; }
+    .spread-gold .badge-row { flex-direction: column; align-items: center; }
+    .spread-rose .stamp { position: relative; top: 0; right: 0; margin: 0 auto 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== SPREAD 1: COVER ===== -->
+<section class="spread spread-cover">
+  <div class="bg-numeral">D</div>
+  <div class="container">
+    <p class="kicker fade-up" style="color:#8b6914;">Raising Good Humans Podcast</p>
+    <div class="cover-rule fade-up d1"></div>
+    <h1 class="fade-up d2">Dopamine Kids</h1>
+    <p class="subtitle fade-up d3">A Science-Based Plan to Rewire Your Child's Brain and Take Back Your Family in the Age of Screens and Ultra-Processed Food</p>
+    <div class="cover-rule fade-up d3"></div>
+    <div class="attribution fade-up d4">
+      Dr. Michaeleen Doucleff &times; Dr. Elisa Pressman
+      <span>Dear Media Production &bull; 2026</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SPREAD 2: DARK — What Dopamine Really Is ===== -->
+<section class="spread spread-dark">
+  <div class="bg-numeral">II</div>
+  <div class="container">
+    <p class="kicker fade-up">The Neuroscience</p>
+    <h2 class="fade-up d1">Dopamine Is Not<br>What You Think It Is</h2>
+    <p class="body-text fade-up d2">We're told that dopamine equals pleasure. That the more dopamine we have, the happier we are. But neuroscience tells us something quite different. Dopamine gives us the feeling of <em>wanting, desire, craving</em>. It's the "do it again" button in the brain. It pulls us to things like a magnet&mdash;and it can pull us to activities and foods that actually make us feel <em>worse</em> afterwards.</p>
+    <div class="stat-row fade-up d3">
+      <div class="stat-item">
+        <div class="stat-number">6 yrs</div>
+        <div class="stat-label">Studying the dopamine system</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">&ne; Pleasure</div>
+        <div class="stat-label">Dopamine = wanting, not happiness</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">2 signs</div>
+        <div class="stat-label">Can they stop? How do they feel after?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SPREAD 3: WARM — Ride the Motivation ===== -->
+<section class="spread spread-warm">
+  <div class="bg-numeral">III</div>
+  <div class="container">
+    <div class="grid-layout">
+      <div>
+        <p class="kicker fade-up">Strategy One</p>
+        <h2 class="fade-up d1">Ride the Motivation</h2>
+        <p class="body-text fade-up d2">Kids actually want to <em>talk about</em> and <em>think about</em> video games and TV shows just as much as they want to watch them. The trick is to take all that excitement, desire, and motivation&mdash;and redirect it toward a hobby you want them to cultivate.</p>
+        <p class="body-text fade-up d3" style="margin-top:1.5rem;">One mom's son was obsessed with Charlie Brown. Instead of fighting it, she channeled his excitement into art. She bought new pens and paper and asked him to draw his favorite character. After years of this approach, her boy became a genuinely talented artist who loves drawing&mdash;a new dopamine pathway built on something that nourishes him.</p>
+      </div>
+      <div class="sidebar fade-up d3">
+        <div class="pull-quote">&ldquo;You deserve activities that make you feel just as good afterwards as while you're doing them.&rdquo;</div>
+        <div class="quote-attr">Dr. Michaeleen Doucleff<br><span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.8rem;">to her daughter Rosie, age 10</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SPREAD 4: ROSE — Engineered for Overuse ===== -->
+<section class="spread spread-rose">
+  <div class="bg-numeral">IV</div>
+  <div class="stamp fade-up">Engineered<br>for<br>Overuse</div>
+  <div class="container">
+    <p class="kicker fade-up">The Modern Trap</p>
+    <h2 class="fade-up d1">Products Designed to<br>Never Let Them Stop</h2>
+    <div class="two-col">
+      <div class="col-card fade-up d2">
+        <h3>Screens</h3>
+        <p>The tech industry has designed products to get kids to scroll more, watch more, engage endlessly. A lot of kids are on social media to feel a sense of belonging and connection&mdash;but data are showing that over time, these apps actually make kids feel <em>lonelier</em>. The dopamine keeps pulling them back, but it never delivers what they're looking for.</p>
+      </div>
+      <div class="col-card fade-up d3">
+        <h3>Ultra-Processed Foods</h3>
+        <p>The food industry still admits they've designed products to get kids to eat more. Ultra-processed foods trick our brains into overeating, eating when we're not hungry, and missing our satiety signals. Kids don't binge on whole foods&mdash;this is a fundamentally different challenge than any generation has faced before.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SPREAD 5: TERMINAL — The Willpower Myth ===== -->
+<section class="spread spread-terminal">
+  <div class="container">
+    <div class="window-chrome fade-up">
+      <span class="dot-red"></span>
+      <span class="dot-yellow"></span>
+      <span class="dot-green"></span>
+    </div>
+    <h2 class="fade-up d1">$ willpower --status<span class="cursor"></span></h2>
+    <div class="terminal-block fade-up d2">
+      <span class="comment">// MYTH: Teach kids to resist temptation through willpower</span><br><br>
+      <span class="prompt">&gt;</span> strategy: resist_phone_during_homework<br>
+      <span class="prompt">&gt;</span> result: <span style="color:#ff5f56;">FAILED</span> — brain knows device location<br>
+      <span class="prompt">&gt;</span> strategy: resist_cupcakes_in_pantry<br>
+      <span class="prompt">&gt;</span> result: <span style="color:#ff5f56;">FAILED</span> — sight triggers dopamine<br>
+      <span class="prompt">&gt;</span> strategy: 30_day_screen_detox<br>
+      <span class="prompt">&gt;</span> result: <span style="color:#ff5f56;">FAILED</span> — parent reported "feeling like a failure"<br><br>
+      <span class="comment">// REALITY: Psychology shows willpower doesn't work long-term</span><br>
+      <span class="comment">// against engineered products. Adults can't do it either.</span>
+    </div>
+    <div class="terminal-block fade-up d3">
+      <span class="comment">// SOLUTION: Create sanctuaries — environments where</span><br>
+      <span class="comment">// healthy options are the ONLY options</span><br><br>
+      <span class="prompt">&gt;</span> tactic: hide_devices_before_dinner<br>
+      <span class="prompt">&gt;</span> location: "the dryer — she won't find them there"<br>
+      <span class="prompt">&gt;</span> replace_with: [audiobook, bike_riding, outdoor_play]<br>
+      <span class="prompt">&gt;</span> result: <span style="color:#27c93f;">SUCCESS</span> — brain stops expecting screens after dinner<br>
+      <span class="prompt">&gt;</span> key_insight: "If the child sees the device, it triggers dopamine.<br>
+      &nbsp;&nbsp;The devices have to completely vanish."
+    </div>
+  </div>
+</section>
+
+<!-- ===== SPREAD 6: ACADEMIC — The 1940s Study ===== -->
+<section class="spread spread-academic">
+  <div class="bg-numeral">VI</div>
+  <div class="container">
+    <p class="kicker fade-up">Debunking The Myth</p>
+    <h2 class="fade-up d1">Why &ldquo;Just Let Them<br>Self-Regulate&rdquo; Fails</h2>
+    <div class="two-col-text">
+      <div>
+        <p class="body-text drop-cap fade-up d2">There's a very famous study from the 1940s looking at kids regulating their food intake. The children regulated beautifully&mdash;they ate a balanced diet. This is where the popular idea of unlimited access comes from. But that study had no ultra-processed foods in it. Kids don't binge on whole foods. We can't take a 1940s study and apply it to 2026's food environment.</p>
+      </div>
+      <div>
+        <p class="body-text fade-up d2">These products are intentionally designed to create endless loops of wanting. This wasn't around even 30 years ago. A lot of the self-regulation theories were based on more natural activities and products. Eventually something will tap into that reward center and pull them in. One psychologist told Dr. Doucleff: you don't have to teach your kid to resist temptation in your home because they're going to learn it everywhere else&mdash;school, friends' houses, church events.</p>
+        <div class="callout-box fade-up d3">
+          <p>&ldquo;When we have the ultra-processed food in our house, she snacks all day&mdash;crackers, pretzels, granola bars&mdash;and then she doesn't eat dinner. When we started removing it, she wasn't a picky eater anymore.&rdquo;</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SPREAD 7: BIG-STAT/GOLD — Kids at Higher Risk ===== -->
+<section class="spread spread-gold">
+  <div class="bg-numeral">VII</div>
+  <div class="container">
+    <p class="kicker fade-up">Vulnerability</p>
+    <h2 class="fade-up d1">Not Every Child Is<br>Affected Equally</h2>
+    <div class="big-stat fade-up d2">&ne;</div>
+    <p class="stat-desc fade-up d3">Genetics, temperament, trauma history, and sensitivity all shape how powerfully these engineered products pull at a child's dopamine system.</p>
+    <div class="badge-row">
+      <div class="badge fade-up d3">
+        <h4>Genetics</h4>
+        <p>In some families, one child struggles while siblings don't. Some are more vulnerable to food, others to video games.</p>
+      </div>
+      <div class="badge fade-up d4">
+        <h4>Trauma</h4>
+        <p>Childhood stress supercharges the dopamine system. Kids who've experienced trauma feel threats more acutely and are more vulnerable to these tricks.</p>
+      </div>
+      <div class="badge fade-up d5">
+        <h4>Sensitivity</h4>
+        <p>&ldquo;My kid is really sensitive to comparisons and criticisms. Social media would crush her. I can't handle it now.&rdquo;</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SPREAD 8: BROADSHEET — Language as Marketing ===== -->
+<section class="spread spread-broadsheet">
+  <div class="bg-numeral">VIII</div>
+  <div class="container">
+    <p class="kicker fade-up">The Power of Words</p>
+    <h2 class="fade-up d1">Be the Hype Woman for<br>Cucumbers and Bok Choy</h2>
+    <div class="red-banner fade-up d2">Language is powerful. How we talk about activities and foods shapes what they mean to our kids.</div>
+    <div class="three-col">
+      <div class="fade-up d2">
+        <p class="body-text">Dr. Doucleff challenges parents to examine how they frame online versus offline activities. If we treat screens as the reward and reading as the punishment, behavioral psychology says we're pumping up motivation for screens and demotivating kids from everything else.</p>
+      </div>
+      <div class="fade-up d3">
+        <p class="body-text">&ldquo;In our home, we talk about how reading is our favorite activity and the best thing in the world. And the screen is this thing we do sometimes, but it has downfalls&mdash;it makes us want more, doesn't make us satisfied, kind of numbs us, puts us in a trance.&rdquo;</p>
+      </div>
+      <div class="fade-up d4">
+        <p class="body-text">The same principle applies to food. Be the publicist and marketer for whole foods. Celebrate how wonderful salmon is, how cucumbers make your skin glow. These foods and activities that we want our kids to reach for naturally&mdash;they need their own marketing campaign.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SPREAD 9: NEON — The Iceland Model ===== -->
+<section class="spread spread-neon">
+  <div class="perspective-grid"></div>
+  <div class="container">
+    <p class="kicker fade-up">Real-World Evidence</p>
+    <h2 class="fade-up d1">The Iceland Experiment:<br>Replacing the High</h2>
+    <p class="fade-up d2" style="font-family:'Inter',sans-serif;font-size:1.15rem;line-height:1.75;color:#70b898;max-width:700px;margin-bottom:2rem;">A landmark study in Iceland tackled adolescent substance misuse by finding replacement activities that could deliver the same sense of risk and excitement. They matched each teen to their own &ldquo;natural high&rdquo;&mdash;and found huge reductions in substance use.</p>
+    <div class="emergence-boxes">
+      <div class="ebox fade-up d2">
+        <h3>The Principle</h3>
+        <p>Kids are drawn to screens and substances because they're trying to fulfill a real need&mdash;social support, adventure, exploration. Just taking away the source without replacing the need guarantees failure.</p>
+      </div>
+      <div class="ebox fade-up d3">
+        <h3>The Natural Highs</h3>
+        <p>For some kids, art delivered what substances did. For others, it was mountain climbing, or baking, or just biking to school alone. The key: match the replacement to the child's individual wiring.</p>
+      </div>
+      <div class="ebox fade-up d4">
+        <h3>The 80s Myth</h3>
+        <p>We fantasize that kids in the 80s and 90s just played outside naturally. But parents built that world&mdash;other kids playing, tree houses, bike ramps. Somebody bought those supplies. There was cultivation.</p>
+      </div>
+      <div class="ebox fade-up d5">
+        <h3>Boredom Isn't Magic</h3>
+        <p>Data shows boredom can spark some creativity, but most of the time it just makes kids feel bad. Parents need to do a little upfront work to set up natural highs&mdash;even simple ones like crossing the street to a neighbor's house.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SPREAD 10: CLEAN — Start Tiny ===== -->
+<section class="spread spread-clean">
+  <div class="bg-numeral">X</div>
+  <div class="container">
+    <p class="kicker fade-up">The First Step</p>
+    <h2 class="fade-up d1">Start Stupid Small.<br>Make It Permanent.</h2>
+    <p class="body-text fade-up d2">A scientist at Google DeepMind told Dr. Doucleff: &ldquo;When I want to start working out again, all I do for the first week is drive to the gym, walk inside, and walk back out.&rdquo; That's how small your first change needs to be. Not a 30-day detox. Not a dramatic overhaul. A tiny, permanent shift.</p>
+    <div class="feature-list">
+      <div class="feature-item fade-up d2">
+        <div class="feature-icon">1</div>
+        <div>
+          <h4>Pick One Sanctuary</h4>
+          <p>The car on Saturdays. After dinner. One window where screens simply don't exist.</p>
+        </div>
+      </div>
+      <div class="feature-item fade-up d3">
+        <div class="feature-icon">2</div>
+        <div>
+          <h4>Swap, Don't Subtract</h4>
+          <p>Replace the screen with a book, coloring, puzzles, crochet&mdash;ask your kid what they want.</p>
+        </div>
+      </div>
+      <div class="feature-item fade-up d3">
+        <div class="feature-icon">3</div>
+        <div>
+          <h4>Never Go Back</h4>
+          <p>The screen never comes back in the car on Saturday. It's permanent. Expand after a few weeks.</p>
+        </div>
+      </div>
+      <div class="feature-item fade-up d4">
+        <div class="feature-icon">4</div>
+        <div>
+          <h4>Watch the Rewiring</h4>
+          <p>The kid will start thinking: &ldquo;When I'm bored, I read. When I'm bored, I crochet.&rdquo; New dopamine pathways, built for real.</p>
+        </div>
+      </div>
+    </div>
+    <div class="cta-block fade-up d5">
+      <div style="width:80px;height:3px;background:#4f46e5;margin:0 auto 2rem;border-radius:2px;"></div>
+      <p class="big-quote">&ldquo;This is about creating a more joyful, happy, pleasurable home. This is not about taking away pleasure and depriving kids. That doesn't work.&rdquo;</p>
+      <p style="margin-top:1rem;font-size:0.95rem;color:#8b85a8;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;">Dr. Michaeleen Doucleff</p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.fade-up').forEach(function(el) {
+    observer.observe(el);
+  });
+})();
+</script>
+
+</body>
+</html>

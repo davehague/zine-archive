@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Claude Code Leak — An Editorial Magazine</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; font-size: 18px; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: #1a1a1a;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-up.delay-1 { transition-delay: 0.15s; }
+.fade-up.delay-2 { transition-delay: 0.3s; }
+.fade-up.delay-3 { transition-delay: 0.45s; }
+.fade-up.delay-4 { transition-delay: 0.6s; }
+
+/* ========== SPREAD 1: COVER — DARK MIDNIGHT ========== */
+.spread-1 {
+  min-height: 100vh;
+  background: #0a0a0f;
+  color: #f0ece4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.spread-1::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(99, 60, 180, 0.08) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 30%, rgba(200, 80, 60, 0.06) 0%, transparent 50%);
+  animation: drift 20s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(-3%, 2%) rotate(1deg); }
+}
+
+.spread-1 .kicker {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #c8785a;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.spread-1 h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(3.5rem, 10vw, 9rem);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  position: relative;
+  z-index: 1;
+  max-width: 14ch;
+}
+
+.spread-1 h1 em {
+  font-style: italic;
+  color: #c8785a;
+}
+
+.spread-1 .subtitle {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  font-weight: 300;
+  font-style: italic;
+  margin-top: 2rem;
+  color: rgba(240, 236, 228, 0.6);
+  max-width: 40ch;
+  position: relative;
+  z-index: 1;
+}
+
+.spread-1 .meta-line {
+  margin-top: 3rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(240, 236, 228, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.spread-1 .scroll-cue {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(to bottom, rgba(200,120,90,0.6), transparent);
+  animation: pulse-down 2s ease-in-out infinite;
+}
+
+@keyframes pulse-down {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* ========== SPREAD 2: TIMELINE — WARM EDITORIAL ========== */
+.spread-2 {
+  min-height: 100vh;
+  background: #f5f0e8;
+  color: #2a2218;
+  padding: 6rem 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.spread-2 .inner {
+  max-width: 900px;
+  width: 100%;
+}
+
+.spread-2 .section-number {
+  font-family: 'Fraunces', serif;
+  font-size: 6rem;
+  font-weight: 900;
+  color: rgba(42, 34, 24, 0.06);
+  line-height: 1;
+}
+
+.spread-2 h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+}
+
+.spread-2 .timeline {
+  border-left: 2px solid #c8785a;
+  padding-left: 2.5rem;
+  margin-top: 3rem;
+}
+
+.spread-2 .timeline-item {
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+
+.spread-2 .timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -2.85rem;
+  top: 0.35rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #c8785a;
+}
+
+.spread-2 .timeline-date {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #c8785a;
+  margin-bottom: 0.4rem;
+}
+
+.spread-2 .timeline-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.spread-2 .timeline-desc {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(42, 34, 24, 0.7);
+}
+
+/* ========== SPREAD 3: THE BREACH — TERMINAL GREEN-ON-BLACK ========== */
+.spread-3 {
+  min-height: 100vh;
+  background: #0c0c0c;
+  color: #33ff33;
+  font-family: 'Inter', monospace;
+  padding: 6rem 2rem;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.spread-3::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(51, 255, 51, 0.015) 2px,
+    rgba(51, 255, 51, 0.015) 4px
+  );
+  pointer-events: none;
+}
+
+.spread-3 .inner {
+  max-width: 800px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.spread-3 .section-number {
+  font-family: 'Fraunces', serif;
+  font-size: 6rem;
+  font-weight: 900;
+  color: rgba(51, 255, 51, 0.07);
+  line-height: 1;
+}
+
+.spread-3 h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 800;
+  line-height: 1.05;
+  margin-bottom: 2.5rem;
+  color: #33ff33;
+}
+
+.spread-3 .terminal-block {
+  background: rgba(51, 255, 51, 0.04);
+  border: 1px solid rgba(51, 255, 51, 0.15);
+  border-radius: 4px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.spread-3 .terminal-block .prompt {
+  color: #88ff88;
+  font-weight: 700;
+}
+
+.spread-3 .terminal-block .comment {
+  color: rgba(51, 255, 51, 0.4);
+}
+
+.spread-3 .stat-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.spread-3 .stat-box {
+  border: 1px solid rgba(51, 255, 51, 0.2);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.spread-3 .stat-box .number {
+  font-family: 'Fraunces', serif;
+  font-size: 3rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.spread-3 .stat-box .label {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+  color: rgba(51, 255, 51, 0.5);
+}
+
+/* ========== SPREAD 4: SUPPLY CHAIN — BROADSHEET NEWSPAPER ========== */
+.spread-4 {
+  min-height: 100vh;
+  background: #fdf8ef;
+  color: #1a1a1a;
+  padding: 4rem 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.spread-4 .inner {
+  max-width: 1000px;
+  width: 100%;
+}
+
+.spread-4 .masthead {
+  text-align: center;
+  border-bottom: 4px double #1a1a1a;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.spread-4 .masthead h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.spread-4 .masthead .dateline {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+  color: #888;
+}
+
+.spread-4 .columns {
+  column-count: 2;
+  column-gap: 3rem;
+  column-rule: 1px solid #ddd;
+}
+
+@media (max-width: 700px) {
+  .spread-4 .columns { column-count: 1; }
+}
+
+.spread-4 .columns p {
+  font-family: 'Inter', serif;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  margin-bottom: 1.2rem;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.spread-4 .columns p:first-of-type::first-letter {
+  font-family: 'Fraunces', serif;
+  font-size: 4rem;
+  float: left;
+  line-height: 0.8;
+  margin-right: 0.15em;
+  margin-top: 0.05em;
+  font-weight: 900;
+}
+
+.spread-4 .pull-quote {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-style: italic;
+  font-weight: 600;
+  border-top: 2px solid #1a1a1a;
+  border-bottom: 2px solid #1a1a1a;
+  padding: 1.2rem 0;
+  margin: 1.5rem 0;
+  line-height: 1.4;
+  text-align: center;
+  break-inside: avoid;
+}
+
+/* ========== SPREAD 5: THE AGENT HARNESS — NEON CYBERPUNK ========== */
+.spread-5 {
+  min-height: 100vh;
+  background: #0d0221;
+  color: #e0d6ff;
+  padding: 6rem 2rem;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.spread-5::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(255, 0, 128, 0.06) 0%, transparent 40%),
+    linear-gradient(225deg, rgba(0, 200, 255, 0.06) 0%, transparent 40%);
+}
+
+.spread-5 .inner {
+  max-width: 900px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.spread-5 .section-number {
+  font-family: 'Fraunces', serif;
+  font-size: 6rem;
+  font-weight: 900;
+  color: rgba(255, 0, 128, 0.12);
+  line-height: 1;
+}
+
+.spread-5 h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #ff0080, #00c8ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.spread-5 .lead {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-style: italic;
+  color: rgba(224, 214, 255, 0.6);
+  margin-bottom: 3rem;
+  max-width: 35ch;
+}
+
+.spread-5 blockquote {
+  border-left: 3px solid #ff0080;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  background: rgba(255, 0, 128, 0.04);
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.spread-5 blockquote cite {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ff0080;
+  margin-top: 1rem;
+}
+
+.spread-5 .body-text {
+  font-size: 1.1rem;
+  line-height: 1.75;
+  color: rgba(224, 214, 255, 0.75);
+  margin-bottom: 1.5rem;
+}
+
+/* ========== SPREAD 6: MEMORY ARCHITECTURE — BLUEPRINT/TECHNICAL ========== */
+.spread-6 {
+  min-height: 100vh;
+  background: #1b2838;
+  color: #c4d4e8;
+  padding: 6rem 2rem;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.spread-6::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(100, 160, 220, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100, 160, 220, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.spread-6 .inner {
+  max-width: 900px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.spread-6 .section-number {
+  font-family: 'Fraunces', serif;
+  font-size: 6rem;
+  font-weight: 900;
+  color: rgba(100, 160, 220, 0.1);
+  line-height: 1;
+}
+
+.spread-6 h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  margin-bottom: 2rem;
+  color: #e8f0ff;
+}
+
+.spread-6 .layer-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(100, 160, 220, 0.15);
+  border-radius: 6px;
+  padding: 2rem 2.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.spread-6 .layer-card .layer-num {
+  position: absolute;
+  top: -0.8rem;
+  left: 1.5rem;
+  background: #1b2838;
+  padding: 0 0.75rem;
+  font-family: 'Fraunces', serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #64a0dc;
+}
+
+.spread-6 .layer-card h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #e8f0ff;
+  margin-bottom: 0.6rem;
+}
+
+.spread-6 .layer-card p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(196, 212, 232, 0.7);
+}
+
+/* ========== SPREAD 7: ANTI-DISTILLATION — HIGH CONTRAST RED/WHITE ========== */
+.spread-7 {
+  min-height: 100vh;
+  background: #fff;
+  color: #1a1a1a;
+  padding: 6rem 2rem;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.spread-7 .inner {
+  max-width: 850px;
+  width: 100%;
+}
+
+.spread-7 .section-number {
+  font-family: 'Fraunces', serif;
+  font-size: 6rem;
+  font-weight: 900;
+  color: rgba(200, 30, 30, 0.08);
+  line-height: 1;
+}
+
+.spread-7 h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+}
+
+.spread-7 h2 span {
+  color: #c81e1e;
+}
+
+.spread-7 .controversy-block {
+  background: #fef2f2;
+  border-left: 4px solid #c81e1e;
+  padding: 2rem 2.5rem;
+  margin: 2rem 0;
+}
+
+.spread-7 .controversy-block h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  color: #c81e1e;
+}
+
+.spread-7 .body-text {
+  font-size: 1.1rem;
+  line-height: 1.75;
+  margin-bottom: 1.5rem;
+  color: rgba(26, 26, 26, 0.8);
+}
+
+.spread-7 blockquote {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-style: italic;
+  line-height: 1.45;
+  border-top: 2px solid #c81e1e;
+  border-bottom: 2px solid #c81e1e;
+  padding: 1.5rem 0;
+  margin: 2rem 0;
+  color: #1a1a1a;
+}
+
+.spread-7 blockquote cite {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #c81e1e;
+  margin-top: 0.8rem;
+}
+
+/* ========== SPREAD 8: OPEN SOURCE REACTION — WARM AMBER ========== */
+.spread-8 {
+  min-height: 100vh;
+  background: #1a1206;
+  color: #f0dfc0;
+  padding: 6rem 2rem;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.spread-8::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(220, 160, 60, 0.08) 0%, transparent 60%);
+}
+
+.spread-8 .inner {
+  max-width: 900px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.spread-8 .section-number {
+  font-family: 'Fraunces', serif;
+  font-size: 6rem;
+  font-weight: 900;
+  color: rgba(220, 160, 60, 0.1);
+  line-height: 1;
+}
+
+.spread-8 h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  margin-bottom: 1rem;
+  color: #f0dfc0;
+}
+
+.spread-8 .lead {
+  font-family: 'Fraunces', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: rgba(240, 223, 192, 0.5);
+  margin-bottom: 3rem;
+  max-width: 40ch;
+}
+
+.spread-8 .stat-hero {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid rgba(220, 160, 60, 0.2);
+  padding-bottom: 2rem;
+}
+
+.spread-8 .stat-hero .big-num {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(4rem, 10vw, 7rem);
+  font-weight: 900;
+  color: #dca03c;
+  line-height: 1;
+}
+
+.spread-8 .stat-hero .big-label {
+  font-size: 1.2rem;
+  line-height: 1.4;
+  color: rgba(240, 223, 192, 0.6);
+  max-width: 20ch;
+}
+
+.spread-8 .body-text {
+  font-size: 1.1rem;
+  line-height: 1.75;
+  color: rgba(240, 223, 192, 0.7);
+  margin-bottom: 1.5rem;
+}
+
+.spread-8 blockquote {
+  border-left: 3px solid #dca03c;
+  padding: 1rem 2rem;
+  margin: 2rem 0;
+  font-family: 'Fraunces', serif;
+  font-size: 1.25rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: #f0dfc0;
+}
+
+.spread-8 blockquote cite {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #dca03c;
+  margin-top: 0.8rem;
+}
+
+/* ========== SPREAD 9: THE CLEAN ROOM — MONOCHROME MINIMALIST ========== */
+.spread-9 {
+  min-height: 100vh;
+  background: #f8f8f8;
+  color: #111;
+  padding: 6rem 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.spread-9 .inner {
+  max-width: 800px;
+  width: 100%;
+}
+
+.spread-9 .section-number {
+  font-family: 'Fraunces', serif;
+  font-size: 6rem;
+  font-weight: 900;
+  color: rgba(0,0,0,0.04);
+  line-height: 1;
+}
+
+.spread-9 h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 2.5rem;
+}
+
+.spread-9 .lang-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+  margin: 2.5rem 0;
+}
+
+@media (max-width: 600px) {
+  .spread-9 .lang-grid { grid-template-columns: 1fr; }
+}
+
+.spread-9 .lang-card {
+  border: 1px solid #ddd;
+  padding: 2rem;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+
+.spread-9 .lang-card:hover {
+  border-color: #111;
+}
+
+.spread-9 .lang-card .lang-name {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+}
+
+.spread-9 .lang-card .lang-role {
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.spread-9 .body-text {
+  font-size: 1.1rem;
+  line-height: 1.75;
+  color: rgba(0,0,0,0.65);
+  margin-bottom: 1.5rem;
+}
+
+.spread-9 .record-bar {
+  background: #111;
+  color: #fff;
+  padding: 2rem 2.5rem;
+  margin: 2.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.spread-9 .record-bar .rec-num {
+  font-family: 'Fraunces', serif;
+  font-size: 2.5rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.spread-9 .record-bar .rec-text {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.7);
+}
+
+/* ========== SPREAD 10: WHAT COMES NEXT — GRADIENT DUSK ========== */
+.spread-10 {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #1a0a2e 0%, #2d1b4e 30%, #4a2040 60%, #6b3030 100%);
+  color: #e8daf0;
+  padding: 6rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spread-10 .inner {
+  max-width: 850px;
+  width: 100%;
+}
+
+.spread-10 .section-number {
+  font-family: 'Fraunces', serif;
+  font-size: 6rem;
+  font-weight: 900;
+  color: rgba(255,255,255,0.05);
+  line-height: 1;
+}
+
+.spread-10 h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 2rem;
+}
+
+.spread-10 .body-text {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: rgba(232, 218, 240, 0.7);
+  margin-bottom: 1.5rem;
+  max-width: 60ch;
+}
+
+.spread-10 blockquote {
+  border-left: 3px solid rgba(255, 255, 255, 0.3);
+  padding: 1.5rem 2rem;
+  margin: 2.5rem 0;
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: #e8daf0;
+}
+
+.spread-10 blockquote cite {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(232, 218, 240, 0.4);
+  margin-top: 0.8rem;
+}
+
+.spread-10 .closing-line {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(232, 218, 240, 0.4);
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.spread-10 .colophon {
+  margin-top: 4rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(232, 218, 240, 0.2);
+}
+</style>
+</head>
+<body>
+
+<!-- SPREAD 1: COVER -->
+<section class="spread-1">
+  <div class="kicker fade-up">Practical AI Podcast &mdash; April 1, 2026</div>
+  <h1 class="fade-up delay-1">The Claude Code <em>Leak</em></h1>
+  <p class="subtitle fade-up delay-2">500,000 lines of proprietary code. A malicious supply chain attack. And the moment the AI industry learned the model isn't the IP.</p>
+  <p class="meta-line fade-up delay-3">Daniel Leitnack &amp; Chris Benson &bull; Episode Transcript</p>
+  <div class="scroll-cue"></div>
+</section>
+
+<!-- SPREAD 2: TIMELINE -->
+<section class="spread-2">
+  <div class="inner">
+    <div class="section-number fade-up">01</div>
+    <h2 class="fade-up delay-1">A Month of<br>Mounting Pressure</h2>
+    <div class="timeline">
+      <div class="timeline-item fade-up">
+        <div class="timeline-date">2021</div>
+        <div class="timeline-title">Anthropic Founded</div>
+        <div class="timeline-desc">Former OpenAI executives establish a company positioning AI safety as its core brand identity.</div>
+      </div>
+      <div class="timeline-item fade-up">
+        <div class="timeline-date">Late 2025</div>
+        <div class="timeline-title">Bun Runtime Acquired</div>
+        <div class="timeline-desc">Anthropic acquires the Bun JavaScript runtime, integrating it deeply into their toolchain&mdash;a decision that would prove pivotal.</div>
+      </div>
+      <div class="timeline-item fade-up">
+        <div class="timeline-date">November 2025</div>
+        <div class="timeline-title">Opus 4.5 Drops</div>
+        <div class="timeline-desc">The model release that changed everything. "Jaws were hitting the ground, including ours," recalls Chris Benson.</div>
+      </div>
+      <div class="timeline-item fade-up">
+        <div class="timeline-date">March 3, 2026</div>
+        <div class="timeline-title">Supply Chain Risk Designation</div>
+        <div class="timeline-desc">The Department of Defense designates Anthropic as a supply chain risk, sending shockwaves through regulated industries.</div>
+      </div>
+      <div class="timeline-item fade-up">
+        <div class="timeline-date">March 26, 2026</div>
+        <div class="timeline-title">Judicial Intervention</div>
+        <div class="timeline-desc">A judge grants Anthropic a preliminary injunction, temporarily freezing the supply chain risk label.</div>
+      </div>
+      <div class="timeline-item fade-up">
+        <div class="timeline-date">March 27, 2026</div>
+        <div class="timeline-title">Claude Mythos Leak</div>
+        <div class="timeline-desc">A leaked blog post surfaces discussing models "too dangerous to release." The first crack appears.</div>
+      </div>
+      <div class="timeline-item fade-up">
+        <div class="timeline-date">March 31 &ndash; April 1, 2026</div>
+        <div class="timeline-title">The Code Leak</div>
+        <div class="timeline-desc">In a three-hour window overnight, everything unravels. The proprietary codebase and a malicious Axios package ship together.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 3: THE BREACH -->
+<section class="spread-3">
+  <div class="inner">
+    <div class="section-number fade-up">02</div>
+    <h2 class="fade-up delay-1">The Perfect Storm</h2>
+    <div class="terminal-block fade-up delay-2">
+      <span class="prompt">$ npm install claude-code</span><br>
+      <span class="comment">// During a ~3-hour window, two things shipped simultaneously:</span><br>
+      <span class="comment">// 1. A .map file containing enough data to reconstruct</span><br>
+      <span class="comment">//    500,000 lines of proprietary TypeScript</span><br>
+      <span class="comment">// 2. A malicious version of Axios containing a remote access trojan</span>
+    </div>
+    <div class="terminal-block fade-up delay-3">
+      <span class="prompt">INCIDENT:</span> Source map file left in published package<br>
+      <span class="prompt">EFFECT:</span> Maps minified JS &rarr; human-readable TypeScript<br>
+      <span class="prompt">SCOPE:</span> Full agent harness, memory system, tool orchestration<br>
+      <span class="prompt">CONCURRENT:</span> Axios supply chain compromise &rarr; RAT deployed
+    </div>
+    <div class="stat-row fade-up delay-4">
+      <div class="stat-box">
+        <div class="number">~3hrs</div>
+        <div class="label">Exposure Window</div>
+      </div>
+      <div class="stat-box">
+        <div class="number">500K</div>
+        <div class="label">Lines of Code Exposed</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 4: SUPPLY CHAIN RISK -->
+<section class="spread-4">
+  <div class="inner">
+    <div class="masthead fade-up">
+      <h2>Supply Chain<br>Reckoning</h2>
+      <div class="dateline">A crisis of trust in the age of AI dependencies</div>
+    </div>
+    <div class="columns fade-up delay-1">
+      <p>Anthropic was already navigating treacherous waters before the code leak. In March 2026, the U.S. Department of Defense designated the company as a supply chain risk&mdash;a move that stunned the technical community and panicked enterprise customers in regulated industries.</p>
+
+      <p>The irony was not lost on observers: a company that had built its entire brand on AI safety was itself identified as a risk in the supply chain. And then, within weeks, an actual supply chain vulnerability shipped in their flagship product.</p>
+
+      <div class="pull-quote">&ldquo;The rug's been pulled out from under us. We were not thinking that Anthropic was going to be identified in this way.&rdquo;</div>
+
+      <p>Enterprise customers began rethinking model vendor lock-in. If the government could designate any AI provider as a supply chain risk overnight, what happens to organizations that have built everything on a single vendor with no way to pivot?</p>
+
+      <p>The Axios compromise added a second dimension to the crisis. Claude Code depended on the popular HTTP library, and when a malicious version containing a remote access trojan was published to NPM, anyone who installed or updated Claude Code during the exposure window was compromised.</p>
+
+      <p>It was, as Daniel Leitnack described it, "a perfect storm of things that happened"&mdash;a leaked .map file, a poisoned dependency, and a company already under extraordinary regulatory pressure, all converging on April Fool's Day.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 5: THE AGENT HARNESS -->
+<section class="spread-5">
+  <div class="inner">
+    <div class="section-number fade-up">04</div>
+    <h2 class="fade-up delay-1">The Real IP Isn't the Model</h2>
+    <p class="lead fade-up delay-2">The leak revealed the industry's worst-kept secret&mdash;and changed the conversation forever.</p>
+
+    <blockquote class="fade-up delay-3">
+      &ldquo;The model itself is not the relevant component that drives performance for these systems. The real IP is actually not the model. It's this, what's called the agent harness around the model.&rdquo;
+      <cite>Daniel Leitnack</cite>
+    </blockquote>
+
+    <p class="body-text fade-up">A year ago, a leak of model weights would have been the defining story. But in April 2026, the weights were irrelevant. The half-million lines of leaked code revealed something far more valuable: how Claude Code orchestrates memory, connects to tools, persists context across sessions, and manages long-running autonomous workflows.</p>
+
+    <p class="body-text fade-up">This is the architecture that turned a capable language model into a tool that, in Chris Benson's words, "completely changed how people productively develop software." The harness is what makes the magic work&mdash;and it works with any sufficiently capable model.</p>
+
+    <blockquote class="fade-up">
+      &ldquo;I don't have to use an Anthropic model. I could use whatever model I want. If I'm putting the right agent harness around it, I can do extremely powerful things.&rdquo;
+      <cite>Daniel Leitnack</cite>
+    </blockquote>
+
+    <p class="body-text fade-up">The implication was seismic: as frontier models converge in capability, the models themselves become commodities. The competitive moat lives in the scaffolding, the orchestration, the engineering that turns raw intelligence into reliable agency.</p>
+  </div>
+</section>
+
+<!-- SPREAD 6: MEMORY ARCHITECTURE -->
+<section class="spread-6">
+  <div class="inner">
+    <div class="section-number fade-up">05</div>
+    <h2 class="fade-up delay-1">Three Layers<br>of Memory</h2>
+
+    <div class="layer-card fade-up delay-2">
+      <div class="layer-num">Layer 01</div>
+      <h3>Memory.md &mdash; The Contextual Index</h3>
+      <p>A lightweight pointer system constantly fed to the agent. Rather than loading all accumulated knowledge, it maintains only an index&mdash;references to where specific information is stored. Think of it as a table of contents for the agent's entire knowledge base, keeping the active context window clean and focused.</p>
+    </div>
+
+    <div class="layer-card fade-up delay-3">
+      <div class="layer-num">Layer 02</div>
+      <h3>Sharded Topic Files</h3>
+      <p>Discrete files containing topic-specific information, loaded only when relevant. This prevents the "context entropy" problem&mdash;the degradation that occurs when agents accumulate too much noisy, undifferentiated memory. Each shard is a self-contained knowledge module activated on demand.</p>
+    </div>
+
+    <div class="layer-card fade-up delay-4">
+      <div class="layer-num">Layer 03</div>
+      <h3>Self-Healing Search (Grep Verification)</h3>
+      <p>An optimized grep-like search mechanism that verifies information against actual system logs and files rather than relying on the agent's own generated summaries. The agent doesn't trust its memory&mdash;it cross-references against ground truth, creating a self-correcting feedback loop.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SPREAD 7: ANTI-DISTILLATION -->
+<section class="spread-7">
+  <div class="inner">
+    <div class="section-number fade-up">06</div>
+    <h2 class="fade-up delay-1">Decoy Tools &amp;<br><span>Dirty Tricks</span></h2>
+
+    <p class="body-text fade-up delay-2">Buried in the leaked codebase were mechanisms designed to prevent exactly this kind of reverse engineering. The anti-distillation system injected fake tools and decoy reasoning into the agent's chain of thought&mdash;deliberate noise to throw off anyone trying to reconstruct the architecture.</p>
+
+    <div class="controversy-block fade-up delay-3">
+      <h3>cover.ts</h3>
+      <p class="body-text" style="margin-bottom:0; color: rgba(26,26,26,0.7);">A file explicitly designed to hide Claude's identity when contributing to open source repositories. It strips watermarks, avoids AI-generation markers, and presents machine-written code as human-authored&mdash;an explicit attempt at obscuring the provenance of AI-generated contributions.</p>
+    </div>
+
+    <blockquote class="fade-up">
+      &ldquo;Anthropic has built its brand on safety and transparency. When you're differentiating yourself against the other major players and then something like that is found&hellip; people were holding it to a higher standard based on that branding.&rdquo;
+      <cite>Chris Benson</cite>
+    </blockquote>
+
+    <p class="body-text fade-up">The open source community's reaction was swift and pointed. Transparency is a foundational value of open source culture, and an explicit mechanism to disguise AI authorship struck at the heart of contributor trust. Had the same feature been discovered in a competitor's product, the reaction might have been a shrug. From the company that made "constitutional AI" its calling card, it landed as hypocrisy.</p>
+  </div>
+</section>
+
+<!-- SPREAD 8: OPEN SOURCE REACTION -->
+<section class="spread-8">
+  <div class="inner">
+    <div class="section-number fade-up">08</div>
+    <h2 class="fade-up delay-1">The Community<br>Responds</h2>
+    <p class="lead fade-up delay-2">When Anthropic's code hit the public, the developer world moved at unprecedented speed.</p>
+
+    <div class="stat-hero fade-up delay-3">
+      <div class="big-num">50K</div>
+      <div class="big-label">GitHub stars in the first two hours</div>
+    </div>
+
+    <p class="body-text fade-up">Within hours of the leak, developers organized a clean-room rewrite effort. The original TypeScript was set aside&mdash;touched by legal risk&mdash;and teams began reconstructing the architecture in Python and Rust simultaneously. Anthropic moved quickly with DMCA takedown requests, but the knowledge was already distributed across thousands of forks and offline copies.</p>
+
+    <blockquote class="fade-up">
+      &ldquo;The repo that these efforts are together in hit&mdash;it was the fastest repo in history to surpass 100,000 stars on GitHub. They surpassed 50,000 stars in the first two hours the repo existed.&rdquo;
+      <cite>Chris Benson</cite>
+    </blockquote>
+
+    <p class="body-text fade-up">Developer sentiment split along familiar lines. The technical community largely viewed the DoD supply chain designation as political overreach. But the code leak introduced a new critique: Anthropic could have open-sourced Claude Code from the start, as OpenAI had done with Codex.</p>
+
+    <blockquote class="fade-up">
+      &ldquo;There's a certain amount of, well, they could have open sourced it up front, and this is kind of what you get.&rdquo;
+      <cite>Chris Benson</cite>
+    </blockquote>
+  </div>
+</section>
+
+<!-- SPREAD 9: THE CLEAN ROOM -->
+<section class="spread-9">
+  <div class="inner">
+    <div class="section-number fade-up">09</div>
+    <h2 class="fade-up delay-1">The Clean<br>Room Rewrite</h2>
+
+    <p class="body-text fade-up delay-2">Rather than distributing the leaked code directly&mdash;a path fraught with legal exposure&mdash;the community organized one of the most rapid clean-room engineering efforts in open source history.</p>
+
+    <div class="lang-grid fade-up delay-3">
+      <div class="lang-card">
+        <div class="lang-name">TypeScript</div>
+        <div class="lang-role">Original (leaked)</div>
+      </div>
+      <div class="lang-card">
+        <div class="lang-name">Python</div>
+        <div class="lang-role">Primary rewrite</div>
+      </div>
+      <div class="lang-card">
+        <div class="lang-name">Rust</div>
+        <div class="lang-role">Performance rewrite</div>
+      </div>
+    </div>
+
+    <div class="record-bar fade-up">
+      <div class="rec-num">100K+ &#9733;</div>
+      <div class="rec-text">Fastest repository in GitHub history to surpass 100,000 stars. Tens of thousands of forks within 24 hours.</div>
+    </div>
+
+    <p class="body-text fade-up">A security researcher known as Chow Fanch Show (Fried Rice on X) was among the first to announce a full reconstruction of the source code from the leaked .map files. The developer who had previously attempted to reverse engineer Claude Code&mdash;and had been shut down by legal action&mdash;pivoted immediately to organizing the clean-room effort.</p>
+
+    <p class="body-text fade-up">The consensus among observers: Anthropic's best move now is to open source Claude Code voluntarily. With the architecture fully public and community rewrites already functional, the proprietary advantage has evaporated. Open sourcing would eliminate a persistent criticism while costing nothing the company hasn't already lost.</p>
+  </div>
+</section>
+
+<!-- SPREAD 10: WHAT COMES NEXT -->
+<section class="spread-10">
+  <div class="inner">
+    <div class="section-number fade-up">10</div>
+    <h2 class="fade-up delay-1">The Turning Point</h2>
+
+    <p class="body-text fade-up delay-2">April 1, 2026 will be remembered not for a prank, but for the moment the AI industry's center of gravity visibly shifted&mdash;from models to the engineering that surrounds them.</p>
+
+    <p class="body-text fade-up">The leaked harness revealed patterns that will rapidly become standard libraries across languages and frameworks. Memory hierarchies, strict write discipline, self-healing verification, auto-dream consolidation&mdash;these are no longer trade secrets. They are the shared vocabulary of mature agent development.</p>
+
+    <blockquote class="fade-up">
+      &ldquo;We're kind of seeing what is likely a turning point in mature agent development going forward. The reporting on the model is a time passed at this point to some degree.&rdquo;
+      <cite>Chris Benson</cite>
+    </blockquote>
+
+    <p class="body-text fade-up">The roadmap glimpsed in the leak suggests Claude Code is evolving from a reactive assistant into an always-on presence&mdash;background maintenance, cron scheduling, continuous monitoring. The future of agentic development isn't a tool you invoke. It's a collaborator that never sleeps.</p>
+
+    <p class="body-text fade-up">For Anthropic, the path forward requires rebuilding trust on two fronts: with regulators questioning their role in the supply chain, and with a developer community that now holds the company to the transparency standards it claimed as its own.</p>
+
+    <blockquote class="fade-up">
+      &ldquo;It's not just an IP issue for the company. It's also a brand perception and a trust issue within the larger developer community. They have some fixing to do to put things right with the people that they are trying to serve.&rdquo;
+      <cite>Chris Benson</cite>
+    </blockquote>
+
+    <p class="closing-line fade-up">The cat is out of the bag. The question is no longer what was leaked&mdash;but what gets built next.</p>
+
+    <div class="colophon fade-up">Source: Practical AI Podcast &bull; April 1, 2026 &bull; Daniel Leitnack &amp; Chris Benson &bull; practicalai.fm</div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -60px 0px'
+  });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>An AI State of the Union — We've Passed the Inflection Point</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+.spread {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  width: 100%;
+  padding: 4rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Fade-up animation */
+.fade-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-up.d1 { transition-delay: 0.1s; }
+.fade-up.d2 { transition-delay: 0.2s; }
+.fade-up.d3 { transition-delay: 0.35s; }
+.fade-up.d4 { transition-delay: 0.5s; }
+.fade-up.d5 { transition-delay: 0.65s; }
+.fade-up.d6 { transition-delay: 0.8s; }
+
+.kicker {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.headline {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  line-height: 0.95;
+  margin-bottom: 1.5rem;
+}
+
+.deck {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 1.25rem;
+  line-height: 1.7;
+  max-width: 680px;
+}
+
+.body-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 1.15rem;
+  line-height: 1.8;
+}
+
+.pull-quote {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.numeral-bg {
+  position: absolute;
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  opacity: 0.04;
+  z-index: 1;
+  pointer-events: none;
+  line-height: 1;
+}
+
+/* ============================
+   SPREAD 1 — COVER / HERO
+   ============================ */
+.spread-1 {
+  background: #f5f0e8;
+  background-image:
+    radial-gradient(ellipse at 30% 60%, rgba(180,140,90,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(120,80,40,0.08) 0%, transparent 50%);
+  flex-direction: column;
+  text-align: center;
+}
+.spread-1 .numeral-bg {
+  font-size: 60vw;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #3d2b1f;
+}
+.spread-1 .kicker { color: #8b6914; }
+.spread-1 .headline {
+  font-size: clamp(3rem, 8vw, 9rem);
+  color: #1a1410;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.spread-1 .divider {
+  width: 120px;
+  height: 3px;
+  background: #8b6914;
+  margin: 2rem auto;
+}
+.spread-1 .deck {
+  color: #4a3f35;
+  margin-left: auto;
+  margin-right: auto;
+}
+.spread-1 .attribution {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #8b7355;
+  margin-top: 2.5rem;
+  letter-spacing: 0.1em;
+}
+
+/* ============================
+   SPREAD 2 — DARK / MIDNIGHT
+   ============================ */
+.spread-2 {
+  background: #0d1117;
+  background-image:
+    radial-gradient(ellipse at 20% 80%, rgba(56,110,200,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 30%, rgba(100,70,220,0.06) 0%, transparent 40%);
+}
+.spread-2 .numeral-bg {
+  font-size: 50vw;
+  right: -5%;
+  top: 10%;
+  color: #58a6ff;
+}
+.spread-2 .kicker { color: #58a6ff; }
+.spread-2 .headline {
+  font-size: clamp(2.8rem, 6vw, 6.5rem);
+  color: #e6edf3;
+}
+.spread-2 .deck { color: #8b949e; }
+.spread-2 .stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+.spread-2 .stat-card {
+  background: rgba(56,110,200,0.08);
+  border: 1px solid rgba(56,110,200,0.15);
+  border-radius: 12px;
+  padding: 2rem;
+}
+.spread-2 .stat-card .num {
+  font-family: 'Fraunces', serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #58a6ff;
+  line-height: 1;
+}
+.spread-2 .stat-card .label {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
+  color: #8b949e;
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+/* ============================
+   SPREAD 3 — WARM EDITORIAL
+   ============================ */
+.spread-3 {
+  background: #f2ece0;
+  background-image:
+    repeating-linear-gradient(90deg, transparent, transparent 99px, rgba(0,0,0,0.03) 99px, rgba(0,0,0,0.03) 100px),
+    repeating-linear-gradient(0deg, transparent, transparent 99px, rgba(0,0,0,0.03) 99px, rgba(0,0,0,0.03) 100px);
+}
+.spread-3 .numeral-bg {
+  font-size: 45vw;
+  left: -8%;
+  bottom: -10%;
+  color: #5a4020;
+}
+.spread-3 .grid-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 3rem;
+  align-items: start;
+}
+.spread-3 .kicker { color: #8b5e14; }
+.spread-3 .headline {
+  font-size: clamp(2.5rem, 5vw, 5.5rem);
+  color: #1a1410;
+}
+.spread-3 .body-text { color: #3d3225; }
+.spread-3 .sidebar {
+  background: #1a1410;
+  color: #f2ece0;
+  padding: 2.5rem;
+  border-radius: 4px;
+}
+.spread-3 .sidebar .pull-quote {
+  font-size: 1.6rem;
+  color: #e8d5b0;
+  margin-bottom: 1.5rem;
+}
+.spread-3 .sidebar .attrib {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #a89070;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ============================
+   SPREAD 4 — ROSE ALERT / STAMP
+   ============================ */
+.spread-4 {
+  background: #14100e;
+  background-image:
+    radial-gradient(ellipse at 60% 40%, rgba(180,40,60,0.1) 0%, transparent 50%);
+}
+.spread-4 .numeral-bg {
+  font-size: 55vw;
+  left: 5%;
+  top: -5%;
+  color: #c0392b;
+}
+.spread-4 .kicker { color: #e74c3c; }
+.spread-4 .headline {
+  font-size: clamp(2.5rem, 5.5vw, 6rem);
+  color: #f5ebe0;
+}
+.spread-4 .two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-top: 2.5rem;
+}
+.spread-4 .body-text { color: #c5b8a8; }
+.spread-4 .stamp {
+  width: 180px;
+  height: 180px;
+  border: 4px solid #e74c3c;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #e74c3c;
+  transform: rotate(-12deg);
+  margin: 2rem auto;
+  padding: 1.5rem;
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ============================
+   SPREAD 5 — TERMINAL
+   ============================ */
+.spread-5 {
+  background: #0a0e0a;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(0,255,65,0.015) 0px, rgba(0,255,65,0.015) 1px, transparent 1px, transparent 3px);
+}
+.spread-5 .numeral-bg {
+  font-size: 50vw;
+  right: -3%;
+  bottom: -5%;
+  color: #00ff41;
+}
+.spread-5 .terminal-window {
+  background: #0d120d;
+  border: 1px solid #1a3a1a;
+  border-radius: 10px;
+  overflow: hidden;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.spread-5 .terminal-bar {
+  background: #142014;
+  padding: 12px 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.spread-5 .dot { width: 12px; height: 12px; border-radius: 50%; }
+.spread-5 .dot-r { background: #ff5f56; }
+.spread-5 .dot-y { background: #ffbd2e; }
+.spread-5 .dot-g { background: #27c93f; }
+.spread-5 .terminal-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: #4a6a4a;
+  margin-left: 10px;
+}
+.spread-5 .terminal-body {
+  padding: 2.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  color: #00ff41;
+  line-height: 2;
+}
+.spread-5 .terminal-body .comment { color: #3a6a3a; }
+.spread-5 .terminal-body .highlight { color: #7fff7f; font-weight: bold; }
+.spread-5 .terminal-body .prompt-char { color: #00aa30; }
+.spread-5 .kicker {
+  color: #00ff41;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.spread-5 .headline {
+  font-size: clamp(2rem, 4vw, 4rem);
+  color: #00ff41;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+.cursor-blink {
+  display: inline-block;
+  width: 10px;
+  height: 1.2em;
+  background: #00ff41;
+  animation: blink 1s infinite;
+  vertical-align: text-bottom;
+  margin-left: 2px;
+}
+
+/* ============================
+   SPREAD 6 — ACADEMIC DROP CAP
+   ============================ */
+.spread-6 {
+  background: #0c1528;
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(60,80,160,0.12) 0%, transparent 50%);
+}
+.spread-6 .numeral-bg {
+  font-size: 48vw;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #3a5090;
+}
+.spread-6 .kicker { color: #7b9bd4; }
+.spread-6 .headline {
+  font-size: clamp(2.5rem, 5vw, 5.5rem);
+  color: #e0e8f5;
+  margin-bottom: 2rem;
+}
+.spread-6 .two-column-text {
+  column-count: 2;
+  column-gap: 3rem;
+  column-rule: 1px solid rgba(123,155,212,0.2);
+}
+.spread-6 .body-text { color: #a0b0cc; }
+.spread-6 .drop-cap::first-letter {
+  font-family: 'Fraunces', serif;
+  font-size: 5.5rem;
+  font-weight: 900;
+  float: left;
+  line-height: 0.8;
+  margin-right: 0.15em;
+  margin-top: 0.05em;
+  color: #7b9bd4;
+}
+.spread-6 .callout-box {
+  background: rgba(60,80,160,0.15);
+  border-left: 4px solid #7b9bd4;
+  padding: 1.5rem 2rem;
+  margin-top: 2rem;
+  border-radius: 0 6px 6px 0;
+}
+.spread-6 .callout-box .body-text {
+  font-size: 1.1rem;
+  color: #c0ccdd;
+}
+
+/* ============================
+   SPREAD 7 — BIG STAT / GOLD
+   ============================ */
+.spread-7 {
+  background: #110e0a;
+  background-image:
+    radial-gradient(ellipse at 40% 50%, rgba(200,160,60,0.08) 0%, transparent 50%);
+}
+.spread-7 .numeral-bg {
+  font-size: 60vw;
+  right: -10%;
+  top: -10%;
+  color: #c8a03c;
+}
+.spread-7 .kicker { color: #d4a843; }
+.spread-7 .big-stat {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(6rem, 15vw, 16rem);
+  font-weight: 900;
+  color: #d4a843;
+  line-height: 0.9;
+  margin-bottom: 1rem;
+}
+.spread-7 .big-stat-label {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  font-weight: 600;
+  color: #e8d5a0;
+  margin-bottom: 2rem;
+}
+.spread-7 .body-text { color: #b0a080; }
+.spread-7 .grade-badge {
+  display: inline-block;
+  background: rgba(200,160,60,0.15);
+  border: 2px solid #d4a843;
+  border-radius: 8px;
+  padding: 0.8rem 1.5rem;
+  font-family: 'Fraunces', serif;
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: #d4a843;
+  margin-right: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* ============================
+   SPREAD 8 — BROADSHEET
+   ============================ */
+.spread-8 {
+  background: #f5f0e4;
+  background-image:
+    repeating-linear-gradient(90deg, transparent, transparent 49.8%, rgba(0,0,0,0.04) 49.8%, rgba(0,0,0,0.04) 50.2%, transparent 50.2%);
+}
+.spread-8 .numeral-bg {
+  font-size: 45vw;
+  left: -5%;
+  top: 5%;
+  color: #2c1810;
+}
+.spread-8 .broadsheet-border {
+  border: 3px double #2c1810;
+  padding: 3rem;
+}
+.spread-8 .kicker { color: #8b1a10; }
+.spread-8 .headline {
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  color: #1a0e08;
+  border-bottom: 2px solid #1a0e08;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+.spread-8 .three-col {
+  column-count: 2;
+  column-gap: 2.5rem;
+  column-rule: 1px solid rgba(0,0,0,0.15);
+}
+.spread-8 .body-text { color: #3d2b1f; font-size: 1.1rem; }
+.spread-8 .red-banner {
+  background: #8b1a10;
+  color: #f5f0e4;
+  padding: 1rem 2rem;
+  margin: 2rem 0;
+  display: inline-block;
+}
+.spread-8 .red-banner .num {
+  font-family: 'Fraunces', serif;
+  font-size: 2.5rem;
+  font-weight: 900;
+}
+.spread-8 .red-banner .label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* ============================
+   SPREAD 9 — NEON / CYBERPUNK
+   ============================ */
+.spread-9 {
+  background: #08080c;
+  background-image:
+    linear-gradient(180deg, #08080c 60%, rgba(0,255,200,0.03) 100%);
+}
+.spread-9::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background:
+    repeating-linear-gradient(90deg, rgba(0,255,200,0.04) 0px, rgba(0,255,200,0.04) 1px, transparent 1px, transparent 60px),
+    repeating-linear-gradient(0deg, rgba(0,255,200,0.03) 0px, rgba(0,255,200,0.03) 1px, transparent 1px, transparent 60px);
+  transform: perspective(400px) rotateX(45deg);
+  transform-origin: bottom;
+  z-index: 1;
+}
+.spread-9 .numeral-bg {
+  font-size: 50vw;
+  left: 50%;
+  bottom: -10%;
+  transform: translateX(-50%);
+  color: #00ffc8;
+}
+.spread-9 .kicker { color: #00ffc8; }
+.spread-9 .headline {
+  font-size: clamp(2.5rem, 5.5vw, 6rem);
+  color: #e0fff5;
+  text-shadow: 0 0 40px rgba(0,255,200,0.2);
+}
+.spread-9 .body-text { color: #80b0a0; }
+.spread-9 .neon-box {
+  border: 1px solid rgba(0,255,200,0.25);
+  background: rgba(0,255,200,0.04);
+  padding: 2rem;
+  border-radius: 6px;
+  margin-top: 2rem;
+  box-shadow: 0 0 30px rgba(0,255,200,0.05);
+}
+.spread-9 .neon-box .pull-quote {
+  font-size: 1.5rem;
+  color: #a0ffe0;
+}
+.spread-9 .neon-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* ============================
+   SPREAD 10 — CLEAN PRODUCT (CLOSER)
+   ============================ */
+.spread-10 {
+  background: #ffffff;
+  background-image:
+    radial-gradient(ellipse at 60% 40%, rgba(79,70,229,0.06) 0%, transparent 50%);
+}
+.spread-10 .numeral-bg {
+  font-size: 55vw;
+  right: -5%;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #4f46e5;
+}
+.spread-10 .kicker { color: #4f46e5; }
+.spread-10 .headline {
+  font-size: clamp(2.5rem, 5vw, 5.5rem);
+  color: #1a1a2e;
+}
+.spread-10 .deck { color: #4a4a6a; }
+.spread-10 .body-text { color: #3a3a5a; }
+.spread-10 .feature-list {
+  list-style: none;
+  margin-top: 2rem;
+}
+.spread-10 .feature-list li {
+  padding: 1.2rem 0;
+  border-bottom: 1px solid rgba(79,70,229,0.12);
+  font-family: 'Inter', sans-serif;
+  font-size: 1.15rem;
+  color: #2a2a4a;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.spread-10 .feature-list .icon {
+  width: 28px;
+  height: 28px;
+  background: rgba(79,70,229,0.1);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #4f46e5;
+  font-weight: 800;
+  font-size: 0.9rem;
+  margin-top: 2px;
+}
+.spread-10 .closer-card {
+  background: #f8f7ff;
+  border: 1px solid rgba(79,70,229,0.15);
+  border-radius: 16px;
+  padding: 3rem;
+  margin-top: 3rem;
+  text-align: center;
+}
+.spread-10 .closer-card .pull-quote {
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  color: #2a2a4a;
+  max-width: 700px;
+  margin: 0 auto 1.5rem;
+}
+.spread-10 .closer-card .attrib {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #7a7a9a;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* ============================
+   RESPONSIVE
+   ============================ */
+@media (max-width: 900px) {
+  .container { padding: 2.5rem 1.5rem; }
+  .spread-3 .grid-layout { grid-template-columns: 1fr; }
+  .spread-4 .two-col { grid-template-columns: 1fr; }
+  .spread-6 .two-column-text { column-count: 1; }
+  .spread-8 .three-col { column-count: 1; }
+  .spread-8 .broadsheet-border { padding: 1.5rem; }
+  .spread-9 .neon-grid { grid-template-columns: 1fr; }
+  .spread-2 .stat-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SPREAD 1 — COVER / HERO
+     ============================================================ -->
+<section class="spread spread-1">
+  <div class="numeral-bg">I</div>
+  <div class="container" style="text-align:center;">
+    <p class="kicker fade-up">Lenny's Podcast &bull; Simon Willison</p>
+    <h1 class="headline fade-up d1">An AI State of the Union</h1>
+    <div class="divider fade-up d2"></div>
+    <p class="deck fade-up d3" style="font-size:1.4rem; max-width:750px;">
+      We've passed the inflection point. Dark factories are coming. And the people most AI-pilled are working harder than they've ever worked.
+    </p>
+    <p class="attribution fade-up d4">
+      From a conversation with <strong>Simon Willison</strong> &mdash; co-creator of Django, coiner of "prompt injection," and one of the most important voices on how AI is changing the way we build software.
+    </p>
+    <p class="attribution fade-up d5" style="margin-top:0.8rem; font-size:0.8rem; opacity:0.6;">
+      April 2026 &bull; Editorial Magazine
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SPREAD 2 — DARK / MIDNIGHT — The November Inflection
+     ============================================================ -->
+<section class="spread spread-2">
+  <div class="numeral-bg">II</div>
+  <div class="container">
+    <p class="kicker fade-up">The Inflection Point</p>
+    <h1 class="headline fade-up d1">November Changed Everything</h1>
+    <p class="deck fade-up d2">
+      In November 2025, GPT 5.1 and Claude Opus 4.5 crossed a threshold. They were incrementally better than previous models&mdash;but in a way that changed everything.
+    </p>
+    <div class="stat-row fade-up d3">
+      <div class="stat-card">
+        <div class="num">10,000</div>
+        <div class="label">Lines of code churned out in a single day&mdash;and most of it works.</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">$200</div>
+        <div class="label">Monthly accounts people gladly pay for coding agents that actually deliver.</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">95%</div>
+        <div class="label">Of the code Simon produces, he didn't type himself.</div>
+      </div>
+    </div>
+    <div style="margin-top:3rem;" class="fade-up d4">
+      <p class="pull-quote" style="font-size:1.6rem; color:#c9d1d9; max-width:800px;">
+        "Previously you could get coding agents to write you some code and most of the time it would mostly work. Suddenly we went from that to almost all of the time it does what you told it to do&mdash;which makes all of the difference in the world."
+      </p>
+      <p style="color:#58a6ff; font-family:'Inter',sans-serif; font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase; margin-top:1rem;">
+        &mdash; Simon Willison
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SPREAD 3 — WARM EDITORIAL — Vibe Coding vs. Agentic Engineering
+     ============================================================ -->
+<section class="spread spread-3">
+  <div class="numeral-bg">III</div>
+  <div class="container">
+    <div class="grid-layout">
+      <div>
+        <p class="kicker fade-up">The Great Divide</p>
+        <h1 class="headline fade-up d1">Vibe Coding vs. Agentic Engineering</h1>
+        <p class="body-text fade-up d2" style="margin-bottom:1.5rem;">
+          Andrej Karpathy's original definition of vibe coding: you don't even look at the code. You go on vibes. You say "build me something that does X" and it builds it. If it looks good, great. If not, you iterate. It's hands-off, and non-programmers can now tell Claude what to build.
+        </p>
+        <p class="body-text fade-up d3" style="margin-bottom:1.5rem;">
+          Simon loves the democratization. But he draws a sharp line: if the only person who gets hurt by bugs is you, go wild. The moment your bugs might harm somebody else, you need to step back.
+        </p>
+        <p class="body-text fade-up d4">
+          For professionals building production software, he's coined a different term: <strong>agentic engineering</strong>. The art of getting really good results from coding agents&mdash;software you could deploy to a million people&mdash;is never going to be easy or trivial.
+        </p>
+      </div>
+      <div class="sidebar fade-up d3">
+        <p class="pull-quote">
+          "The moment vibe coding means everything that touches AI, it effectively means programming&mdash;because we're all moving in a direction where our code is mediated through AI."
+        </p>
+        <p class="attrib" style="margin-top:1.5rem;">&mdash; Simon Willison</p>
+        <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid rgba(200,180,150,0.2);">
+          <p style="font-family:'Inter',sans-serif; font-size:0.9rem; color:#a89070; line-height:1.6;">
+            Simon is publishing an agentic engineering book one chapter at a time on his blog&mdash;the best form of writing, he says, because he has no editor or publisher pressure.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SPREAD 4 — ROSE ALERT / STAMP — The Dark Factory
+     ============================================================ -->
+<section class="spread spread-4">
+  <div class="numeral-bg">IV</div>
+  <div class="container">
+    <p class="kicker fade-up">The Next Frontier</p>
+    <h1 class="headline fade-up d1">Dark Factories Are Coming</h1>
+    <div class="two-col">
+      <div class="fade-up d2">
+        <p class="body-text" style="margin-bottom:1.5rem;">
+          The dark factory pattern borrows from manufacturing: if your factory is so automated you don't need people, you can turn the lights off. The machines operate in complete darkness.
+        </p>
+        <p class="body-text" style="margin-bottom:1.5rem;">
+          For software, this means: <strong>nobody writes code</strong> and <strong>nobody reads the code</strong>. But you're not vibe coding. You're applying professional practices and quality expectations to code you're not directly reviewing.
+        </p>
+        <p class="body-text">
+          StrongDM pioneered this approach, using swarms of AI testers simulating end users 24 hours a day&mdash;complete with simulated Slack channels, simulated Jira, and simulated Okta, all built by their own coding agents.
+        </p>
+      </div>
+      <div class="fade-up d3">
+        <div class="stamp">
+          No Human<br>Reads<br>The Code
+        </div>
+        <p class="body-text" style="margin-top:1.5rem;">
+          Their simulated QA team: AI agents in a fake Slack channel, making requests like "Hey, could somebody give me access to Jira?" Running around the clock. StrongDM was spending roughly $10,000 a day on tokens to simulate all of these end users.
+        </p>
+        <p class="pull-quote" style="color:#e8b8a8; font-size:1.3rem; margin-top:2rem;">
+          "Similar to having a manual QA team, except one that never sleeps."
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SPREAD 5 — TERMINAL — Agentic Engineering Patterns
+     ============================================================ -->
+<section class="spread spread-5">
+  <div class="numeral-bg">V</div>
+  <div class="container">
+    <p class="kicker fade-up">Patterns for Professionals</p>
+    <h1 class="headline fade-up d1">The Agentic<br>Engineering Playbook</h1>
+    <div class="terminal-window fade-up d2">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <span class="terminal-title">simon@halfmoonbay ~ agentic-engineering</span>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># Pattern 1: Red/Green TDD</span><br>
+        <span class="prompt-char">$</span> <span class="highlight">prompt</span> "Use red/green TDD"<br>
+        <span class="comment"># Write the test first. Watch it fail. Implement. Watch it pass.</span><br>
+        <span class="comment"># 5 seconds of typing. Material impact on code quality.</span><br><br>
+
+        <span class="comment"># Pattern 2: Hoard Things You Know How To Do</span><br>
+        <span class="prompt-char">$</span> <span class="highlight">ls</span> simonw/tools/<br>
+        &gt; 193 HTML/JS tools &mdash; each one captures an idea<br>
+        <span class="prompt-char">$</span> <span class="highlight">ls</span> simonw/research/<br>
+        &gt; 75+ coding agent research projects &mdash; verified, run, graphed<br><br>
+
+        <span class="comment"># Pattern 3: Start With a Good Template</span><br>
+        <span class="prompt-char">$</span> <span class="highlight">cp</span> template/ new-project/<br>
+        <span class="comment"># A single test (1+1=2). Your preferred style. Minimal boilerplate.</span><br>
+        <span class="comment"># Agents are phenomenally good at sticking to existing patterns.</span><br><br>
+
+        <span class="comment"># Pattern 4: Code Is Cheap Now</span><br>
+        <span class="prompt-char">$</span> <span class="highlight">prototype</span> --variants=3 --compare<br>
+        <span class="comment"># Prototype three different approaches. It costs nothing.</span><br>
+        <span class="comment"># Prototyping is almost free. Use that to produce better code.</span><br>
+        <span class="cursor-blink"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SPREAD 6 — ACADEMIC DROP-CAP — The Middle Gets Squeezed
+     ============================================================ -->
+<section class="spread spread-6">
+  <div class="numeral-bg">VI</div>
+  <div class="container">
+    <p class="kicker fade-up">Career Implications</p>
+    <h1 class="headline fade-up d1">AI Is Coming for the Middle</h1>
+    <div class="two-column-text fade-up d2">
+      <p class="body-text drop-cap" style="margin-bottom:1.5rem;">
+        ThoughtWorks assembled engineering VPs from multiple companies and arrived at a striking conclusion: AI is great for experienced engineers&mdash;it amplifies their skills. It's great for new engineers&mdash;Cloudflare and Shopify both hired a thousand interns over the course of 2025 because AI assistants cut onboarding from a month to a week. The problem is the people in the middle. Mid-career engineers who haven't made it to super senior yet, but aren't new either. They don't have deep expertise to amplify, and they've already gotten the beginner boosts.
+      </p>
+      <p class="body-text" style="margin-bottom:1.5rem;">
+        It's not just engineering. AI is coming at the middle of the product development process, the middle of seniority, and probably every function. New PMs and designers are ramping up more quickly because they're AI-native. Seniors can leverage decades of pattern recognition. The middle cohort faces the hardest transition.
+      </p>
+      <p class="body-text">
+        Simon's advice: lean into it. Use AI to amplify your own skills, learn new things, take on more ambitious projects. The only universal skill right now is being able to roll with the changes. And weirdly, the term that comes up most in these conversations is <em>agency</em>&mdash;human agency. Decide what problems to take on. Invest in your own ability to choose.
+      </p>
+    </div>
+    <div class="callout-box fade-up d3">
+      <p class="body-text" style="color:#c0ccdd;">
+        <strong style="color:#7b9bd4;">Cloudflare & Shopify</strong> each hired 1,000 interns in 2025. Intern onboarding cost went from one month to one week with AI assistants.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SPREAD 7 — BIG STAT / GOLD — The Exhaustion Paradox
+     ============================================================ -->
+<section class="spread spread-7">
+  <div class="numeral-bg">VII</div>
+  <div class="container">
+    <p class="kicker fade-up">The Paradox</p>
+    <div class="fade-up d1">
+      <div class="big-stat">11 AM</div>
+      <div class="big-stat-label">Wiped Out for the Day</div>
+    </div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:3rem; margin-top:2rem;" class="fade-up d2">
+      <div>
+        <p class="body-text" style="margin-bottom:1.5rem;">
+          AI is supposed to make us more productive. It's supposed to give us more time off. But the people most AI-pilled are working harder than they've ever worked.
+        </p>
+        <p class="body-text" style="margin-bottom:1.5rem;">
+          Simon runs four agents in parallel working on four different problems. By 11 AM, he's cognitively done for the day. There's a limit on human cognition&mdash;how much you can hold in your head at one time. It's very easy to pop that stack.
+        </p>
+        <p class="body-text">
+          People are losing sleep. They're setting off coding agents at midnight, waking up at 4 AM. There's an element of gambling and addiction to how we're using these tools.
+        </p>
+      </div>
+      <div>
+        <p class="pull-quote" style="font-size:1.5rem; color:#e8d5a0; margin-bottom:2rem;">
+          "This year, my New Year's resolution was the opposite of every other year. Instead of 'focus more, take on less'&mdash;it was take on more stuff and be more ambitious. We've got these tools. Bring it all in."
+        </p>
+        <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+          <span class="grade-badge">More Ambitious</span>
+          <span class="grade-badge">More Exhausted</span>
+          <span class="grade-badge">More Fun</span>
+        </div>
+        <p class="body-text" style="margin-top:2rem;">
+          But there's a flip side people haven't mentioned enough: it's actually <em>really fun</em>. Simon's friends have been clearing entire backlogs of side projects they've accumulated over 10-15 years. Some of them feel a sense of loss&mdash;their backlog is gone. Now what?
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SPREAD 8 — BROADSHEET — The Pelican Benchmark
+     ============================================================ -->
+<section class="spread spread-8">
+  <div class="numeral-bg">VIII</div>
+  <div class="container">
+    <div class="broadsheet-border">
+      <p class="kicker fade-up">Benchmarks & Whimsy</p>
+      <h1 class="headline fade-up d1">A Pelican Riding a Bicycle</h1>
+      <div class="three-col fade-up d2">
+        <p class="body-text" style="margin-bottom:1.5rem;">
+          Frustrated by numeric benchmarks that don't really tell you anything interesting, Simon started his own: generate an SVG of a pelican riding a bicycle. Not a test of image models&mdash;a test of LLMs generating SVG code. And something weird happened: there appears to be a very strong correlation between how good a model's pelican-on-bicycle drawing is and how good the model is at everything else.
+        </p>
+        <p class="body-text" style="margin-bottom:1.5rem;">
+          Nobody can explain why. But the better models really do draw better pelicans. It's reached meme status. The AI labs all relish how good their pelicans are. When OpenAI released GPT 5.4 mini and nano at five different thinking levels, Simon produced a grid of 15 pelicans. Sure enough, GPT 5.4 at extra-high thinking drew the best one.
+        </p>
+        <div class="red-banner" style="break-inside: avoid;">
+          <div class="num">15</div>
+          <div class="label">Pelicans in Simon's GPT 5.4 comparison grid</div>
+        </div>
+        <p class="body-text" style="margin-top:1.5rem;">
+          Simon even has secret alternative prompts in his pocket&mdash;an ocelot on a moped, for instance&mdash;to detect if labs are overfitting to pelicans. When Gemini 3.1 launched with an animated pelican riding a bicycle in their promotional video, he thought he'd caught them. But they did all the other animal-vehicle combinations too.
+        </p>
+        <p class="body-text" style="margin-top:1.5rem;">
+          Why pelicans? Simon lives in Half Moon Bay near the world's second-largest roosting colony of California brown pelicans. He just likes pelicans.
+        </p>
+      </div>
+      <div class="fade-up d3" style="margin-top:2rem; padding-top:1.5rem; border-top:2px solid #1a0e08;">
+        <p class="pull-quote" style="font-size:1.4rem; color:#3d2b1f; max-width:750px;">
+          "All I want from life is a really good picture of a pelican riding a bicycle. If I can trick every AI lab in the world into cheating on benchmarks to get it, that just achieves my goal."
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SPREAD 9 — NEON / CYBERPUNK — The Lethal Trifecta
+     ============================================================ -->
+<section class="spread spread-9">
+  <div class="numeral-bg">IX</div>
+  <div class="container">
+    <p class="kicker fade-up">Security Warning</p>
+    <h1 class="headline fade-up d1">The Lethal Trifecta &amp; the Challenger Disaster of AI</h1>
+    <p class="deck fade-up d2" style="color:#80b0a0; max-width:700px;">
+      Prompt injection is the unsolved crisis of AI applications. And Simon believes a catastrophic incident is inevitable.
+    </p>
+    <div class="neon-grid fade-up d3">
+      <div>
+        <div class="neon-box">
+          <p style="font-family:'Inter',sans-serif; font-weight:700; color:#00ffc8; font-size:0.85rem; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:1rem;">The Three Legs</p>
+          <p class="body-text" style="margin-bottom:1rem;">
+            <strong style="color:#a0ffe0;">1. Private Data</strong> &mdash; The agent has access to sensitive information like your inbox.
+          </p>
+          <p class="body-text" style="margin-bottom:1rem;">
+            <strong style="color:#a0ffe0;">2. Malicious Input</strong> &mdash; An attacker can get their text into your system (e.g., sending you an email).
+          </p>
+          <p class="body-text">
+            <strong style="color:#a0ffe0;">3. Exfiltration</strong> &mdash; The agent can send data back to the attacker (e.g., forwarding an email).
+          </p>
+        </div>
+        <p class="body-text fade-up d4" style="margin-top:1.5rem;">
+          You can get to 97% effectiveness on injection filters. Simon considers that a failing grade. Three out of 100 attacks steal everything. Until it's 100%, it just gives people a false sense of security.
+        </p>
+      </div>
+      <div>
+        <div class="neon-box">
+          <p class="pull-quote" style="font-size:1.3rem;">
+            "Every single time you get away with launching a space shuttle without the O-rings failing, you institutionally feel more confident. We've been using these systems in increasingly unsafe ways. This is going to catch up with us."
+          </p>
+        </div>
+        <p class="body-text fade-up d4" style="margin-top:1.5rem;">
+          The concept comes from the Challenger disaster's "normalization of deviance." People knew the O-rings were unreliable, but kept launching. Simon has made this prediction every six months for three years. It hasn't happened. That's exactly the pattern that should scare us most.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SPREAD 10 — CLEAN PRODUCT — Closer
+     ============================================================ -->
+<section class="spread spread-10">
+  <div class="numeral-bg">X</div>
+  <div class="container">
+    <p class="kicker fade-up">Looking Ahead</p>
+    <h1 class="headline fade-up d1">What Comes Next</h1>
+    <p class="deck fade-up d2" style="margin-bottom:2rem;">
+      Simon's ambitions for the road ahead&mdash;and a rare piece of good news about 2026.
+    </p>
+    <ul class="feature-list fade-up d3">
+      <li>
+        <span class="icon">&rarr;</span>
+        <span><strong>Data journalism meets AI:</strong> Building tools to help journalists tell stories with data&mdash;feeding in PDFs of police reports, extracting key details, building database tables. Goal: software that contributes to Pulitzer Prize-winning reporting.</span>
+      </li>
+      <li>
+        <span class="icon">&rarr;</span>
+        <span><strong>The "not-a-book":</strong> Publishing agentic engineering patterns one chapter at a time on his blog. No editor, no publisher pressure&mdash;just writing when he feels like it.</span>
+      </li>
+      <li>
+        <span class="icon">&rarr;</span>
+        <span><strong>Building his own claw:</strong> "The new hello world of AI engineering is going to be building your own claw." Personal AI assistants are the killer app&mdash;if someone can make them safe.</span>
+      </li>
+      <li>
+        <span class="icon">&rarr;</span>
+        <span><strong>Blog as business:</strong> After years as an unpaid side project, simonwillison.net is now making real money through subtle sponsorship banners and newsletter ads.</span>
+      </li>
+      <li>
+        <span class="icon">&rarr;</span>
+        <span><strong>Zero-deliverable consulting:</strong> An hour of full attention. No report. No code. Just his time and 25 years of experience.</span>
+      </li>
+    </ul>
+    <div class="closer-card fade-up d4">
+      <p class="pull-quote">
+        "There is a rare parrot in New Zealand called the Kakapo. There are only 250 left. They haven't bred in four years. This year, the Rimu trees are in fruit. There have been dozens of new chicks. It's a really, really good time for rare New Zealand parrots."
+      </p>
+      <p class="attrib" style="margin-top:1rem;">&mdash; Simon Willison's rare piece of excellent news about 2026</p>
+    </div>
+    <p style="text-align:center; margin-top:3rem; font-family:'Inter',sans-serif; font-size:0.85rem; color:#9a9aba; letter-spacing:0.1em;" class="fade-up d5">
+      Source: Lenny's Podcast &bull; Simon Willison Interview &bull; 2026
+    </p>
+  </div>
+</section>
+
+<script>
+(function() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -50px 0px'
+  });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+})();
+</script>
+</body>
+</html>

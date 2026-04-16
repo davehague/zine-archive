@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Love Letter to Value Pricing — Carl Franklin × Ditching Hourly</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --fr: 'Fraunces', serif;
+  --in: 'Inter', sans-serif;
+}
+
+html { scroll-behavior: smooth; font-size: 18px; }
+body { font-family: var(--in); line-height: 1.6; overflow-x: hidden; }
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══════════════════════════════════════
+   SPREAD 1 — COVER (Midnight / Deep Navy)
+   ═══════════════════════════════════════ */
+.spread-1 {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #0a0a1a 0%, #0d1b2a 40%, #1b2838 100%);
+  color: #f0ece2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.spread-1::before {
+  content: '';
+  position: absolute;
+  top: -20%; left: -20%;
+  width: 140%; height: 140%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(200,160,80,0.06) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 30%, rgba(100,140,200,0.04) 0%, transparent 50%);
+  pointer-events: none;
+}
+.spread-1 .kicker {
+  font-family: var(--in);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #c8a04e;
+  margin-bottom: 2rem;
+}
+.spread-1 h1 {
+  font-family: var(--fr);
+  font-size: clamp(3.5rem, 9vw, 9rem);
+  font-weight: 900;
+  line-height: 0.95;
+  max-width: 14ch;
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+.spread-1 h1 span {
+  color: #c8a04e;
+}
+.spread-1 .subtitle {
+  font-family: var(--in);
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: #8899aa;
+  max-width: 42ch;
+  margin-bottom: 3rem;
+}
+.spread-1 .byline {
+  font-family: var(--in);
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #667788;
+}
+.spread-1 .byline strong { color: #c8a04e; font-weight: 600; }
+
+/* ═══════════════════════════════════════
+   SPREAD 2 — WARM EDITORIAL (Cream & Sepia)
+   ═══════════════════════════════════════ */
+.spread-2 {
+  min-height: 100vh;
+  background: #f5f0e8;
+  color: #2a2520;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  position: relative;
+}
+@media (max-width: 800px) { .spread-2 { grid-template-columns: 1fr; } }
+.spread-2 .left {
+  background: #e8dfd0;
+  padding: 6rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.spread-2 .right {
+  padding: 6rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.spread-2 .section-num {
+  font-family: var(--fr);
+  font-size: 8rem;
+  font-weight: 900;
+  color: rgba(0,0,0,0.06);
+  line-height: 1;
+  margin-bottom: -1rem;
+}
+.spread-2 h2 {
+  font-family: var(--fr);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  margin-bottom: 1.5rem;
+  color: #1a1510;
+}
+.spread-2 .intro-text {
+  font-family: var(--in);
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #4a4035;
+  max-width: 50ch;
+}
+.spread-2 .pull-quote {
+  font-family: var(--fr);
+  font-size: 1.6rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: #6b4c2a;
+  border-left: 4px solid #c8a04e;
+  padding-left: 1.5rem;
+  margin: 2rem 0;
+  max-width: 40ch;
+}
+.spread-2 .attribution {
+  font-family: var(--in);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #999;
+  margin-top: 0.5rem;
+}
+
+/* ═══════════════════════════════════════
+   SPREAD 3 — TERMINAL GREEN-ON-BLACK
+   ═══════════════════════════════════════ */
+.spread-3 {
+  min-height: 100vh;
+  background: #080c08;
+  color: #33ff66;
+  font-family: 'Courier New', monospace;
+  padding: 5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.spread-3::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,255,0,0.02) 2px,
+    rgba(0,255,0,0.02) 4px
+  );
+  pointer-events: none;
+}
+.spread-3 .prompt { color: #1a9944; margin-bottom: 0.5rem; font-size: 0.85rem; }
+.spread-3 h2 {
+  font-family: var(--fr);
+  font-size: clamp(3rem, 6vw, 6rem);
+  font-weight: 900;
+  color: #33ff66;
+  line-height: 1;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 30px rgba(51,255,102,0.3);
+}
+.spread-3 .terminal-block {
+  background: rgba(0,255,0,0.03);
+  border: 1px solid rgba(51,255,102,0.15);
+  border-radius: 4px;
+  padding: 2rem;
+  max-width: 72ch;
+  margin-bottom: 2rem;
+}
+.spread-3 .terminal-block p {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #22cc55;
+  margin-bottom: 1rem;
+}
+.spread-3 .stat-row {
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+.spread-3 .stat {
+  text-align: left;
+}
+.spread-3 .stat .num {
+  font-family: var(--fr);
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #33ff66;
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(51,255,102,0.4);
+}
+.spread-3 .stat .label {
+  font-size: 0.75rem;
+  color: #1a9944;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-top: 0.3rem;
+}
+
+/* ═══════════════════════════════════════
+   SPREAD 4 — BROADSHEET NEWSPAPER
+   ═══════════════════════════════════════ */
+.spread-4 {
+  min-height: 100vh;
+  background: #faf6ef;
+  color: #1a1a1a;
+  padding: 4rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.spread-4 .masthead {
+  text-align: center;
+  border-bottom: 3px double #1a1a1a;
+  border-top: 3px double #1a1a1a;
+  padding: 1rem 0;
+  margin-bottom: 3rem;
+}
+.spread-4 .masthead h2 {
+  font-family: var(--fr);
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  font-style: italic;
+}
+.spread-4 .masthead .date-line {
+  font-family: var(--in);
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #888;
+  margin-top: 0.5rem;
+}
+.spread-4 .columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+@media (max-width: 800px) { .spread-4 .columns { grid-template-columns: 1fr; } }
+.spread-4 .col { border-right: 1px solid #ddd; padding-right: 2rem; }
+.spread-4 .col:last-child { border-right: none; padding-right: 0; }
+.spread-4 .col h3 {
+  font-family: var(--fr);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+.spread-4 .col p {
+  font-family: var(--in);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #333;
+  text-align: justify;
+  hyphens: auto;
+}
+.spread-4 .col .dropcap::first-letter {
+  font-family: var(--fr);
+  font-size: 3.5rem;
+  float: left;
+  line-height: 0.8;
+  margin-right: 0.1em;
+  font-weight: 900;
+  color: #1a1a1a;
+}
+
+/* ═══════════════════════════════════════
+   SPREAD 5 — NEON CYBERPUNK
+   ═══════════════════════════════════════ */
+.spread-5 {
+  min-height: 100vh;
+  background: #0a0010;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
+.spread-5::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(255,0,200,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(0,200,255,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+.spread-5 h2 {
+  font-family: var(--fr);
+  font-size: clamp(3rem, 7vw, 7rem);
+  font-weight: 900;
+  text-align: center;
+  line-height: 1;
+  margin-bottom: 3rem;
+  background: linear-gradient(90deg, #ff00cc, #00ccff, #ff00cc);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: neonShift 4s ease-in-out infinite;
+}
+@keyframes neonShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.spread-5 .card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  width: 100%;
+}
+.spread-5 .card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,0,200,0.2);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.spread-5 .card:hover {
+  border-color: rgba(0,200,255,0.5);
+  box-shadow: 0 0 30px rgba(0,200,255,0.1);
+}
+.spread-5 .card .card-num {
+  font-family: var(--fr);
+  font-size: 3rem;
+  font-weight: 900;
+  color: rgba(255,0,200,0.3);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.spread-5 .card h3 {
+  font-family: var(--fr);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #fff;
+}
+.spread-5 .card p {
+  font-family: var(--in);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #8899aa;
+}
+
+/* ═══════════════════════════════════════
+   SPREAD 6 — HIGH CONTRAST RED & WHITE
+   ═══════════════════════════════════════ */
+.spread-6 {
+  min-height: 100vh;
+  background: #fff;
+  color: #1a1a1a;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  position: relative;
+}
+@media (max-width: 800px) { .spread-6 { grid-template-columns: 1fr; } }
+.spread-6 .accent-bar {
+  width: 80px;
+  background: #cc0000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.spread-6 .accent-bar span {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: var(--in);
+  font-weight: 800;
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.spread-6 .content {
+  padding: 6rem 5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 900px;
+}
+.spread-6 h2 {
+  font-family: var(--fr);
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 2rem;
+}
+.spread-6 h2 span { color: #cc0000; }
+.spread-6 .big-quote {
+  font-family: var(--fr);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-style: italic;
+  line-height: 1.4;
+  color: #333;
+  margin-bottom: 2rem;
+  max-width: 50ch;
+  position: relative;
+  padding-left: 2rem;
+}
+.spread-6 .big-quote::before {
+  content: '"';
+  font-family: var(--fr);
+  font-size: 6rem;
+  color: #cc0000;
+  position: absolute;
+  left: -0.5rem;
+  top: -1.5rem;
+  line-height: 1;
+}
+.spread-6 .body-text {
+  font-family: var(--in);
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #444;
+  max-width: 60ch;
+}
+
+/* ═══════════════════════════════════════
+   SPREAD 7 — DARK AMBER / WHISKY EDITORIAL
+   ═══════════════════════════════════════ */
+.spread-7 {
+  min-height: 100vh;
+  background: linear-gradient(170deg, #1a1208 0%, #2a1f10 50%, #1a1208 100%);
+  color: #e8d5b0;
+  padding: 6rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.spread-7 h2 {
+  font-family: var(--fr);
+  font-size: clamp(3rem, 6vw, 6rem);
+  font-weight: 900;
+  text-align: center;
+  line-height: 1;
+  margin-bottom: 3rem;
+  color: #c8a04e;
+}
+.spread-7 .timeline {
+  max-width: 700px;
+  width: 100%;
+  position: relative;
+  padding-left: 3rem;
+}
+.spread-7 .timeline::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, #c8a04e, transparent);
+}
+.spread-7 .timeline-item {
+  margin-bottom: 3rem;
+  position: relative;
+}
+.spread-7 .timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -3.35rem;
+  top: 0.5rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #c8a04e;
+  box-shadow: 0 0 10px rgba(200,160,78,0.4);
+}
+.spread-7 .timeline-item .year {
+  font-family: var(--fr);
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #c8a04e;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.spread-7 .timeline-item h3 {
+  font-family: var(--fr);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #e8d5b0;
+  margin-bottom: 0.5rem;
+}
+.spread-7 .timeline-item p {
+  font-family: var(--in);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #a08b6a;
+}
+
+/* ═══════════════════════════════════════
+   SPREAD 8 — LAVENDER / SOFT MODERN
+   ═══════════════════════════════════════ */
+.spread-8 {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0eaf6 0%, #e8e0f0 50%, #f5f0fa 100%);
+  color: #2a2040;
+  padding: 6rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.spread-8 h2 {
+  font-family: var(--fr);
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 900;
+  text-align: center;
+  line-height: 1.05;
+  margin-bottom: 3rem;
+  color: #2a2040;
+}
+.spread-8 .insight-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 900px;
+  width: 100%;
+}
+@media (max-width: 700px) { .spread-8 .insight-grid { grid-template-columns: 1fr; } }
+.spread-8 .insight {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 2.5rem;
+  border: 1px solid rgba(100,60,160,0.08);
+}
+.spread-8 .insight .icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+.spread-8 .insight h3 {
+  font-family: var(--fr);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #3a2060;
+}
+.spread-8 .insight p {
+  font-family: var(--in);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #5a4a70;
+}
+
+/* ═══════════════════════════════════════
+   SPREAD 9 — BRUTALIST / CONCRETE
+   ═══════════════════════════════════════ */
+.spread-9 {
+  min-height: 100vh;
+  background: #e5e2dd;
+  color: #1a1a1a;
+  padding: 5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.spread-9 .big-number {
+  font-family: var(--fr);
+  font-size: clamp(6rem, 15vw, 14rem);
+  font-weight: 900;
+  line-height: 0.85;
+  color: #1a1a1a;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.spread-9 .big-label {
+  font-family: var(--in);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #888;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+.spread-9 .quote-stack {
+  max-width: 700px;
+  width: 100%;
+}
+.spread-9 .q-item {
+  padding: 2rem 0;
+  border-top: 2px solid #1a1a1a;
+}
+.spread-9 .q-item:last-child {
+  border-bottom: 2px solid #1a1a1a;
+}
+.spread-9 .q-item blockquote {
+  font-family: var(--fr);
+  font-size: 1.4rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+}
+.spread-9 .q-item cite {
+  font-family: var(--in);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #999;
+  font-style: normal;
+}
+
+/* ═══════════════════════════════════════
+   SPREAD 10 — CLOSING (Deep Blue Gradient)
+   ═══════════════════════════════════════ */
+.spread-10 {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #0a1628 0%, #0f2040 50%, #1a3060 100%);
+  color: #d0dce8;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 5rem 3rem;
+  position: relative;
+}
+.spread-10::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(200,160,78,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+.spread-10 h2 {
+  font-family: var(--fr);
+  font-size: clamp(3rem, 7vw, 7rem);
+  font-weight: 900;
+  font-style: italic;
+  line-height: 1;
+  margin-bottom: 2rem;
+  color: #c8a04e;
+}
+.spread-10 .closing-text {
+  font-family: var(--in);
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #8899aa;
+  max-width: 50ch;
+  margin-bottom: 3rem;
+}
+.spread-10 .links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+.spread-10 .links a {
+  font-family: var(--in);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #c8a04e;
+  text-decoration: none;
+  padding: 0.7rem 1.5rem;
+  border: 1px solid rgba(200,160,78,0.3);
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+.spread-10 .links a:hover {
+  background: rgba(200,160,78,0.1);
+  border-color: #c8a04e;
+}
+.spread-10 .colophon {
+  font-family: var(--in);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #445566;
+  margin-top: 2rem;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ SPREAD 1: COVER ═══ -->
+<section class="spread-1">
+  <div class="fade-up">
+    <p class="kicker">Ditching Hourly · Carl Franklin</p>
+    <h1>A Love Letter to <span>Value Pricing</span></h1>
+    <p class="subtitle">Nearly 2,000 episodes of .NET Rocks, a Starbucks hack that hit CNN, and the pricing model that changed everything.</p>
+    <p class="byline">Featuring <strong>Carl Franklin</strong> in conversation with <strong>Jonathan Stark</strong></p>
+  </div>
+</section>
+
+<!-- ═══ SPREAD 2: WARM EDITORIAL — The Origin Story ═══ -->
+<section class="spread-2">
+  <div class="left fade-up">
+    <div class="section-num">01</div>
+    <h2>Before the Word "Podcast" Existed</h2>
+    <p class="intro-text">In 2002, Carl Franklin started recording conversations and putting them on the web — calling them an "internet audio talk show for .NET developers." He had a mailing list of 25,000–30,000 people from his Visual Basic homepage and a training company called Franklin's .NET. When RSS feeds came around, he already had a hundred episodes and all the metadata in a database. When Apple made podcasting take off, it was just the next bump.</p>
+  </div>
+  <div class="right fade-up">
+    <div class="pull-quote">
+      "I had a podcast called .NET Rocks that I started in 2002. And if you do the math, that was before the word podcast existed."
+      <div class="attribution">— Carl Franklin</div>
+    </div>
+    <div class="pull-quote">
+      "We had people who wanted to burn them to CDs and so they were complaining when the podcast got too long they couldn't fit it all on one."
+      <div class="attribution">— Carl Franklin, on the early growing pains</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SPREAD 3: TERMINAL — By the Numbers ═══ -->
+<section class="spread-3">
+  <div class="fade-up">
+    <p class="prompt">$ cat carl_franklin_stats.txt</p>
+    <h2>The Numbers Don't Lie</h2>
+    <div class="terminal-block">
+      <p>Carl's .NET Rocks podcast is approaching its 2,000th episode — a staggering run that began with phone calls recorded via hybrid telephone technology. Episode 1,979 was the last recorded at the time of this conversation. Richard Campbell has co-hosted since episode 100. And along the way, Carl turned a Starbucks barcode stunt into over a million website hits in three days.</p>
+    </div>
+    <div class="stat-row">
+      <div class="stat">
+        <div class="num">~2,000</div>
+        <div class="label">Episodes of .NET Rocks</div>
+      </div>
+      <div class="stat">
+        <div class="num">2002</div>
+        <div class="label">Year the show launched</div>
+      </div>
+      <div class="stat">
+        <div class="num">1M+</div>
+        <div class="label">Website hits in ~3 days</div>
+      </div>
+      <div class="stat">
+        <div class="num">25–30K</div>
+        <div class="label">Mailing list subscribers</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SPREAD 4: BROADSHEET — The Why Conversation ═══ -->
+<section class="spread-4">
+  <div class="fade-up">
+    <div class="masthead">
+      <h2>The Why Conversation</h2>
+      <div class="date-line">The Three Questions That Unlock Value Pricing — From Alan Weiss via Jonathan Stark</div>
+    </div>
+    <div class="columns">
+      <div class="col">
+        <h3>Why This?</h3>
+        <p class="dropcap">Do you have to build this? Is there something you can get off the shelf and modify? By the time a prospect is talking to you, Carl notes, the answer is usually no — it's too complex, too much business logic to customize. So you write that down. You're documenting why a custom build is unavoidable, capturing the language they use, building the foundation for a proposal they'll recognize as their own words reflected back.</p>
+      </div>
+      <div class="col">
+        <h3>Why Now?</h3>
+        <p class="dropcap">Can it wait a year? You're basically trying to talk them out of hiring you. Hopefully the answer is something like "the current application is hemorrhaging money." That's a ding ding ding. Carl observes they've usually waited too long by the time they're calling. The urgency isn't manufactured — it's real, and they want you to understand it. This is where the value lives.</p>
+      </div>
+      <div class="col">
+        <h3>Why Me?</h3>
+        <p class="dropcap">You could hire a team from Bangalore for $30 an hour. Hopefully they'll say they did their research, found your reputation, read the testimonials. Carl's newest client found him through Reddit research. Another didn't realize until halfway through the project that he was Carl Franklin from .NET Rocks — "and like his whole attitude changed after that."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SPREAD 5: NEON CYBERPUNK — The Three Options ═══ -->
+<section class="spread-5">
+  <div class="fade-up">
+    <h2>The Three‑Option Proposal</h2>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-num">01</div>
+        <h3>Option One: The MVP</h3>
+        <p>A minimum viable product for less money. Doesn't include everything in the spec they wanted, but it covers the major things. The safety net. The "if budget is truly tight" option that still delivers real value.</p>
+      </div>
+      <div class="card">
+        <div class="card-num">02</div>
+        <h3>Option Two: The Full Spec</h3>
+        <p>Everything you all agreed on during phase one — the documentation and discovery. Every feature, every requirement, at a higher price. The complete vision, as scoped.</p>
+      </div>
+      <div class="card">
+        <div class="card-num">03</div>
+        <h3>Option Three: The Works</h3>
+        <p>Bells and whistles: penetration testing from a reputable security company, CSS design polish, accessibility, end-to-end testing, QA testers to bang on the product. Things typically not in a software spec. And they always pick option three.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SPREAD 6: HIGH CONTRAST RED — The Mind Shift ═══ -->
+<section class="spread-6">
+  <div class="accent-bar"><span>The Mind Shift</span></div>
+  <div class="content fade-up">
+    <h2>Less Stress. <span>More Money.</span></h2>
+    <div class="big-quote">
+      My customers love this. Because they know exactly how much they're going to pay, and I have guaranteed them that I'm going to keep working until they say it's done and until our spec is complete.
+    </div>
+    <p class="body-text">
+      When asked about the financial impact of switching to value pricing, Carl doesn't hesitate: "Less stress for me, more money." There's no argument at the end of the project about bugs. No "I want to be paid to fix the bugs" / "We're not going to pay you to fix the bugs" blowup. The car lot metaphor says it all — imagine taking a car for a few months and then being told how much it costs. Nobody wants that. A fixed price, tied to value, gives everyone certainty. And when Carl told his new client "we're not going to stop working until you're satisfied," they replied: "Sounds too good to be true." Another guy chimed in: "Well, you haven't seen the number yet."
+    </p>
+  </div>
+</section>
+
+<!-- ═══ SPREAD 7: DARK AMBER — Carl's Value Pricing Journey ═══ -->
+<section class="spread-7">
+  <div class="fade-up">
+    <h2>The Journey</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="year">Project 1</div>
+        <h3>First Swing — A Home Run</h3>
+        <p>"The first project went exceedingly well even though it was kind of small." A clean, confident start that proved the model worked.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="year">Project 2</div>
+        <h3>The Spec That Walked</h3>
+        <p>The customer took Carl's detailed phase-one proposal and shopped it to another team. "That was fine." The $5,000 discovery phase was a product — if they wanted the lowest bidder, have at it.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="year">Project 3</div>
+        <h3>The One That Shouldn't Have Been Value Priced</h3>
+        <p>A cautionary tale. The client wanted milestone-based payments. "You should be able to smell when it's not going to be a good client for value pricing."</p>
+      </div>
+      <div class="timeline-item">
+        <div class="year">Project 4</div>
+        <h3>The .NET Rocks Fan</h3>
+        <p>"The guy found me from .NET Rocks, was a huge listener and I still keep in touch with them and do work for them to this day." The power of reputation compounding.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="year">Projects 5 & 6</div>
+        <h3>Multi-Year Engagements</h3>
+        <p>Currently deep in a 2-year project with another year-long engagement on deck. Taking them in chunks — each one a win that builds confidence for the next.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SPREAD 8: LAVENDER — AI, Experience & Expertise ═══ -->
+<section class="spread-8">
+  <div class="fade-up">
+    <h2>You Can't Fake Expertise</h2>
+    <div class="insight-grid">
+      <div class="insight">
+        <div class="icon">🎯</div>
+        <h3>Know What to Ask</h3>
+        <p>"It's easier for guys like us who've been around the block because we know what questions to ask and we know to recognize the answer as inappropriate or not right." The agents might give you a solution that works — but it's dumb. You wouldn't know that without experience.</p>
+      </div>
+      <div class="insight">
+        <div class="icon">🔍</div>
+        <h3>The Framework Trap</h3>
+        <p>Carl's telling example: your boss asks for a class that does X. You ask ChatGPT to write it. It works. But the framework already has that class built in. "The question should have been: is there anything in the tool set that I'm using that does this?"</p>
+      </div>
+      <div class="insight">
+        <div class="icon">⚡</div>
+        <h3>Grunt Work, Not Thinking</h3>
+        <p>Jonathan gets the most utility from AI "when I'm asking it to do some grunt work that I'm capable of doing. I just don't want to do it. Because then I can verify the results." If you don't know what correct looks like, you have no way to verify.</p>
+      </div>
+      <div class="insight">
+        <div class="icon">🛡️</div>
+        <h3>Be Good First</h3>
+        <p>"First of all, you have to not be a bullshitter. You can't BS your way into something like this. You actually have to do the work and you have to be good enough to do the work." Then show the world you can. Blog. Contribute to open source. Answer questions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SPREAD 9: BRUTALIST — The Quotes ═══ -->
+<section class="spread-9">
+  <div class="fade-up">
+    <div class="big-number">5/5</div>
+    <div class="big-label">Value-priced projects with happy customers</div>
+    <div class="quote-stack">
+      <div class="q-item">
+        <blockquote>"Never had a regret. We always put enough in there to satisfy our income requirements. And according to the value to them."</blockquote>
+        <cite>— Carl Franklin</cite>
+      </div>
+      <div class="q-item">
+        <blockquote>"It's like imagine going to the car lot and them saying, 'You just take it and drive it around for a few months and then we'll let you know how much it is.' No, no."</blockquote>
+        <cite>— Carl Franklin, on why clients love fixed prices</cite>
+      </div>
+      <div class="q-item">
+        <blockquote>"Sounds too good to be true." — And another guy chimed in: "Well, you haven't seen the number yet."</blockquote>
+        <cite>— Carl's prospective client, upon hearing the value pricing pitch</cite>
+      </div>
+      <div class="q-item">
+        <blockquote>"My advice in three words is: just be awesome."</blockquote>
+        <cite>— Carl Franklin</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SPREAD 10: CLOSING ═══ -->
+<section class="spread-10">
+  <div class="fade-up">
+    <h2>Just Be Awesome.</h2>
+    <p class="closing-text">
+      Carl Franklin has been building software, teaching developers, and recording conversations since the late 1990s. His portfolio today spans .NET Rocks, Blazer Train, Blazer Puzzle, Code It with AI (with Jeff Fritz from Microsoft), and Security This Week with the team from Pulsar Security. But the throughline is simple: be genuinely good at what you do, show the world, and price for value — not hours.
+    </p>
+    <div class="links">
+      <a href="https://dotnetrocks.com" target="_blank">.NET Rocks</a>
+      <a href="https://blazertrain.com" target="_blank">Blazer Train</a>
+      <a href="https://jonathanstark.com" target="_blank">Jonathan Stark</a>
+    </div>
+    <p class="colophon">Source: Ditching Hourly Podcast · Carl Franklin interview · Hosted by Jonathan Stark</p>
+  </div>
+</section>
+
+<script>
+// Scroll-triggered fade-up animations via IntersectionObserver
+document.addEventListener('DOMContentLoaded', function() {
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -50px 0px'
+  });
+
+  document.querySelectorAll('.fade-up').forEach(function(el) {
+    observer.observe(el);
+  });
+});
+</script>
+</body>
+</html>

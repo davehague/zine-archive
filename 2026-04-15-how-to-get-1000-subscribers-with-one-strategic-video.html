@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Get 1,000 Subscribers With ONE Strategic Video</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Inter', sans-serif; overflow-x: hidden; background: #0a0a0a; color: #e0e0e0; }
+
+/* Utility */
+.container { max-width: 1400px; margin: 0 auto; padding: 0 4rem; }
+.fade-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.fade-up.d1 { transition-delay: 0.1s; }
+.fade-up.d2 { transition-delay: 0.2s; }
+.fade-up.d3 { transition-delay: 0.35s; }
+.fade-up.d4 { transition-delay: 0.5s; }
+.fade-up.d5 { transition-delay: 0.65s; }
+
+/* ===================== SPREAD 1: COVER ===================== */
+.spread-cover {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  background: #faf6f0;
+  background-image:
+    radial-gradient(ellipse at 20% 80%, rgba(200,160,100,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(180,120,80,0.08) 0%, transparent 60%);
+  overflow: hidden;
+}
+.spread-cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+.cover-content { position: relative; z-index: 2; max-width: 900px; padding: 2rem; }
+.cover-kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #b8860b;
+  margin-bottom: 1.5rem;
+}
+.cover-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(3rem, 8vw, 7.5rem);
+  font-weight: 900;
+  line-height: 0.95;
+  color: #1a1a1a;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.03em;
+}
+.cover-title em { font-style: italic; color: #b8860b; }
+.cover-divider {
+  width: 80px;
+  height: 3px;
+  background: #b8860b;
+  margin: 2rem auto;
+}
+.cover-deck {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: #555;
+  line-height: 1.7;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+.cover-attribution {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #999;
+  letter-spacing: 0.1em;
+}
+.cover-attribution strong { color: #1a1a1a; font-weight: 700; }
+.cover-numeral {
+  position: absolute;
+  bottom: -8%;
+  right: -5%;
+  font-family: 'Fraunces', serif;
+  font-size: 28rem;
+  font-weight: 900;
+  color: rgba(0,0,0,0.03);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ===================== SPREAD 2: DARK/MIDNIGHT — The Ranked Video ===================== */
+.spread-ranked {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: #0d1117;
+  overflow: hidden;
+}
+.spread-ranked::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 50%, rgba(56,120,200,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(100,60,200,0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+.ranked-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+.ranked-numeral {
+  position: absolute;
+  top: -5%;
+  left: -3%;
+  font-family: 'Fraunces', serif;
+  font-size: 22rem;
+  font-weight: 900;
+  color: rgba(56,120,200,0.06);
+  line-height: 1;
+  pointer-events: none;
+}
+.ranked-kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #5b9bf5;
+  margin-bottom: 1rem;
+}
+.ranked-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+.ranked-body {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #a0aec0;
+  margin-bottom: 2rem;
+}
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.stat-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(91,155,245,0.15);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+.stat-number {
+  font-family: 'Fraunces', serif;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #5b9bf5;
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+.stat-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #5a6a80;
+}
+.ranked-pullquote {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: #c8d6e5;
+  border-left: 3px solid #5b9bf5;
+  padding-left: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* ===================== SPREAD 3: WARM EDITORIAL — The System ===================== */
+.spread-system {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: #f5f0e8;
+  overflow: hidden;
+}
+.spread-system::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(0,0,0,0.03) 79px, rgba(0,0,0,0.03) 80px),
+    repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(0,0,0,0.03) 79px, rgba(0,0,0,0.03) 80px);
+  pointer-events: none;
+}
+.system-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 3rem;
+  align-items: start;
+  position: relative;
+  z-index: 2;
+  padding: 4rem 0;
+}
+.system-numeral {
+  position: absolute;
+  top: 2%;
+  right: 2%;
+  font-family: 'Fraunces', serif;
+  font-size: 18rem;
+  font-weight: 900;
+  color: rgba(0,0,0,0.04);
+  line-height: 1;
+  pointer-events: none;
+}
+.system-kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #8b6914;
+  margin-bottom: 1rem;
+}
+.system-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: #1a1a1a;
+  margin-bottom: 1.5rem;
+}
+.system-body {
+  font-size: 1.15rem;
+  line-height: 1.85;
+  color: #4a4a4a;
+  margin-bottom: 1.5rem;
+}
+.system-quote-block {
+  background: #1a1a1a;
+  color: #f5f0e8;
+  padding: 2.5rem;
+  border-radius: 8px;
+  position: relative;
+}
+.system-quote-block::before {
+  content: '\201C';
+  font-family: 'Fraunces', serif;
+  font-size: 6rem;
+  color: rgba(255,255,255,0.1);
+  position: absolute;
+  top: -10px;
+  left: 15px;
+  line-height: 1;
+}
+.system-quote-text {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: #f5f0e8;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 2;
+}
+.system-quote-attr {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #b8860b;
+  letter-spacing: 0.1em;
+}
+.system-sidebar {
+  background: #2d2520;
+  color: #f5f0e8;
+  padding: 2.5rem;
+  border-radius: 8px;
+}
+.sidebar-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #e8d5b5;
+}
+.sidebar-step {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+  align-items: flex-start;
+}
+.sidebar-step-num {
+  font-family: 'Fraunces', serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #b8860b;
+  line-height: 1;
+  min-width: 30px;
+}
+.sidebar-step-text {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #c8b89a;
+}
+
+/* ===================== SPREAD 4: ROSE/STAMP — The ASQ Method ===================== */
+.spread-asq {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: #121015;
+  overflow: hidden;
+}
+.spread-asq::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 80% 30%, rgba(200,40,60,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 70%, rgba(160,30,50,0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+.asq-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+.asq-stamp {
+  width: 260px;
+  height: 260px;
+  border: 4px solid #c82840;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  transform: rotate(-8deg);
+  position: relative;
+}
+.asq-stamp::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 2px solid rgba(200,40,64,0.4);
+  border-radius: 50%;
+}
+.asq-stamp-title {
+  font-family: 'Fraunces', serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #c82840;
+  line-height: 1;
+}
+.asq-stamp-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #c82840;
+  margin-top: 0.3rem;
+}
+.asq-kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #c82840;
+  margin-bottom: 1rem;
+}
+.asq-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+.asq-body {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #a09098;
+  margin-bottom: 1.5rem;
+}
+.asq-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.asq-compare-card {
+  padding: 1.2rem;
+  border-radius: 8px;
+  text-align: center;
+}
+.asq-compare-card.bad {
+  background: rgba(200,40,64,0.1);
+  border: 1px solid rgba(200,40,64,0.2);
+}
+.asq-compare-card.good {
+  background: rgba(40,200,100,0.08);
+  border: 1px solid rgba(40,200,100,0.2);
+}
+.asq-compare-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.asq-compare-card.bad .asq-compare-label { color: #c82840; }
+.asq-compare-card.good .asq-compare-label { color: #28c864; }
+.asq-compare-text {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  color: #d0c8cc;
+  line-height: 1.4;
+}
+
+/* ===================== SPREAD 5: TERMINAL — Research Tools ===================== */
+.spread-terminal {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: #0a0e0a;
+  overflow: hidden;
+}
+.terminal-window {
+  background: #111;
+  border: 1px solid #2a3a2a;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 1000px;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 0 80px rgba(0,255,80,0.04);
+}
+.terminal-bar {
+  background: #1a1e1a;
+  padding: 0.8rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid #2a3a2a;
+}
+.terminal-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.terminal-dot.red { background: #ff5f56; }
+.terminal-dot.yellow { background: #ffbd2e; }
+.terminal-dot.green { background: #27c93f; }
+.terminal-bar-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  color: #4a6a4a;
+  margin-left: 0.5rem;
+  letter-spacing: 0.05em;
+}
+.terminal-body {
+  padding: 2rem 2.5rem;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 1rem;
+  line-height: 1.9;
+  color: #33ff66;
+}
+.terminal-comment { color: #3a6a3a; }
+.terminal-cmd { color: #33ff66; }
+.terminal-output { color: #88cc88; }
+.terminal-highlight { color: #ffdd44; font-weight: 700; }
+.terminal-url { color: #66ccff; text-decoration: underline; }
+.terminal-cursor {
+  display: inline-block;
+  width: 10px;
+  height: 1.2em;
+  background: #33ff66;
+  animation: blink 1s step-end infinite;
+  vertical-align: text-bottom;
+  margin-left: 4px;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.terminal-section { margin-bottom: 1.5rem; }
+.terminal-heading {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: #33ff66;
+  font-weight: 800;
+  text-align: center;
+  padding: 2rem 2.5rem 0;
+}
+.terminal-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #3a6a3a;
+  text-align: center;
+  padding: 0.5rem 2.5rem 1rem;
+}
+
+/* ===================== SPREAD 6: ACADEMIC DROP-CAP — Sally & Mary ===================== */
+.spread-academic {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: #0f1b2d;
+  overflow: hidden;
+}
+.spread-academic::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(30,60,100,0.3) 0%, transparent 50%);
+  pointer-events: none;
+}
+.academic-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  position: relative;
+  z-index: 2;
+  padding: 4rem 0;
+}
+.academic-numeral {
+  position: absolute;
+  top: 5%;
+  left: -2%;
+  font-family: 'Fraunces', serif;
+  font-size: 20rem;
+  font-weight: 900;
+  color: rgba(100,150,220,0.05);
+  line-height: 1;
+  pointer-events: none;
+}
+.academic-kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #6496dc;
+  margin-bottom: 1rem;
+}
+.academic-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: #e8eef5;
+  margin-bottom: 1.5rem;
+  grid-column: 1 / -1;
+}
+.academic-drop-cap::first-letter {
+  font-family: 'Fraunces', serif;
+  font-size: 4.5rem;
+  font-weight: 900;
+  float: left;
+  line-height: 0.8;
+  margin-right: 0.6rem;
+  margin-top: 0.1rem;
+  color: #6496dc;
+}
+.academic-body {
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: #8a9ab5;
+}
+.academic-callout {
+  background: rgba(100,150,220,0.1);
+  border: 1px solid rgba(100,150,220,0.2);
+  border-radius: 8px;
+  padding: 2rem;
+  margin-top: 1.5rem;
+}
+.academic-callout-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #e8eef5;
+  margin-bottom: 0.8rem;
+}
+.academic-callout-body {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #8a9ab5;
+}
+.academic-callout-stat {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: #6496dc;
+}
+
+/* ===================== SPREAD 7: BIG-STAT/GOLD — VPH ===================== */
+.spread-vph {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  background: #0e0c08;
+  overflow: hidden;
+}
+.spread-vph::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(200,160,40,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+.vph-content { position: relative; z-index: 2; max-width: 900px; }
+.vph-kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #c8a020;
+  margin-bottom: 1.5rem;
+}
+.vph-hero-stat {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(6rem, 18vw, 14rem);
+  font-weight: 900;
+  line-height: 0.9;
+  color: #c8a020;
+  letter-spacing: -0.04em;
+  text-shadow: 0 0 80px rgba(200,160,32,0.2);
+}
+.vph-hero-label {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: #6a5a20;
+  margin-bottom: 2rem;
+  letter-spacing: 0.05em;
+}
+.vph-body {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #8a7a5a;
+  max-width: 650px;
+  margin: 0 auto 2.5rem;
+}
+.vph-badges {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.vph-badge {
+  background: rgba(200,160,32,0.08);
+  border: 1px solid rgba(200,160,32,0.2);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  text-align: center;
+  min-width: 180px;
+}
+.vph-badge-num {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: #c8a020;
+}
+.vph-badge-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #6a5a20;
+  margin-top: 0.3rem;
+}
+
+/* ===================== SPREAD 8: BROADSHEET — Simple Videos Win ===================== */
+.spread-broadsheet {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: #f8f4ec;
+  overflow: hidden;
+}
+.broadsheet-wrapper {
+  border-top: 6px double #1a1a1a;
+  border-bottom: 6px double #1a1a1a;
+  padding: 3rem 0;
+  position: relative;
+  z-index: 2;
+}
+.broadsheet-masthead {
+  text-align: center;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 2rem;
+}
+.broadsheet-masthead-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 900;
+  color: #1a1a1a;
+  letter-spacing: -0.02em;
+}
+.broadsheet-masthead-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #888;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 0.3rem;
+}
+.broadsheet-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
+}
+.broadsheet-columns > div {
+  border-right: 1px solid #ddd;
+  padding-right: 2rem;
+}
+.broadsheet-columns > div:last-child { border-right: none; padding-right: 0; }
+.broadsheet-col-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 0.8rem;
+  line-height: 1.2;
+}
+.broadsheet-col-body {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: #4a4a4a;
+}
+.broadsheet-stat-banner {
+  background: #c82840;
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+  text-align: center;
+  margin: 1.5rem 0;
+}
+.broadsheet-stat-banner-num {
+  font-family: 'Fraunces', serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+}
+.broadsheet-stat-banner-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 0.2rem;
+}
+
+/* ===================== SPREAD 9: NEON/CYBERPUNK — Resourcefulness ===================== */
+.spread-neon {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: #08080c;
+  overflow: hidden;
+}
+.spread-neon::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0,255,136,0.03) 0%, transparent 100%);
+  pointer-events: none;
+}
+.neon-grid-floor {
+  position: absolute;
+  bottom: 0;
+  left: -10%;
+  right: -10%;
+  height: 35%;
+  background:
+    repeating-linear-gradient(90deg, rgba(0,255,136,0.06) 0px, rgba(0,255,136,0.06) 1px, transparent 1px, transparent 80px),
+    repeating-linear-gradient(0deg, rgba(0,255,136,0.06) 0px, rgba(0,255,136,0.06) 1px, transparent 1px, transparent 80px);
+  transform: perspective(400px) rotateX(45deg);
+  transform-origin: bottom;
+  pointer-events: none;
+}
+.neon-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+.neon-kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #00ff88;
+  margin-bottom: 1rem;
+}
+.neon-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+.neon-title em { color: #00ff88; font-style: normal; }
+.neon-body {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #6a8a7a;
+  margin-bottom: 1.5rem;
+}
+.neon-callout {
+  background: rgba(0,255,136,0.05);
+  border: 1px solid rgba(0,255,136,0.15);
+  border-radius: 8px;
+  padding: 2rem;
+}
+.neon-callout-quote {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-style: italic;
+  line-height: 1.4;
+  color: #c8e8d8;
+  margin-bottom: 0.8rem;
+}
+.neon-callout-attr {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #00ff88;
+}
+.neon-emergence-box {
+  border: 1px solid rgba(0,255,136,0.2);
+  padding: 2rem;
+  border-radius: 8px;
+  position: relative;
+}
+.neon-emergence-box::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00ff88, transparent);
+}
+.neon-emergence-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #00ff88;
+  margin-bottom: 1rem;
+}
+.neon-emergence-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+  font-size: 1.05rem;
+  color: #8aaa9a;
+}
+.neon-emergence-item::before {
+  content: '\25B8';
+  color: #00ff88;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+/* ===================== SPREAD 10: CLEAN PRODUCT — The Call ===================== */
+.spread-closer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  background: #ffffff;
+  overflow: hidden;
+}
+.spread-closer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(79,70,229,0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+.closer-content { position: relative; z-index: 2; max-width: 800px; padding: 2rem; }
+.closer-kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #4f46e5;
+  margin-bottom: 1.5rem;
+}
+.closer-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #1a1a1a;
+  margin-bottom: 1.5rem;
+}
+.closer-title em { font-style: italic; color: #4f46e5; }
+.closer-divider {
+  width: 60px;
+  height: 3px;
+  background: #4f46e5;
+  margin: 2rem auto;
+}
+.closer-body {
+  font-size: 1.25rem;
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 2.5rem;
+}
+.closer-recap {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  text-align: left;
+  margin-bottom: 2.5rem;
+}
+.closer-recap-item {
+  background: #f8f7ff;
+  border: 1px solid rgba(79,70,229,0.12);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+.closer-recap-num {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: #4f46e5;
+  margin-bottom: 0.5rem;
+}
+.closer-recap-text {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #555;
+}
+.closer-final-quote {
+  font-family: 'Fraunces', serif;
+  font-size: 1.8rem;
+  font-style: italic;
+  line-height: 1.4;
+  color: #1a1a1a;
+  margin-bottom: 0.8rem;
+}
+.closer-final-attr {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4f46e5;
+}
+.closer-big-stat {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(4rem, 10vw, 8rem);
+  font-weight: 900;
+  color: #4f46e5;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.03em;
+}
+.closer-big-stat-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #888;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 900px) {
+  .container { padding: 0 1.5rem; }
+  .ranked-grid, .system-layout, .asq-layout, .academic-layout, .neon-layout,
+  .broadsheet-columns, .closer-recap, .asq-compare, .stat-row {
+    grid-template-columns: 1fr !important;
+  }
+  .broadsheet-columns > div { border-right: none; padding-right: 0; border-bottom: 1px solid #ddd; padding-bottom: 1.5rem; }
+  .broadsheet-columns > div:last-child { border-bottom: none; }
+  .asq-stamp { width: 200px; height: 200px; }
+  .asq-stamp-title { font-size: 2.5rem; }
+  .cover-numeral, .ranked-numeral, .system-numeral, .academic-numeral { display: none; }
+  .vph-badges { flex-direction: column; align-items: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== SPREAD 1: COVER ==================== -->
+<section class="spread-cover">
+  <div class="cover-numeral">I</div>
+  <div class="cover-content">
+    <p class="cover-kicker fade-up">YouTube Growth Sprint &bull; Session One</p>
+    <h1 class="cover-title fade-up d1">Get 1,000 Subscribers With <em>One</em> Video</h1>
+    <div class="cover-divider fade-up d2"></div>
+    <p class="cover-deck fade-up d3">The three-step system to predictable YouTube growth in 2026. No fancy equipment needed&mdash;just a smartphone, a strategy, and the courage to press record.</p>
+    <p class="cover-attribution fade-up d4">Based on the training by <strong>Sean Cannell</strong> &bull; Think Media</p>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 2: THE RANKED VIDEO ==================== -->
+<section class="spread-ranked">
+  <div class="ranked-numeral">II</div>
+  <div class="container">
+    <div class="ranked-grid">
+      <div>
+        <p class="ranked-kicker fade-up">The Proof</p>
+        <h2 class="ranked-title fade-up d1">One Video.<br>Seven Years.<br>Still Working.</h2>
+        <p class="ranked-body fade-up d2">Sean posted a single video seven years ago. It wasn&rsquo;t viral clickbait or a production masterpiece. It was a ranked video&mdash;one that answers a specific question people keep searching for. Seven years later, it&rsquo;s still getting views today.</p>
+        <p class="ranked-body fade-up d3">Even at 10% of those results, you&rsquo;d earn $4,000 from one video and gain 5,600 subscribers. At just 1%, that&rsquo;s still $400 from a single upload.</p>
+      </div>
+      <div>
+        <div class="stat-row fade-up d2">
+          <div class="stat-card">
+            <div class="stat-number">$40K</div>
+            <div class="stat-label">Revenue Earned</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">56K</div>
+            <div class="stat-label">Subscribers Gained</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">179K</div>
+            <div class="stat-label">Watch Hours</div>
+          </div>
+        </div>
+        <div class="ranked-pullquote fade-up d3">
+          &ldquo;This isn&rsquo;t about everybody going viral. This is about proven, predictable views.&rdquo;
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 3: THE SYSTEM ==================== -->
+<section class="spread-system">
+  <div class="system-numeral">III</div>
+  <div class="container">
+    <div class="system-layout">
+      <div>
+        <p class="system-kicker fade-up">The Foundation</p>
+        <h2 class="system-title fade-up d1">Fall to the Level of Your Systems</h2>
+        <div class="system-quote-block fade-up d2">
+          <p class="system-quote-text">&ldquo;You don&rsquo;t rise to the level of your goals, you fall to the level of your systems.&rdquo;</p>
+          <p class="system-quote-attr">&mdash; James Clear, Atomic Habits</p>
+        </div>
+        <p class="system-body fade-up d3" style="margin-top:1.5rem;">Why do some people struggle for years while others succeed in months? Sean found the answer after over a decade of coaching creators: the people who succeed follow a system&mdash;a step-by-step method they can trust and repeat. Most creators never even think about having a system.</p>
+        <p class="system-body fade-up d4">If you can follow a recipe, you can make YouTube videos that get views. That&rsquo;s the promise of the seven-step Video Ranking Academy system.</p>
+      </div>
+      <div>
+        <div class="system-sidebar fade-up d2">
+          <h3 class="sidebar-title">The 7-Step VRA System</h3>
+          <div class="sidebar-step"><span class="sidebar-step-num">1</span><span class="sidebar-step-text">Reverse Engineer</span></div>
+          <div class="sidebar-step"><span class="sidebar-step-num">2</span><span class="sidebar-step-text">Research</span></div>
+          <div class="sidebar-step"><span class="sidebar-step-num">3</span><span class="sidebar-step-text">Step 3 (Session 2)</span></div>
+          <div class="sidebar-step"><span class="sidebar-step-num">4</span><span class="sidebar-step-text">Step 4 (Session 2)</span></div>
+          <div class="sidebar-step"><span class="sidebar-step-num">5</span><span class="sidebar-step-text">Step 5 (Session 3)</span></div>
+          <div class="sidebar-step"><span class="sidebar-step-num">6</span><span class="sidebar-step-text">Step 6 (Session 3)</span></div>
+          <div class="sidebar-step"><span class="sidebar-step-num">7</span><span class="sidebar-step-text">Step 7 (Session 4)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 4: THE ASQ METHOD ==================== -->
+<section class="spread-asq">
+  <div class="container">
+    <div class="asq-layout">
+      <div style="display:flex;align-items:center;justify-content:center;">
+        <div class="asq-stamp fade-up">
+          <div class="asq-stamp-title">ASQ</div>
+          <div class="asq-stamp-sub">Answer Specific<br>Questions</div>
+        </div>
+      </div>
+      <div>
+        <p class="asq-kicker fade-up">Step 2 &bull; Research</p>
+        <h2 class="asq-title fade-up d1">The Most Predictable Path to YouTube Growth</h2>
+        <p class="asq-body fade-up d2">Create clear videos that answer specific questions people are searching for. That&rsquo;s it. Not random topics you want to talk about. Not guesses. Verified questions that real people type into YouTube&rsquo;s search bar every single day.</p>
+        <p class="asq-body fade-up d3">86% of US viewers say they use YouTube to learn new things. If you teach, you grow.</p>
+        <div class="asq-compare fade-up d4">
+          <div class="asq-compare-card bad">
+            <div class="asq-compare-label">Before ASQ</div>
+            <p class="asq-compare-text">Random videos, no plan, posting what <em>you</em> want to talk about</p>
+          </div>
+          <div class="asq-compare-card good">
+            <div class="asq-compare-label">After ASQ</div>
+            <p class="asq-compare-text">Verified topics, strategic titles, answering what people <em>search</em> for</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 5: RESEARCH TOOLS ==================== -->
+<section class="spread-terminal">
+  <div class="container">
+    <div class="terminal-window fade-up">
+      <div class="terminal-heading">Your Research Toolkit</div>
+      <div class="terminal-sub">Step 1 &bull; Smart Creators Use Smart Tools</div>
+      <div class="terminal-bar">
+        <div class="terminal-dot red"></div>
+        <div class="terminal-dot yellow"></div>
+        <div class="terminal-dot green"></div>
+        <span class="terminal-bar-title">research_tools.sh &mdash; bash</span>
+      </div>
+      <div class="terminal-body">
+        <div class="terminal-section">
+          <span class="terminal-comment"># TOOL 1: YouTube Search Bar (Free, instant)</span><br>
+          <span class="terminal-cmd">$ youtube_search</span> <span class="terminal-output">"how to get started in video production"</span><br>
+          <span class="terminal-output">&gt; video production for beginners</span><br>
+          <span class="terminal-output">&gt; video production tips</span><br>
+          <span class="terminal-output">&gt; video production equipment</span><br>
+          <span class="terminal-comment"># Top = most searched. Bottom = least searched.</span><br>
+          <span class="terminal-comment"># Pro tip: use underscore + letter before your keyword</span><br>
+          <span class="terminal-cmd">$ youtube_search</span> <span class="terminal-output">"_ lose weight"</span> <span class="terminal-highlight"># reveals hidden gems</span>
+        </div>
+        <div class="terminal-section">
+          <span class="terminal-comment"># TOOL 2: Answer The Public (3 free searches/day)</span><br>
+          <span class="terminal-cmd">$ open</span> <span class="terminal-url">answerthepublic.com</span><br>
+          <span class="terminal-output">&gt; Enter 1-2 words &rarr; "bass fishing"</span><br>
+          <span class="terminal-output">&gt; Select: Google | YouTube | TikTok | Amazon</span><br>
+          <span class="terminal-output">&gt; Result: mind map of actual questions people ask</span><br>
+          <span class="terminal-highlight">&gt; "What bait attracts bass most?"</span><br>
+          <span class="terminal-highlight">&gt; "What is the number one bass lure?"</span><br>
+          <span class="terminal-highlight">&gt; "What is the trick to catching bass?"</span>
+        </div>
+        <div class="terminal-section">
+          <span class="terminal-comment"># TOOL 3: AI Title Generator (ChatGPT/Claude)</span><br>
+          <span class="terminal-cmd">$ ai_prompt</span> <span class="terminal-output">"Write 10 YouTube video titles that</span><br>
+          <span class="terminal-output">&nbsp; answer this question: [YOUR QUESTION]"</span><br>
+          <span class="terminal-highlight">&gt; Titles reveal entirely different video concepts</span><br>
+          <span class="terminal-highlight">&gt; Write title BEFORE pressing record</span><span class="terminal-cursor"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 6: SUCCESS STORIES ==================== -->
+<section class="spread-academic">
+  <div class="academic-numeral">VI</div>
+  <div class="container">
+    <p class="academic-kicker fade-up" style="grid-column:1/-1;">Real Creators, Real Results</p>
+    <h2 class="academic-title fade-up d1">From Zero to Monetized&mdash;The Proof Is in the People</h2>
+    <div class="academic-layout">
+      <div>
+        <p class="academic-body academic-drop-cap fade-up d2">Sally runs a gardening channel in the Pacific Northwest. A master gardener for years, she now helps gardeners over 50 create beautiful gardens. Her first uploads felt slow, but she didn&rsquo;t quit. She applied the system, got monetized in months, and now has a year-old video still earning five views per hour with 44,000 total views and brand deal talks underway.</p>
+        <div class="academic-callout fade-up d3">
+          <p class="academic-callout-title">Sally&rsquo;s Garden Solutions</p>
+          <p class="academic-callout-body">&ldquo;I finally hit my magic numbers and I feel more motivated than ever before.&rdquo;</p>
+          <p class="academic-callout-stat" style="margin-top:0.8rem;">5 VPH &bull; 44K Views</p>
+        </div>
+      </div>
+      <div>
+        <p class="academic-body fade-up d2">Mary discovered Think Media around her 60th birthday. A former New Yorker living in Texas Hill Country, she started making videos about traditional cooking. Her video on how to make apple cider vinegar&mdash;six years old&mdash;still gets seven views per hour and has nearly a million views. By 65, she earned a gold play button, a million subscribers, and a book deal with Random House.</p>
+        <div class="academic-callout fade-up d3">
+          <p class="academic-callout-title">Mary&rsquo;s Kitchen</p>
+          <p class="academic-callout-body">One video. Six years. Still working at 7 views per hour.</p>
+          <p class="academic-callout-stat" style="margin-top:0.8rem;">~1M Views &bull; Gold Play Button</p>
+        </div>
+        <div class="academic-callout fade-up d4" style="margin-top:1rem; border-color: rgba(200,160,40,0.3); background: rgba(200,160,40,0.06);">
+          <p class="academic-callout-title">Kevin &mdash; Real Estate Coach</p>
+          <p class="academic-callout-body">38,000 total channel views. $200,000 earned in his business. Not all views are equal&mdash;you need the <em>right</em> views.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 7: VPH ==================== -->
+<section class="spread-vph">
+  <div class="vph-content">
+    <p class="vph-kicker fade-up">The Metric That Matters</p>
+    <div class="vph-hero-stat fade-up d1">VPH</div>
+    <div class="vph-hero-label fade-up d2">Views Per Hour</div>
+    <p class="vph-body fade-up d3">The obsession isn&rsquo;t viral spikes. It&rsquo;s what happens years later. A ranked video keeps getting discovered&mdash;generating views, watch hours, subscribers, and revenue while you sleep. VPH is the scoreboard for evergreen content.</p>
+    <div class="vph-badges fade-up d4">
+      <div class="vph-badge">
+        <div class="vph-badge-num">7 VPH</div>
+        <div class="vph-badge-label">Mary&rsquo;s 6yr old video</div>
+      </div>
+      <div class="vph-badge">
+        <div class="vph-badge-num">5 VPH</div>
+        <div class="vph-badge-label">Sally&rsquo;s 1yr old video</div>
+      </div>
+      <div class="vph-badge">
+        <div class="vph-badge-num">3 VPH</div>
+        <div class="vph-badge-label">Weber&rsquo;s 4yr old video</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 8: SIMPLE VIDEOS WIN ==================== -->
+<section class="spread-broadsheet">
+  <div class="container">
+    <div class="broadsheet-wrapper fade-up">
+      <div class="broadsheet-masthead">
+        <h2 class="broadsheet-masthead-title">Simple Videos Win</h2>
+        <p class="broadsheet-masthead-sub">Step 2 &bull; Start with videos that are easy to create</p>
+      </div>
+      <div class="broadsheet-columns">
+        <div class="fade-up d1">
+          <h3 class="broadsheet-col-title">The Salt Grinder Video</h3>
+          <p class="broadsheet-col-body">The Weber Enthusiast posted a video called &ldquo;How to Remove Salt Grinder Top.&rdquo; One minute and 42 seconds. No fancy lighting. No fancy equipment. Just answering a specific question.</p>
+          <div class="broadsheet-stat-banner">
+            <div class="broadsheet-stat-banner-num">146,000</div>
+            <div class="broadsheet-stat-banner-label">Views from 1 simple video</div>
+          </div>
+          <p class="broadsheet-col-body">That single video generated enough watch hours to get a channel monetized. Four years later, it still gets 3 views per hour.</p>
+        </div>
+        <div class="fade-up d2">
+          <h3 class="broadsheet-col-title">Sean&rsquo;s Ford Taurus Studio</h3>
+          <p class="broadsheet-col-body">Sean filmed his breakthrough videos in his car on a smartphone with a jerry-rigged mount. The framing was off-center. The audio was just okay. But the information was good.</p>
+          <p class="broadsheet-col-body" style="margin-top:1rem;">&ldquo;If the information is good, it doesn&rsquo;t matter if the video quality is bad.&rdquo; Your car is a little audio booth. Close the door, put your phone on the dashboard, press record.</p>
+          <div class="broadsheet-stat-banner" style="background:#1a6a3a;">
+            <div class="broadsheet-stat-banner-num">$20,000</div>
+            <div class="broadsheet-stat-banner-label">Earned from one greens powder video</div>
+          </div>
+        </div>
+        <div class="fade-up d3">
+          <h3 class="broadsheet-col-title">The Myth of Perfect</h3>
+          <p class="broadsheet-col-body">Think you need expensive cameras and studio lighting? Kevin, a real estate marketing coach, screen-shared with a webcam&mdash;like a Zoom call. Total channel views: 38,000. Revenue generated for his business: $200,000.</p>
+          <p class="broadsheet-col-body" style="margin-top:1rem; font-weight:600; color:#1a1a1a;">&ldquo;You don&rsquo;t need millions of views. You need simple videos with the right strategy.&rdquo;</p>
+          <p class="broadsheet-col-body" style="margin-top:1rem;">Adding value matters more than perfect visuals. A smartphone, a webcam, or a borrowed phone&mdash;whatever you have is enough to start.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 9: RESOURCEFULNESS ==================== -->
+<section class="spread-neon">
+  <div class="neon-grid-floor"></div>
+  <div class="container">
+    <div class="neon-layout">
+      <div>
+        <p class="neon-kicker fade-up">Mindset</p>
+        <h2 class="neon-title fade-up d1">It&rsquo;s Not About Your Resources. It&rsquo;s About Your <em>Resourcefulness</em>.</h2>
+        <p class="neon-body fade-up d2">The biggest thing standing between you and the next level isn&rsquo;t the strategy&mdash;it&rsquo;s the story you&rsquo;re telling yourself about why you can&rsquo;t start today.</p>
+        <p class="neon-body fade-up d3">Sean had every excuse: no fancy setup, no perfect lighting. Just a phone and a message and the courage to press record. He went from filming in his car between Red Robin shifts to building a multi-million dollar company.</p>
+        <div class="neon-callout fade-up d4">
+          <p class="neon-callout-quote">&ldquo;You don&rsquo;t have to see the full staircase to take the first step.&rdquo;</p>
+          <p class="neon-callout-attr">&mdash; Sean Cannell</p>
+        </div>
+      </div>
+      <div>
+        <div class="neon-emergence-box fade-up d2">
+          <div class="neon-emergence-title">The Stories You Tell Yourself</div>
+          <div class="neon-emergence-item">I don&rsquo;t have the perfect setup</div>
+          <div class="neon-emergence-item">I don&rsquo;t have enough time</div>
+          <div class="neon-emergence-item">I don&rsquo;t feel ready</div>
+          <div class="neon-emergence-item">Nobody else in my life is doing this</div>
+          <div class="neon-emergence-item">My first video needs to be perfect</div>
+        </div>
+        <div class="neon-emergence-box fade-up d3" style="margin-top:1.5rem; border-color: rgba(0,255,136,0.35);">
+          <div class="neon-emergence-title">The Truth</div>
+          <div class="neon-emergence-item">Everything is figureoutable</div>
+          <div class="neon-emergence-item">Your car is a recording studio</div>
+          <div class="neon-emergence-item">One person&rsquo;s courage becomes infectious</div>
+          <div class="neon-emergence-item">Not fitting in pushes you to create your own path</div>
+          <div class="neon-emergence-item">Your first video transforms <em>you</em>, not your audience</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SPREAD 10: THE CALL ==================== -->
+<section class="spread-closer">
+  <div class="closer-content">
+    <p class="closer-kicker fade-up">Session One &bull; Final Thought</p>
+    <h2 class="closer-title fade-up d1">Who&rsquo;s Waiting for You to <em>Show Up</em>?</h2>
+    <div class="closer-divider fade-up d2"></div>
+    <p class="closer-body fade-up d2">Right now, someone is searching for help. They&rsquo;re searching for answers, education, entertainment. They&rsquo;re waiting for your video to appear in search results&mdash;but your video cannot appear if you don&rsquo;t post it.</p>
+    <div class="closer-big-stat fade-up d3">31.8B</div>
+    <div class="closer-big-stat-label fade-up d3">Views generated by Think Media students</div>
+    <div class="closer-recap fade-up d4">
+      <div class="closer-recap-item">
+        <div class="closer-recap-num">01</div>
+        <p class="closer-recap-text">Stop waiting for perfect. Your audience is searching for you right now.</p>
+      </div>
+      <div class="closer-recap-item">
+        <div class="closer-recap-num">02</div>
+        <p class="closer-recap-text">Use simple tools to discover exactly what videos your audience wants.</p>
+      </div>
+      <div class="closer-recap-item">
+        <div class="closer-recap-num">03</div>
+        <p class="closer-recap-text">Your first video doesn&rsquo;t need to be perfect. It needs to be helpful.</p>
+      </div>
+    </div>
+    <p class="closer-final-quote fade-up d5">&ldquo;Will you have the courage to press record today?&rdquo;</p>
+    <p class="closer-final-attr fade-up d5">&mdash; Sean Cannell</p>
+  </div>
+</section>
+
+<script>
+// Intersection Observer for fade-up animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

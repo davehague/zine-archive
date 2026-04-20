@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Harness Engineering — An Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#f3ead8;
+    --parchment:#ece1c7;
+    --ink:#141210;
+    --rose:#c8354b;
+    --gold:#d9a441;
+    --indigo:#2a3bb7;
+    --navy:#0b1230;
+    --terminal:#0a1a10;
+    --green:#7CFFB2;
+    --neon:#b8ff3a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#0d1117;color:var(--ink);font-family:'Inter',sans-serif;font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .spread{min-height:100vh;padding:6rem 5rem;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+  .kicker{font-family:'Inter',sans-serif;font-size:.85rem;letter-spacing:.35em;text-transform:uppercase;font-weight:600}
+  .deck{font-family:'Fraunces',serif;font-weight:300;font-style:italic;line-height:1.35}
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:700;line-height:.95;letter-spacing:-.02em}
+  p{font-size:1.15rem;line-height:1.65;max-width:65ch}
+  .rule{height:1px;background:currentColor;opacity:.3;margin:2rem 0}
+  .double-rule{border-top:3px double currentColor;border-bottom:1px solid currentColor;padding:1rem 0;margin:1.5rem 0}
+
+  .fade{opacity:0;transform:translateY(28px);transition:opacity .9s ease, transform .9s ease}
+  .fade.in{opacity:1;transform:none}
+
+  /* ————————————————————————————— SPREAD 1 : COVER ————————————————————————————— */
+  .s1{background:var(--cream);color:var(--ink);justify-content:space-between;padding:4rem 5rem}
+  .s1::before{content:"";position:absolute;inset:2rem;border:1px solid rgba(20,18,16,.3);pointer-events:none}
+  .s1 .masthead{display:flex;justify-content:space-between;align-items:baseline;font-size:.8rem;letter-spacing:.3em;text-transform:uppercase;z-index:2}
+  .s1 .title{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(4rem,14vw,13rem);line-height:.85;letter-spacing:-.04em;margin-top:auto}
+  .s1 .title em{font-style:italic;font-weight:400;color:var(--rose)}
+  .s1 .sub{font-family:'Fraunces',serif;font-style:italic;font-weight:300;font-size:clamp(1.3rem,2.4vw,2.1rem);max-width:40ch;margin-top:2rem;line-height:1.3}
+  .s1 .foot{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem;margin-top:3.5rem;padding-top:2rem;border-top:1px solid var(--ink);font-size:.85rem;letter-spacing:.15em;text-transform:uppercase}
+  .s1 .foot b{font-family:'Fraunces',serif;font-size:1.6rem;text-transform:none;letter-spacing:normal;display:block;font-weight:700;margin-top:.3rem}
+  .s1 .roman{position:absolute;right:4rem;top:25%;font-family:'Fraunces',serif;font-size:22rem;color:rgba(200,53,75,.07);font-weight:900;line-height:1;pointer-events:none;font-style:italic}
+
+  /* ————————————————————————————— SPREAD 2 : MIDNIGHT STATS ————————————————————————————— */
+  .s2{background:#06080e;color:#e8edf5}
+  .s2::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(60,120,255,.15),transparent 60%),radial-gradient(circle at 80% 70%,rgba(120,60,255,.12),transparent 55%);pointer-events:none}
+  .s2 .wrap{max-width:1300px;margin:0 auto;position:relative;z-index:2}
+  .s2 .kicker{color:#6fb3ff}
+  .s2 h2{font-size:clamp(3rem,7vw,6.5rem);margin:1.2rem 0 2rem;font-weight:900}
+  .s2 h2 em{color:#6fb3ff;font-style:italic;font-weight:400}
+  .s2 .statrow{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;margin-top:3rem;border-top:1px solid rgba(255,255,255,.15);border-bottom:1px solid rgba(255,255,255,.15);padding:2.5rem 0}
+  .s2 .stat b{font-family:'Fraunces',serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:700;display:block;line-height:.9;letter-spacing:-.03em;color:#fff}
+  .s2 .stat span{font-size:.8rem;letter-spacing:.25em;text-transform:uppercase;color:#8a9bb8;display:block;margin-top:.8rem}
+  .s2 .lede{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(1.3rem,2vw,1.8rem);line-height:1.4;max-width:55ch;color:#c7d0e0}
+  .s2 .lede em{color:#6fb3ff;font-style:italic}
+
+  /* ————————————————————————————— SPREAD 3 : WARM EDITORIAL ————————————————————————————— */
+  .s3{background:var(--parchment);color:var(--ink);background-image:linear-gradient(rgba(20,18,16,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(20,18,16,.05) 1px,transparent 1px);background-size:80px 80px}
+  .s3 .grid{display:grid;grid-template-columns:1.4fr 1fr;gap:4rem;max-width:1300px;margin:0 auto}
+  .s3 .kicker{color:var(--rose)}
+  .s3 h2{font-size:clamp(2.8rem,6vw,5.6rem);margin:1rem 0 2rem}
+  .s3 h2 em{font-style:italic;font-weight:400}
+  .s3 p{margin-bottom:1.2rem}
+  .s3 .side{background:var(--ink);color:var(--cream);padding:2.5rem;align-self:start;position:relative}
+  .s3 .side h3{font-size:1.8rem;margin-bottom:1.2rem;color:var(--cream)}
+  .s3 .side .quote{font-family:'Fraunces',serif;font-style:italic;font-size:1.5rem;line-height:1.35;font-weight:300}
+  .s3 .side .attrib{font-size:.75rem;letter-spacing:.3em;text-transform:uppercase;margin-top:1.5rem;color:var(--gold)}
+  .s3 .pull{font-family:'Fraunces',serif;font-size:2.4rem;font-weight:600;font-style:italic;line-height:1.2;padding:2rem 0;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);margin:2rem 0}
+
+  /* ————————————————————————————— SPREAD 4 : ROSE STAMP ————————————————————————————— */
+  .s4{background:#170a0d;color:#f3e9dc}
+  .s4 .wrap{max-width:1300px;margin:0 auto;position:relative}
+  .s4 .kicker{color:var(--rose)}
+  .s4 h2{font-size:clamp(2.8rem,6.5vw,5.8rem);margin:1rem 0 1rem}
+  .s4 h2 em{color:var(--rose);font-style:italic;font-weight:400}
+  .s4 .deck{font-size:1.5rem;color:#c7a9a1;max-width:55ch;margin-bottom:3rem}
+  .s4 .stamp{position:absolute;right:-2rem;top:2rem;width:260px;height:260px;border:3px solid var(--rose);border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--rose);transform:rotate(-8deg);padding:1.5rem;font-family:'Fraunces',serif;font-style:italic;font-size:1.1rem;line-height:1.2;letter-spacing:.05em}
+  .s4 .stamp::before{content:"";position:absolute;inset:10px;border:1px dashed var(--rose);border-radius:50%}
+  .s4 .stamp b{display:block;font-family:'Fraunces',serif;font-size:3rem;font-weight:900;font-style:normal;margin:.5rem 0;letter-spacing:-.02em}
+  .s4 .cols{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:2rem}
+  .s4 .col{border-top:3px solid var(--rose);padding-top:1.5rem}
+  .s4 .col h3{font-size:1rem;letter-spacing:.3em;text-transform:uppercase;color:var(--rose);margin-bottom:1rem;font-family:'Inter',sans-serif;font-weight:700}
+  .s4 .col .big{font-family:'Fraunces',serif;font-size:2rem;line-height:1.25;font-weight:600;margin-bottom:1rem}
+  .s4 .col p{font-size:1.05rem;color:#d4c4b8}
+
+  /* ————————————————————————————— SPREAD 5 : TERMINAL ————————————————————————————— */
+  .s5{background:#030806;color:var(--green);font-family:'JetBrains Mono',monospace}
+  .s5 .wrap{max-width:1200px;margin:0 auto;width:100%}
+  .s5 .chrome{background:#0f1a14;border:1px solid #1a3a26;border-radius:10px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 60px rgba(124,255,178,.08)}
+  .s5 .bar{background:#0a1410;padding:.8rem 1.2rem;display:flex;gap:.5rem;align-items:center;border-bottom:1px solid #1a3a26}
+  .s5 .bar span{width:12px;height:12px;border-radius:50%;background:#3a5044}
+  .s5 .bar span.r{background:#ff5f56}.s5 .bar span.y{background:#ffbd2e}.s5 .bar span.g{background:#27c93f}
+  .s5 .bar b{margin-left:1rem;font-size:.8rem;color:#6a8a78;font-weight:400;letter-spacing:.15em}
+  .s5 .body{padding:2.5rem;font-size:1.1rem;line-height:1.7}
+  .s5 .prompt{color:#6a8a78}
+  .s5 .cmd{color:var(--green)}
+  .s5 .ok{color:#4fd688}
+  .s5 .hl{color:#e8ffc0}
+  .s5 .dim{color:#5a7a66}
+  .s5 .cursor{display:inline-block;width:.6em;height:1.1em;background:var(--green);vertical-align:text-bottom;animation:blink 1s steps(2) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .s5 .heading{font-family:'Fraunces',serif;font-size:clamp(2rem,4.5vw,4rem);color:#e8ffc0;margin-bottom:2rem;font-weight:700;letter-spacing:-.02em}
+  .s5 .heading em{color:var(--green);font-style:italic}
+  .s5 .kicker{color:#6a8a78;font-family:'JetBrains Mono',monospace;letter-spacing:.25em}
+
+  /* ————————————————————————————— SPREAD 6 : ACADEMIC DROP-CAP ————————————————————————————— */
+  .s6{background:#0a1230;color:#e6e8f2}
+  .s6::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(255,255,255,.06),transparent 60%);pointer-events:none}
+  .s6 .wrap{max-width:1300px;margin:0 auto;position:relative;z-index:2}
+  .s6 .kicker{color:#a9b8ff}
+  .s6 h2{font-size:clamp(2.5rem,5.5vw,5rem);margin:1rem 0 2.5rem;max-width:20ch;font-weight:700}
+  .s6 h2 em{font-style:italic;color:#a9b8ff;font-weight:400}
+  .s6 .cols{columns:2;column-gap:3.5rem;column-rule:1px solid rgba(255,255,255,.12);font-size:1.1rem;line-height:1.7;color:#c9cfe0}
+  .s6 .cols p{margin-bottom:1.2rem;max-width:none}
+  .s6 .drop{font-family:'Fraunces',serif;float:left;font-size:8.5rem;line-height:.8;font-weight:900;margin:.4rem .8rem 0 -.3rem;color:#a9b8ff;font-style:italic}
+  .s6 .callout{background:rgba(169,184,255,.08);border-left:4px solid #a9b8ff;padding:1.5rem 1.8rem;margin-top:2rem;break-inside:avoid}
+  .s6 .callout b{font-family:'Fraunces',serif;font-size:1.3rem;display:block;margin-bottom:.5rem;color:#fff}
+
+  /* ————————————————————————————— SPREAD 7 : BIG STAT GOLD ————————————————————————————— */
+  .s7{background:#0f0d08;color:#f1e6c7;justify-content:center}
+  .s7::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,rgba(217,164,65,.18),transparent 55%);pointer-events:none}
+  .s7 .wrap{text-align:center;max-width:1200px;margin:0 auto;position:relative;z-index:2}
+  .s7 .kicker{color:var(--gold);margin-bottom:2rem}
+  .s7 .hero{font-family:'Fraunces',serif;font-size:clamp(8rem,22vw,22rem);font-weight:900;line-height:.85;color:var(--gold);letter-spacing:-.05em;text-shadow:0 0 80px rgba(217,164,65,.3)}
+  .s7 .hero em{font-style:italic;font-weight:400;color:#f1e6c7}
+  .s7 h2{font-family:'Fraunces',serif;font-size:clamp(1.8rem,3.2vw,2.8rem);font-style:italic;font-weight:300;max-width:30ch;margin:2rem auto 0;line-height:1.25}
+  .s7 .grades{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:4rem;max-width:900px;margin-left:auto;margin-right:auto}
+  .s7 .grade{border:1px solid rgba(217,164,65,.35);padding:1.5rem 1rem}
+  .s7 .grade b{font-family:'Fraunces',serif;font-size:3rem;color:var(--gold);display:block;font-weight:700}
+  .s7 .grade span{font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:#c9b988}
+
+  /* ————————————————————————————— SPREAD 8 : BROADSHEET ————————————————————————————— */
+  .s8{background:var(--cream);color:var(--ink)}
+  .s8 .wrap{max-width:1300px;margin:0 auto}
+  .s8 .top{text-align:center;border-top:4px double var(--ink);border-bottom:4px double var(--ink);padding:1rem 0;margin-bottom:2rem;display:flex;justify-content:space-between;align-items:center;font-size:.75rem;letter-spacing:.3em;text-transform:uppercase}
+  .s8 h2{font-family:'Fraunces',serif;font-size:clamp(3rem,7vw,6rem);text-align:center;font-weight:900;line-height:.95;letter-spacing:-.02em;margin:1rem 0}
+  .s8 h2 em{font-style:italic;color:var(--rose);font-weight:400}
+  .s8 .deck{text-align:center;max-width:50ch;margin:0 auto 2.5rem;font-size:1.4rem;color:#4a4036}
+  .s8 .banner{background:var(--rose);color:var(--cream);padding:1.2rem 2rem;margin:2rem 0;display:flex;justify-content:space-between;align-items:center;font-family:'Fraunces',serif;font-style:italic;font-size:1.4rem;letter-spacing:-.01em}
+  .s8 .banner b{font-family:'Fraunces',serif;font-size:2.8rem;font-weight:900;font-style:normal;letter-spacing:-.03em}
+  .s8 .cols{columns:3;column-gap:2.5rem;column-rule:1px solid rgba(20,18,16,.2);font-size:1.05rem;line-height:1.65}
+  .s8 .cols p{margin-bottom:1rem;max-width:none}
+  .s8 .cols p:first-child::first-letter{font-family:'Fraunces',serif;font-size:3.5rem;font-weight:700;float:left;line-height:.85;margin:.2rem .4rem 0 0;color:var(--rose)}
+  .s8 .byline{text-align:center;font-family:'Fraunces',serif;font-style:italic;margin-bottom:2rem}
+
+  /* ————————————————————————————— SPREAD 9 : NEON CYBER ————————————————————————————— */
+  .s9{background:#050509;color:#e8ffd6;position:relative}
+  .s9::before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 0%,rgba(184,255,58,.04) 50%,transparent 100%);pointer-events:none}
+  .s9::after{content:"";position:absolute;left:0;right:0;bottom:0;height:50%;background-image:linear-gradient(rgba(184,255,58,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(184,255,58,.18) 1px,transparent 1px);background-size:60px 60px;transform:perspective(500px) rotateX(60deg);transform-origin:bottom;mask-image:linear-gradient(transparent,black);pointer-events:none}
+  .s9 .wrap{max-width:1300px;margin:0 auto;position:relative;z-index:2}
+  .s9 .kicker{color:var(--neon);letter-spacing:.4em}
+  .s9 h2{font-size:clamp(3rem,7vw,6.4rem);margin:1rem 0 1.5rem;text-shadow:0 0 30px rgba(184,255,58,.3);font-weight:900}
+  .s9 h2 em{color:var(--neon);font-style:italic;font-weight:400}
+  .s9 .deck{color:#aac89a;font-size:1.3rem;max-width:55ch;margin-bottom:3rem}
+  .s9 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+  .s9 .step{border:1px solid rgba(184,255,58,.3);background:rgba(184,255,58,.04);padding:1.3rem;backdrop-filter:blur(4px);position:relative;transition:all .3s}
+  .s9 .step:hover{border-color:var(--neon);box-shadow:0 0 30px rgba(184,255,58,.2)}
+  .s9 .step b{font-family:'Fraunces',serif;color:var(--neon);font-size:1.8rem;display:block;font-weight:700;font-style:italic}
+  .s9 .step span{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:#7a9668;display:block;margin:.3rem 0 .6rem}
+  .s9 .step p{font-size:.98rem;color:#d0e8b8;line-height:1.45}
+
+  /* ————————————————————————————— SPREAD 10 : CLOSER ————————————————————————————— */
+  .s10{background:#fafafa;color:#111;justify-content:center}
+  .s10 .wrap{max-width:1100px;margin:0 auto;text-align:center}
+  .s10 .kicker{color:var(--indigo);margin-bottom:2rem}
+  .s10 .quote{font-family:'Fraunces',serif;font-size:clamp(2.5rem,5.5vw,4.8rem);font-weight:400;line-height:1.1;letter-spacing:-.02em}
+  .s10 .quote em{font-style:italic;color:var(--indigo)}
+  .s10 .mark{font-family:'Fraunces',serif;font-size:10rem;color:var(--indigo);line-height:.6;font-weight:900;font-style:italic}
+  .s10 .attrib{margin-top:3rem;font-size:.85rem;letter-spacing:.3em;text-transform:uppercase;color:#555}
+  .s10 .attrib b{display:block;font-family:'Fraunces',serif;font-size:1.4rem;text-transform:none;letter-spacing:normal;color:#111;margin-top:.4rem;font-weight:700}
+  .s10 .colophon{margin-top:5rem;padding-top:2rem;border-top:1px solid #ccc;display:flex;justify-content:space-between;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:#666}
+
+  @media (max-width:900px){
+    .spread{padding:4rem 1.5rem}
+    .s3 .grid,.s4 .cols,.s9 .steps{grid-template-columns:1fr !important}
+    .s2 .statrow,.s7 .grades{grid-template-columns:repeat(2,1fr) !important}
+    .s6 .cols,.s8 .cols{columns:1}
+    .s4 .stamp{position:relative;right:auto;top:auto;margin:2rem auto}
+    .s1 .foot{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- 1 : COVER -->
+<section class="spread s1">
+  <div class="masthead fade"><span>Vol. XXVI — The Agent Issue</span><span>Engineering Quarterly</span><span>№ 011</span></div>
+  <div class="roman">XI</div>
+  <div class="fade" style="margin-top:auto;z-index:2;position:relative">
+    <div class="kicker" style="color:var(--rose);margin-bottom:1.5rem">A field report from inside OpenAI</div>
+    <h1 class="title">Harness<br/><em>Engineering</em></h1>
+    <p class="sub">Five months. Zero hand-written lines. One million lines of code. The story of building a real product with a team of agents — and what changes when humans stop touching the keyboard.</p>
+    <div class="foot">
+      <div>Dispatch<b>OpenAI, February 2026</b></div>
+      <div>Author<b>Ryan Lopopolo</b></div>
+      <div>Filed under<b>Agent-First Engineering</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 : MIDNIGHT STATS -->
+<section class="spread s2">
+  <div class="wrap">
+    <div class="kicker fade">The numbers behind the experiment</div>
+    <h2 class="fade">One empty repo, <em>five months</em>, and a team that no longer writes code.</h2>
+    <p class="lede fade">The first commit landed in late August 2025. The scaffold — CI, formatters, package manager, framework, even the initial <em>AGENTS.md</em> — was generated by Codex CLI using GPT‑5. There was no human-written anchor. The repository has been shaped by the agent from line zero.</p>
+    <div class="statrow fade">
+      <div class="stat"><b>0</b><span>Lines hand-written</span></div>
+      <div class="stat"><b>~1M</b><span>Lines of code shipped</span></div>
+      <div class="stat"><b>1,500</b><span>Pull requests merged</span></div>
+      <div class="stat"><b>3.5</b><span>PRs / engineer / day</span></div>
+    </div>
+    <p class="lede fade" style="margin-top:2.5rem">Throughput <em>increased</em> as the team grew from three engineers to seven. The product has hundreds of internal users, external alpha testers, and daily power users. Built, the authors estimate, in <em>one-tenth the time</em> it would have taken by hand.</p>
+  </div>
+</section>
+
+<!-- 3 : WARM EDITORIAL -->
+<section class="spread s3">
+  <div class="grid">
+    <div class="fade">
+      <div class="kicker">The new job description</div>
+      <h2>Humans steer.<br/><em>Agents execute.</em></h2>
+      <p>Early progress was slower than expected — not because Codex was incapable, but because the environment was underspecified. The agent lacked the tools, abstractions, and internal structure required to make progress toward high-level goals.</p>
+      <p>The primary job of the engineering team became enabling the agents to do useful work. When something failed, the fix was almost never &ldquo;try harder.&rdquo; Human engineers stepped in and asked a different question entirely.</p>
+      <div class="pull">&ldquo;What capability is missing, and how do we make it both legible and enforceable for the agent?&rdquo;</div>
+      <p>In practice, that meant working depth-first: breaking down larger goals into smaller building blocks — design, code, review, test — prompting the agent to construct those blocks, then composing them into unlocks for more complex tasks.</p>
+    </div>
+    <aside class="side fade">
+      <div class="kicker" style="color:var(--gold);opacity:.9">Core Principle</div>
+      <h3 style="margin-top:1rem">No manually-written code.</h3>
+      <div class="rule" style="opacity:.2"></div>
+      <p class="quote">&ldquo;From the beginning, the repository was shaped by the agent. Throughout development, humans never directly contributed any code. This became a core philosophy for the team.&rdquo;</p>
+      <div class="attrib">— The house rule</div>
+    </aside>
+  </div>
+</section>
+
+<!-- 4 : ROSE STAMP -->
+<section class="spread s4">
+  <div class="wrap">
+    <div class="stamp fade">Failed<b>AGENTS<br/>.md</b>instruction<br/>manual</div>
+    <div class="kicker fade">A cautionary tale</div>
+    <h2 class="fade">The one-big-manual <em>antipattern</em>.</h2>
+    <p class="deck fade">Teams reach for a monolithic instruction file and learn the hard way: context is scarce, guidance decays, drift is invisible. We tried it. It failed in predictable ways.</p>
+
+    <div class="cols">
+      <div class="col fade">
+        <h3>Context is scarce</h3>
+        <p class="big">A giant instruction file crowds out the task, the code, and the relevant docs.</p>
+        <p>The agent either misses key constraints or starts optimizing for the wrong ones. Every token spent on the manual is a token not spent on the problem.</p>
+      </div>
+      <div class="col fade">
+        <h3>Guidance decays</h3>
+        <p class="big">When everything is &ldquo;important,&rdquo; nothing is.</p>
+        <p>Agents pattern-match locally instead of navigating intentionally. The manual rots instantly — becoming a graveyard of stale rules that humans stop maintaining and agents can&rsquo;t trust.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(200,53,75,.4);display:grid;grid-template-columns:1fr 2fr;gap:2rem" class="fade">
+      <div class="kicker" style="color:var(--rose)">The fix</div>
+      <p style="color:#d4c4b8;font-size:1.15rem">Treat <b style="font-family:'Fraunces',serif;font-style:italic;font-weight:600;color:#fff">AGENTS.md</b> as a table of contents, not an encyclopedia. Roughly 100 lines. A map. Pointers to deeper sources of truth — enforced mechanically, gardened continuously.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 : TERMINAL -->
+<section class="spread s5">
+  <div class="wrap">
+    <div class="kicker fade" style="margin-bottom:1.5rem">$ observability — a worktree-local stack</div>
+    <h2 class="heading fade">The app became <em>legible</em> to the agent.</h2>
+
+    <div class="chrome fade">
+      <div class="bar"><span class="r"></span><span class="y"></span><span class="g"></span><b>codex@worktree-a91f — LogQL &amp; PromQL over isolated stack</b></div>
+      <div class="body">
+<span class="dim"># Per-worktree app boot. Ephemeral observability. Full CDP.</span>
+<br/><span class="prompt">codex@run-142 ~ $</span> <span class="cmd">codex task "no span in the 4 critical user journeys exceeds 2s"</span>
+<br/><span class="dim">→ spinning up isolated app instance  </span><span class="ok">[ok]</span>
+<br/><span class="dim">→ attaching CDP — DOM snapshot + screenshot tools  </span><span class="ok">[ok]</span>
+<br/><span class="dim">→ loki://worktree-a91f/logs  promtheus://:9090  </span><span class="ok">[ok]</span>
+<br/><br/><span class="prompt">agent&gt;</span> <span class="hl">{journey="signup"} | p99 &gt; 2s</span>
+<br/><span class="ok">  ✓ signup          p99 = 1.42s</span>
+<br/><span class="ok">  ✓ import          p99 = 1.81s</span>
+<br/><span class="ok">  ✗ share-document  p99 = 3.04s  → investigating…</span>
+<br/><br/><span class="prompt">agent&gt;</span> reproducing bug via Chrome DevTools Protocol…
+<br/><span class="dim">  recording video → fix.mp4 (before)</span>
+<br/><span class="dim">  patch opened → PR #1412 → self-review → cloud review → merge</span>
+<br/><span class="dim">  recording video → fix.mp4 (after)</span>
+<br/><br/><span class="prompt">codex@run-142 ~ $</span> <span class="cmd">_</span><span class="cursor"></span>
+      </div>
+    </div>
+
+    <p style="margin-top:2rem;color:#aac89a;font-family:'Inter',sans-serif;font-size:1.1rem;max-width:65ch" class="fade">Bootable per-git-worktree. Logs queryable with LogQL. Metrics queryable with PromQL. Every task runs on a fully isolated instance — torn down on completion. A single Codex run routinely works on a task for <b style="color:#e8ffc0">upwards of six hours</b>. Usually while the humans are sleeping.</p>
+  </div>
+</section>
+
+<!-- 6 : ACADEMIC DROP-CAP -->
+<section class="spread s6">
+  <div class="wrap">
+    <div class="kicker fade">On legibility</div>
+    <h2 class="fade">If the agent <em>can&rsquo;t see it,</em> it effectively doesn&rsquo;t exist.</h2>
+    <div class="cols fade">
+      <p><span class="drop">F</span>rom the agent&rsquo;s point of view, anything it can&rsquo;t access in-context while running effectively doesn&rsquo;t exist. Knowledge that lives in Google Docs, chat threads, or people&rsquo;s heads is not accessible to the system. Repository-local, versioned artifacts — code, markdown, schemas, executable plans — are all it can see.</p>
+      <p>That Slack discussion which aligned the team on an architectural pattern? If it isn&rsquo;t discoverable to the agent, it&rsquo;s illegible in the same way it would be unknown to a new hire joining three months later.</p>
+      <p>The team favored dependencies that could be fully internalized. Boring technologies tend to be easier for agents to model — composability, API stability, strong training-set representation. In some cases it was cheaper to have the agent reimplement subsets of functionality than to wrestle with opaque upstream behavior.</p>
+      <div class="callout"><b>Case in point</b>Rather than pull in a generic <i>p-limit</i>-style package, the agent authored its own map-with-concurrency helper — tightly integrated with OpenTelemetry instrumentation, 100% test coverage, behaving exactly as the runtime expects.</div>
+      <p>Pulling more of the system into a form the agent can inspect, validate, and modify directly increases leverage — not just for Codex, but for the other agents (Aardvark among them) that work on the same codebase.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 : BIG STAT GOLD -->
+<section class="spread s7">
+  <div class="wrap">
+    <div class="kicker fade">Throughput</div>
+    <div class="hero fade">6<em>hrs</em></div>
+    <h2 class="fade">A single Codex run, working one task, while the humans sleep.</h2>
+
+    <div class="grades fade">
+      <div class="grade"><b>A</b><span>Types</span></div>
+      <div class="grade"><b>A−</b><span>Service layer</span></div>
+      <div class="grade"><b>B+</b><span>UI runtime</span></div>
+      <div class="grade"><b>B</b><span>Providers</span></div>
+    </div>
+    <p style="margin-top:2.5rem;color:#c9b988;max-width:55ch;margin-left:auto;margin-right:auto;font-size:1.1rem" class="fade">A quality document grades each product domain and architectural layer, tracking gaps over time. Review comments, refactors, and bugs are captured as documentation updates or promoted into tooling. <em style="color:var(--gold);font-family:'Fraunces',serif">When documentation falls short, the rule is promoted into code.</em></p>
+  </div>
+</section>
+
+<!-- 8 : BROADSHEET -->
+<section class="spread s8">
+  <div class="wrap">
+    <div class="top fade"><span>The Architecture Desk</span><span>Invariants, not implementations</span><span>Page 8</span></div>
+    <h2 class="fade">Enforce <em>boundaries.</em> Allow autonomy.</h2>
+    <p class="deck fade">The kind of architecture you usually postpone until you have hundreds of engineers. With coding agents, it&rsquo;s an early prerequisite.</p>
+    <div class="byline fade">By the Harness Team · Illustrated with custom linters</div>
+
+    <div class="banner fade"><span>Forward-only dependency layers per business domain</span><b>Types → Config → Repo → Service → Runtime → UI</b></div>
+
+    <div class="cols fade">
+      <p>Documentation alone does not keep a fully agent-generated codebase coherent. The team built the application around a rigid architectural model. Each business domain is divided into a fixed set of layers, with strictly validated dependency directions and a limited set of permissible edges.</p>
+      <p>These constraints are enforced mechanically via custom linters — Codex-generated, of course — and structural tests. Cross-cutting concerns such as auth, connectors, telemetry, and feature flags enter through a single explicit interface called Providers. Anything else is disallowed.</p>
+      <p>A small set of &ldquo;taste invariants&rdquo; travels with the layering: structured logging is statically enforced; naming conventions for schemas and types are checked; file-size limits and reliability requirements are codified. Because the lints are custom, error messages inject remediation instructions directly into agent context.</p>
+      <p>In a human-first workflow these rules might feel pedantic. With agents they become multipliers: once encoded, they apply everywhere at once. The team is explicit about where constraints matter and where they do not — boundaries, correctness, reproducibility are non-negotiable; stylistic expression within those walls is left to the agent.</p>
+      <p>The resulting code does not always match human stylistic preferences, and that is okay. As long as the output is correct, maintainable, and legible to future agent runs, it meets the bar. Human taste is fed back continuously: promoted into documentation, then into tooling, then into lint.</p>
+      <p>The repository now operates with minimal blocking merge gates. Pull requests are short-lived. Test flakes are often addressed with follow-up runs rather than blocked indefinitely. In a system where agent throughput far exceeds human attention, corrections are cheap and waiting is expensive.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 : NEON AUTONOMY LOOP -->
+<section class="spread s9">
+  <div class="wrap">
+    <div class="kicker fade">The threshold</div>
+    <h2 class="fade">End-to-end, from <em>one prompt.</em></h2>
+    <p class="deck fade">As more of the development loop was encoded into the repository — testing, validation, review, feedback handling, recovery — Codex crossed a threshold. Given a single prompt, the agent now drives the entire arc of a feature.</p>
+
+    <div class="steps">
+      <div class="step fade"><b>01</b><span>Validate</span><p>Inspect the current state of the codebase before touching anything.</p></div>
+      <div class="step fade"><b>02</b><span>Reproduce</span><p>Reproduce the reported bug in an isolated worktree instance.</p></div>
+      <div class="step fade"><b>03</b><span>Record</span><p>Capture a video demonstrating the failure for the record.</p></div>
+      <div class="step fade"><b>04</b><span>Implement</span><p>Write the fix, guided by repository knowledge and layer boundaries.</p></div>
+      <div class="step fade"><b>05</b><span>Re-validate</span><p>Drive the application to confirm the fix actually resolves the issue.</p></div>
+      <div class="step fade"><b>06</b><span>Re-record</span><p>A second video, demonstrating the resolution in context.</p></div>
+      <div class="step fade"><b>07</b><span>Open PR</span><p>Request self-review, local agent review, and cloud agent review.</p></div>
+      <div class="step fade"><b>08</b><span>Iterate</span><p>Respond inline to agent &amp; human feedback. Detect &amp; repair build breakage.</p></div>
+      <div class="step fade"><b>09</b><span>Escalate / Merge</span><p>Escalate to a human only when judgment is required. Otherwise — squash &amp; merge.</p></div>
+    </div>
+    <p style="margin-top:2.5rem;color:#aac89a;font-size:1rem;max-width:60ch" class="fade">This behavior depends heavily on the specific structure and tooling of this repository and <em style="color:var(--neon)">should not be assumed to generalize</em> without similar investment — at least, not yet.</p>
+  </div>
+</section>
+
+<!-- 10 : CLOSER -->
+<section class="spread s10">
+  <div class="wrap">
+    <div class="kicker fade">Closing dispatch</div>
+    <div class="mark fade">&ldquo;</div>
+    <p class="quote fade">Building software still demands discipline, but the discipline shows up more in the <em>scaffolding</em> rather than the code. The tooling, abstractions, and feedback loops that keep the codebase coherent are increasingly important.</p>
+    <div class="attrib fade">From the field<b>Ryan Lopopolo · OpenAI</b></div>
+
+    <div class="colophon fade">
+      <span>Harness Engineering</span>
+      <span>openai.com/index/harness-engineering</span>
+      <span>An Editorial Quarterly · MMXXVI</span>
+    </div>
+  </div>
+</section>
+
+<script>
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach((e,i)=>{
+      if(e.isIntersecting){
+        const els = e.target.parentElement.querySelectorAll('.fade');
+        e.target.classList.add('in');
+      }
+    });
+  },{threshold:.12});
+  document.querySelectorAll('.fade').forEach((el,i)=>{
+    const o = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          setTimeout(()=>entry.target.classList.add('in'), (i%6)*90);
+          o.unobserve(entry.target);
+        }
+      });
+    },{threshold:.15});
+    o.observe(el);
+  });
+</script>
+</body>
+</html>

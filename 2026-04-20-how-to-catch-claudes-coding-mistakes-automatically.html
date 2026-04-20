@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Second Pair of Eyes — An Editorial on Dual-AI Code Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,800;0,9..144,900;1,9..144,400&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #1a1a1a;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  .spread {
+    min-height: 100vh;
+    padding: 5rem 6rem;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .kicker {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .serif { font-family: 'Fraunces', serif; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .big-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    line-height: 0.85;
+    font-variant-numeric: oldstyle-nums;
+  }
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- 01 COVER ---------- */
+  .cover {
+    background: radial-gradient(circle at 20% 10%, #f4e6cf 0%, #eadcc0 45%, #dec9a4 100%);
+    color: #1b1205;
+  }
+  .cover::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(27,18,5,0.05) 0 1px, transparent 1px 80px),
+      repeating-linear-gradient(0deg, rgba(27,18,5,0.05) 0 1px, transparent 1px 80px);
+    pointer-events: none;
+  }
+  .cover-grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .cover-top {
+    display: flex; justify-content: space-between;
+    border-top: 2px solid #1b1205;
+    border-bottom: 1px solid #1b1205;
+    padding: 0.9rem 0;
+    font-size: 0.78rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .cover h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(3.6rem, 11vw, 9.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+  }
+  .cover h1 em { font-style: italic; font-weight: 400; }
+  .cover h1 .amp { font-size: 1.3em; font-weight: 300; }
+  .cover-deck {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.3rem, 2vw, 1.8rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.35;
+    max-width: 760px;
+  }
+  .cover-foot {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    border-top: 1px solid #1b1205;
+    padding-top: 1.1rem;
+    margin-top: 3rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .cover-foot .issue {
+    font-family: 'Fraunces', serif;
+    font-size: 4rem;
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1;
+  }
+
+  /* ---------- 02 MIDNIGHT ---------- */
+  .midnight {
+    background: #0b0f16;
+    color: #e4e8ef;
+  }
+  .midnight::before {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 80% 20%, rgba(82,140,255,0.22), transparent 45%),
+      radial-gradient(circle at 10% 90%, rgba(120,180,255,0.12), transparent 50%);
+  }
+  .midnight-wrap { position: relative; z-index: 2; max-width: 1400px; margin: 0 auto; width:100%; }
+  .midnight .kicker { color: #6aa0ff; }
+  .midnight h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(3rem, 7vw, 6rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-top: 1.3rem;
+    margin-bottom: 3rem;
+    max-width: 1100px;
+  }
+  .midnight h2 em { font-style: italic; color: #9ec2ff; }
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid rgba(255,255,255,0.14);
+    border-bottom: 1px solid rgba(255,255,255,0.14);
+  }
+  .stat-cell {
+    padding: 2.5rem 2rem;
+    border-right: 1px solid rgba(255,255,255,0.14);
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-cell .n { font-family: 'Fraunces', serif; font-size: clamp(3rem, 6vw, 5rem); line-height: 1; font-weight: 300; color:#9ec2ff; }
+  .stat-cell .l { margin-top: 0.8rem; font-size: 0.95rem; letter-spacing: 0.18em; text-transform: uppercase; color: #8a96a7; }
+  .stat-cell p { margin-top: 1rem; font-size: 1.1rem; line-height: 1.55; color: #cfd6e2; }
+  .midnight-lead {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    font-weight: 300;
+    max-width: 820px;
+    color: #c9d2e1;
+    margin-bottom: 3rem;
+    font-style: italic;
+  }
+
+  /* ---------- 03 WARM EDITORIAL ---------- */
+  .warm {
+    background: #f3ebdb;
+    color: #1f1a10;
+  }
+  .warm::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(31,26,16,0.06) 0 1px, transparent 1px 48px);
+  }
+  .warm-grid {
+    position: relative; z-index: 2;
+    max-width: 1400px; margin: 0 auto; width:100%;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 4rem;
+  }
+  .warm h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(2.8rem, 5.5vw, 4.8rem);
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+  }
+  .warm h2 em { font-style: italic; }
+  .warm p.lede {
+    font-family: 'Fraunces', serif;
+    font-size: 1.35rem;
+    line-height: 1.55;
+    margin-top: 2rem;
+    max-width: 620px;
+  }
+  .pullquote {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    line-height: 1.25;
+    padding: 2.5rem 0;
+    border-top: 2px solid #1f1a10;
+    border-bottom: 2px solid #1f1a10;
+    margin: 3rem 0;
+    max-width: 720px;
+  }
+  .sidebar {
+    background: #1a1610;
+    color: #f3ebdb;
+    padding: 2.5rem;
+    align-self: start;
+  }
+  .sidebar .label {
+    font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: #c6b590;
+    margin-bottom: 1.5rem;
+  }
+  .sidebar h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 2rem;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+  .sidebar ul { list-style: none; }
+  .sidebar li {
+    padding: 0.9rem 0;
+    border-top: 1px solid rgba(243,235,219,0.2);
+    font-size: 1.05rem;
+    display: flex;
+    gap: 1rem;
+  }
+  .sidebar li span {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: #d9c8a0;
+  }
+
+  /* ---------- 04 ROSE STAMP ---------- */
+  .rose {
+    background: #160b0d;
+    color: #f5dcdf;
+  }
+  .rose::before {
+    content: "";
+    position: absolute; inset:0;
+    background: radial-gradient(circle at 85% 85%, rgba(210,60,80,0.2), transparent 55%);
+  }
+  .rose-wrap { position: relative; z-index: 2; max-width: 1400px; margin: 0 auto; width:100%; }
+  .rose .kicker { color: #e87485; }
+  .rose h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(3rem, 7vw, 5.8rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-top: 1.3rem;
+    max-width: 1000px;
+  }
+  .rose h2 em { font-style: italic; color: #e87485; }
+  .rose-cols {
+    display: grid;
+    grid-template-columns: 1fr 220px 1fr;
+    gap: 2rem;
+    align-items: center;
+    margin-top: 4rem;
+  }
+  .rose-col {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(245,220,223,0.15);
+    padding: 2.5rem;
+  }
+  .rose-col h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 2.2rem;
+    margin-bottom: 1.2rem;
+  }
+  .rose-col p { font-size: 1.1rem; line-height: 1.6; color: #e6cdd0; }
+  .rose-col .tag {
+    display: inline-block;
+    font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+    padding: 0.35rem 0.7rem;
+    margin-bottom: 1.5rem;
+  }
+  .tag-red { background: #c63a4c; color: white; }
+  .tag-green { background: #3c7c5a; color: white; }
+  .stamp {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 2px solid #e87485;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
+    position: relative;
+    color: #e87485;
+  }
+  .stamp::before, .stamp::after {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border-radius: 50%;
+    border: 1px dashed rgba(232,116,133,0.5);
+  }
+  .stamp::after { inset: 18px; border-style: solid; border-color: rgba(232,116,133,0.25); }
+  .stamp .s1 {
+    font-family: 'Fraunces', serif;
+    font-size: 2.4rem; font-weight: 300; line-height: 0.9;
+    font-style: italic;
+  }
+  .stamp .s2 {
+    font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
+    margin-top: 0.6rem;
+  }
+
+  /* ---------- 05 TERMINAL ---------- */
+  .terminal {
+    background: #05090a;
+    color: #8df0b0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .terminal-window {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    background: #0a1013;
+    border: 1px solid #1d3b2b;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 80px rgba(90,220,140,0.12);
+    position: relative;
+    z-index: 2;
+  }
+  .term-bar {
+    background: #0f1a17;
+    padding: 0.8rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid #1d3b2b;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot.r { background: #ff5f56; }
+  .dot.y { background: #ffbd2e; }
+  .dot.g { background: #27c93f; }
+  .term-title {
+    margin-left: 1rem;
+    font-size: 0.8rem;
+    color: #6a8a7a;
+    letter-spacing: 0.12em;
+  }
+  .term-body { padding: 2.5rem; font-size: 1.15rem; line-height: 1.9; }
+  .term-body .prompt { color: #4a9978; }
+  .term-body .comment { color: #5a7a6a; font-style: italic; }
+  .term-body .hi { color: #f4e48a; }
+  .term-body .ok { color: #8df0b0; }
+  .term-body .er { color: #ff7b7b; }
+  .cursor {
+    display: inline-block;
+    width: 10px; height: 1.2em;
+    background: #8df0b0;
+    vertical-align: text-bottom;
+    animation: blink 1s steps(2) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .terminal .kicker { color: #4a9978; margin-bottom: 1.5rem; text-align: center; }
+  .terminal h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 300;
+    text-align: center;
+    color: #d9efe0;
+    margin-bottom: 3rem;
+    letter-spacing: -0.02em;
+  }
+  .terminal h2 em { color: #8df0b0; font-style: italic; }
+
+  /* ---------- 06 ACADEMIC DROP CAP ---------- */
+  .academic {
+    background: #0f1630;
+    color: #e6e9f5;
+  }
+  .academic::before {
+    content: "VI";
+    position: absolute;
+    top: -3rem; right: -2rem;
+    font-family: 'Fraunces', serif;
+    font-size: clamp(18rem, 30vw, 32rem);
+    font-weight: 300;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    font-style: italic;
+    pointer-events: none;
+  }
+  .academic-wrap { position: relative; z-index: 2; max-width: 1400px; margin: 0 auto; width:100%; }
+  .academic .kicker { color: #a6b5ec; }
+  .academic h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(2.6rem, 5vw, 4.4rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    margin-top: 1.2rem;
+    margin-bottom: 2.5rem;
+    max-width: 1000px;
+  }
+  .academic h2 em { font-style: italic; color: #c5d0f5; }
+  .two-col {
+    columns: 2;
+    column-gap: 3rem;
+    column-rule: 1px solid rgba(255,255,255,0.1);
+    font-size: 1.15rem;
+    line-height: 1.75;
+    color: #d7dcef;
+  }
+  .two-col p { margin-bottom: 1.2rem; break-inside: avoid; }
+  .dropcap {
+    float: left;
+    font-family: 'Fraunces', serif;
+    font-size: 7rem;
+    font-weight: 300;
+    line-height: 0.85;
+    padding: 0.3rem 0.8rem 0 0;
+    color: #a6b5ec;
+  }
+  .callout {
+    break-inside: avoid;
+    background: rgba(166,181,236,0.1);
+    border-left: 4px solid #a6b5ec;
+    padding: 1.3rem 1.5rem;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    line-height: 1.4;
+    margin: 1.5rem 0;
+    color: #e6e9f5;
+  }
+
+  /* ---------- 07 BIG STAT GOLD ---------- */
+  .gold {
+    background: #100c05;
+    color: #f3e2b4;
+  }
+  .gold::before {
+    content: "";
+    position: absolute; inset:0;
+    background: radial-gradient(circle at 30% 40%, rgba(230,180,70,0.18), transparent 55%);
+  }
+  .gold-wrap { position: relative; z-index: 2; max-width: 1400px; margin: 0 auto; width:100%; text-align: center; }
+  .gold .kicker { color: #e0b85a; }
+  .gold .hero-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(10rem, 28vw, 26rem);
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+    color: #f4d97a;
+    margin: 2rem 0;
+    font-style: italic;
+  }
+  .gold h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 300;
+    max-width: 900px;
+    margin: 0 auto;
+    line-height: 1.25;
+    color: #f3e2b4;
+  }
+  .gold h2 em { font-style: italic; color: #f4d97a; }
+  .grade-row {
+    display: flex; justify-content: center; gap: 1.5rem; margin-top: 4rem; flex-wrap: wrap;
+  }
+  .grade {
+    border: 1px solid rgba(244,217,122,0.4);
+    padding: 1.5rem 2rem;
+    min-width: 180px;
+  }
+  .grade .g {
+    font-family: 'Fraunces', serif; font-size: 3rem; font-weight: 300; color: #f4d97a;
+    line-height: 1;
+  }
+  .grade .gl {
+    font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase;
+    margin-top: 0.6rem; color: #d4be80;
+  }
+
+  /* ---------- 08 BROADSHEET ---------- */
+  .broadsheet {
+    background: #f2ecde;
+    color: #14120d;
+    border-top: 6px double #14120d;
+    border-bottom: 6px double #14120d;
+  }
+  .broad-wrap { position: relative; z-index:2; max-width: 1400px; margin: 0 auto; width:100%; }
+  .masthead {
+    border-bottom: 3px solid #14120d;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .masthead .name {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: -0.02em;
+  }
+  .masthead .meta {
+    font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase;
+    font-weight: 600;
+  }
+  .broad h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin: 1.5rem 0 1rem;
+    max-width: 1100px;
+  }
+  .broad h2 em { font-style: italic; }
+  .broad .deck {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    font-style: italic;
+    max-width: 800px;
+    margin-bottom: 2rem;
+  }
+  .stat-banner {
+    background: #b6242e;
+    color: #fff5e8;
+    padding: 1.6rem 2rem;
+    display: flex; align-items: baseline; gap: 2rem;
+    margin: 2rem 0;
+  }
+  .stat-banner .n {
+    font-family: 'Fraunces', serif; font-size: clamp(2.4rem, 4vw, 3.6rem); font-weight: 300; line-height: 1;
+  }
+  .stat-banner .t { font-size: 1.1rem; line-height: 1.4; }
+  .three-col {
+    columns: 3;
+    column-gap: 2.5rem;
+    column-rule: 1px solid #14120d;
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }
+  .three-col p { margin-bottom: 1rem; break-inside: avoid; }
+  .three-col h4 {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.28em; text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    break-after: avoid;
+  }
+
+  /* ---------- 09 NEON ---------- */
+  .neon {
+    background: #020306;
+    color: #c8ffe6;
+  }
+  .neon::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 100%, rgba(60,255,170,0.25), transparent 60%);
+  }
+  .neon::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 50%;
+    background-image:
+      linear-gradient(0deg, rgba(60,255,170,0.35) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(60,255,170,0.35) 1px, transparent 1px);
+    background-size: 60px 60px;
+    transform: perspective(400px) rotateX(60deg);
+    transform-origin: bottom;
+    opacity: 0.4;
+    mask-image: linear-gradient(0deg, black, transparent);
+    -webkit-mask-image: linear-gradient(0deg, black, transparent);
+  }
+  .neon-wrap { position: relative; z-index: 3; max-width: 1400px; margin: 0 auto; width: 100%; }
+  .neon .kicker { color: #5effb0; text-shadow: 0 0 18px rgba(94,255,176,0.6); }
+  .neon h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(3rem, 8vw, 7rem);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    margin: 1.5rem 0 2rem;
+    color: #e9fff3;
+    text-shadow: 0 0 40px rgba(94,255,176,0.25);
+    max-width: 1100px;
+  }
+  .neon h2 em { font-style: italic; color: #5effb0; }
+  .neon-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .neon-card {
+    border: 1px solid rgba(94,255,176,0.35);
+    background: rgba(5,20,12,0.6);
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 40px rgba(94,255,176,0.08) inset;
+  }
+  .neon-card .n {
+    font-family: 'Fraunces', serif; font-size: 2.6rem; font-weight: 300;
+    color: #5effb0; line-height: 1;
+  }
+  .neon-card h3 {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: 1.5rem; margin: 0.6rem 0 0.8rem; color: #e9fff3;
+  }
+  .neon-card p { color: #9fd8bd; font-size: 1.05rem; line-height: 1.55; }
+
+  /* ---------- 10 CLOSER / PRODUCT ---------- */
+  .closer {
+    background: #f7f7fb;
+    color: #1a1a2e;
+  }
+  .closer::before {
+    content: "X";
+    position: absolute;
+    top: 4rem; right: 6rem;
+    font-family: 'Fraunces', serif;
+    font-size: 22rem;
+    font-weight: 300;
+    color: rgba(60,60,140,0.05);
+    line-height: 1;
+    font-style: italic;
+    pointer-events: none;
+  }
+  .closer-wrap { position: relative; z-index: 2; max-width: 1400px; margin: 0 auto; width:100%; }
+  .closer .kicker { color: #3a45c2; }
+  .closer h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(3.4rem, 9vw, 8.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    margin: 2rem 0;
+    max-width: 1200px;
+  }
+  .closer h2 em { font-style: italic; color: #3a45c2; }
+  .closer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 4rem;
+    margin-top: 3rem;
+    align-items: start;
+  }
+  .closer p.lead {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    color: #2a2a3e;
+    font-weight: 300;
+  }
+  .cta-card {
+    background: #0f1326;
+    color: white;
+    padding: 2.5rem;
+    border-radius: 6px;
+    position: relative;
+  }
+  .cta-card .corner {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    font-size: 0.7rem; letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #8a93d9;
+  }
+  .cta-card h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 2.4rem;
+    line-height: 1.05;
+    margin-bottom: 1.2rem;
+  }
+  .cta-card h3 em { font-style: italic; color: #8a93d9; }
+  .cta-card .word {
+    display: inline-block;
+    background: #3a45c2;
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+    font-size: 1.1rem;
+  }
+  .cta-card p { font-size: 1.05rem; line-height: 1.55; color: #c9cde8; }
+  .feature-list { list-style: none; margin-top: 2rem; }
+  .feature-list li {
+    display: flex; gap: 1rem;
+    padding: 1.2rem 0;
+    border-top: 1px solid rgba(26,26,46,0.15);
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+  .feature-list li .i {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: #3a45c2;
+    min-width: 2.5rem;
+    font-size: 1.4rem;
+  }
+  .colophon {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #1a1a2e;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    color: #555;
+  }
+
+  @media (max-width: 900px) {
+    .spread { padding: 4rem 1.6rem; }
+    .warm-grid, .closer-grid, .rose-cols, .neon-grid, .stat-row { grid-template-columns: 1fr !important; }
+    .two-col, .three-col { columns: 1; }
+    .stat-cell { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.14); }
+    .stat-cell:last-child { border-bottom: none; }
+    .academic::before { font-size: 14rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 01 COVER -->
+<section class="spread cover">
+  <div class="cover-grid">
+    <div class="cover-top reveal">
+      <span>Vol. IV · Issue 20</span>
+      <span>A Field Report</span>
+      <span>April MMXXVI</span>
+    </div>
+    <div class="reveal">
+      <div class="kicker" style="margin-bottom: 2rem;">On Writing Code With Machines That Can't See Themselves</div>
+      <h1>A Second<br/><em>Pair of</em><br/>Eyes.</h1>
+    </div>
+    <p class="cover-deck reveal">
+      If you are writing code with AI, you may have noticed it isn't great at catching its own mistakes. A short dispatch on the dual-model review loop that finally works — and why two adversaries are better than one genius.
+    </p>
+    <div class="cover-foot reveal">
+      <div>
+        <div style="font-weight:600;">The Dispatch</div>
+        <div style="margin-top:0.3rem; font-weight: 400; letter-spacing: 0.1em;">Ten spreads · One idea</div>
+      </div>
+      <div class="issue">No. 20</div>
+      <div style="text-align:right;">
+        <div style="font-weight:600;">Filed from</div>
+        <div style="margin-top:0.3rem; font-weight: 400; letter-spacing: 0.1em;">A terminal, somewhere</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 MIDNIGHT -->
+<section class="spread midnight">
+  <div class="midnight-wrap">
+    <div class="kicker reveal">Chapter I — The Problem</div>
+    <h2 class="reveal">AI <em>isn't great</em> at catching<br/>its own mistakes.</h2>
+    <p class="midnight-lead reveal">
+      The model that wrote the bug is the same model you're asking to find it. It has the same training, the same assumptions, the same blind spots. It is, in the most literal sense, marking its own homework.
+    </p>
+    <div class="stat-row reveal">
+      <div class="stat-cell">
+        <div class="n">01</div>
+        <div class="l">Same Training</div>
+        <p>A reviewer who learned the same lessons won't notice what those lessons leave out.</p>
+      </div>
+      <div class="stat-cell">
+        <div class="n">02</div>
+        <div class="l">Same Blind Spots</div>
+        <p>Errors in judgement look like the correct answer — to itself.</p>
+      </div>
+      <div class="stat-cell">
+        <div class="n">03</div>
+        <div class="l">Same Output</div>
+        <p>Asking it twice mostly returns a more confident version of the first reply.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 WARM EDITORIAL -->
+<section class="spread warm">
+  <div class="warm-grid">
+    <div>
+      <div class="kicker reveal">Chapter II — The Premise</div>
+      <h2 class="reveal">Build a tool that <em>adds</em> a second pair of eyes.</h2>
+      <p class="lede reveal">
+        The idea, stripped of ceremony: let one model write, and a different model — from a different lab, with a different upbringing — review everything it produced. Not a rubber stamp. An adversary.
+      </p>
+      <div class="pullquote reveal">
+        &ldquo;I built a free tool that adds a second pair of eyes.&rdquo;
+      </div>
+    </div>
+    <aside class="sidebar reveal">
+      <div class="label">The Handshake</div>
+      <h3>How the loop runs, end to end.</h3>
+      <ul>
+        <li><span>i.</span> You give Claude a task.</li>
+        <li><span>ii.</span> It writes the code.</li>
+        <li><span>iii.</span> A second AI — Codex, from OpenAI — reviews every change.</li>
+        <li><span>iv.</span> Bugs, missing tests, security holes all get flagged.</li>
+        <li><span>v.</span> Claude reads the feedback and fixes what it agrees with.</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<!-- 04 ROSE STAMP -->
+<section class="spread rose">
+  <div class="rose-wrap">
+    <div class="kicker reveal">Chapter III — The Asymmetry</div>
+    <h2 class="reveal">Different training.<br/>Different <em>blind spots.</em></h2>
+    <div class="rose-cols">
+      <div class="rose-col reveal">
+        <span class="tag tag-red">Anthropic · Claude</span>
+        <h3>The Author.</h3>
+        <p>Confident, articulate, produces the first draft. Excellent at shape and structure. Prone — like any author — to not see the typo it just wrote.</p>
+      </div>
+      <div class="stamp reveal">
+        <div class="s1">vs.</div>
+        <div class="s2">adversaries<br/>by design</div>
+      </div>
+      <div class="rose-col reveal">
+        <span class="tag tag-green">OpenAI · Codex</span>
+        <h3>The Reviewer.</h3>
+        <p>Different lab, different corpus, different priors. Catches the bugs, missing tests, and security holes the first pair of eyes sailed right past.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 TERMINAL -->
+<section class="spread terminal">
+  <div class="kicker reveal">Chapter IV — The Loop, Live</div>
+  <h2 class="reveal">Watch them <em>argue</em> like coworkers.</h2>
+  <div class="terminal-window reveal">
+    <div class="term-bar">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="term-title">~/review-loop — claude × codex — 120×34</div>
+    </div>
+    <div class="term-body">
+      <div><span class="prompt">$</span> claude task "refactor auth handler"</div>
+      <div class="comment"># Claude writes the code...</div>
+      <div><span class="ok">✓</span> 4 files changed · 128 insertions · 47 deletions</div>
+      <br/>
+      <div><span class="prompt">$</span> codex review --diff</div>
+      <div class="comment"># Codex reads every change.</div>
+      <div><span class="er">!</span> <span class="hi">bug:</span>        token comparison uses == (timing attack)</div>
+      <div><span class="er">!</span> <span class="hi">missing:</span>    no test for expired-token path</div>
+      <div><span class="er">!</span> <span class="hi">security:</span>   refresh secret logged at info level</div>
+      <br/>
+      <div><span class="prompt">$</span> claude apply-review</div>
+      <div class="comment"># Claude reads feedback. Fixes what it agrees with.</div>
+      <div><span class="ok">✓</span> patched: constant-time compare</div>
+      <div><span class="ok">✓</span> added:   expired-token test</div>
+      <div><span class="ok">✓</span> redacted: secret from logs</div>
+      <div>&nbsp;</div>
+      <div><span class="prompt">$</span> <span class="cursor"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 ACADEMIC DROP CAP -->
+<section class="spread academic">
+  <div class="academic-wrap">
+    <div class="kicker reveal">Chapter V — Why Pairing Works</div>
+    <h2 class="reveal">Two models, raised on <em>different texts,</em> make a better team than one that argues with itself.</h2>
+    <div class="two-col reveal">
+      <p>
+        <span class="dropcap">T</span>he central claim is almost suspiciously simple. <em>These models have different training and different blind spots. One catches what the other misses.</em> The rest of the tool is plumbing.
+      </p>
+      <p>
+        What the author calls "arguing like co-workers" is not a metaphor so much as a description. The writer defends the choice. The reviewer flags the risk. Nobody's feelings are at stake. The diff is.
+      </p>
+      <div class="callout">
+        &ldquo;They argue like co-workers. Of everything I've tried, this pairing works the best.&rdquo;
+      </div>
+      <p>
+        A single model reviewing its own output tends to agree with itself. It wrote the code for reasons it still finds persuasive. A reviewer with a different intellectual lineage has no such loyalty — and, crucially, a different set of things it was taught to worry about.
+      </p>
+      <p>
+        The result, in practice, is a quieter but sharper workflow. Fewer bugs ship. Fewer tests go missing. Fewer secrets end up in logs. You did not hire a second engineer; you rented one for the length of a diff.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 07 BIG STAT GOLD -->
+<section class="spread gold">
+  <div class="gold-wrap">
+    <div class="kicker reveal">Chapter VI — The Result</div>
+    <div class="hero-num reveal">3</div>
+    <h2 class="reveal">
+      categories the reviewer reliably catches:<br/>
+      <em>bugs, missing tests, and security holes</em> — all flagged, every time the code changes.
+    </h2>
+    <div class="grade-row">
+      <div class="grade reveal">
+        <div class="g">Bugs</div>
+        <div class="gl">Flagged</div>
+      </div>
+      <div class="grade reveal">
+        <div class="g">Tests</div>
+        <div class="gl">Missing · Flagged</div>
+      </div>
+      <div class="grade reveal">
+        <div class="g">Security</div>
+        <div class="gl">Holes · Flagged</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 BROADSHEET -->
+<section class="spread broadsheet">
+  <div class="broad-wrap">
+    <div class="masthead reveal">
+      <div class="name">The Review Ledger</div>
+      <div class="meta">Dispatch · Section C · Page 08</div>
+    </div>
+    <div class="kicker reveal">Chapter VII — The Economics</div>
+    <h2 class="reveal">It works with the <em>subscriptions</em> you already have.</h2>
+    <p class="deck reveal">No new vendor. No procurement cycle. No enterprise pilot. Your Claude and ChatGPT accounts, already sitting in your browser, already paid for this month.</p>
+    <div class="stat-banner reveal">
+      <div class="n">$0</div>
+      <div class="t">The tool itself is <strong>free</strong>. Bring-your-own subscriptions. The only thing it costs is the five minutes it takes to wire up.</div>
+    </div>
+    <div class="three-col reveal">
+      <div>
+        <h4>The Author</h4>
+        <p>Claude does what Claude already does in your editor — takes the task, writes the code, commits the diff. Nothing about the way you work with it changes at the moment of authorship.</p>
+      </div>
+      <div>
+        <h4>The Reviewer</h4>
+        <p>Codex, from OpenAI, reads the change set the moment it's produced. Different model, different lab, different intuitions about what counts as a bug. That asymmetry is the product.</p>
+      </div>
+      <div>
+        <h4>The Conclusion</h4>
+        <p>Claude reads the reviewer's notes and fixes the ones it agrees with. It doesn't capitulate — it evaluates. Disagreements are logged. You stay the tiebreaker, but most diffs never need you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 NEON -->
+<section class="spread neon">
+  <div class="neon-wrap">
+    <div class="kicker reveal">Chapter VIII — The Verdict</div>
+    <h2 class="reveal">Of everything tried, this <em>pairing</em> works best.</h2>
+    <p class="reveal" style="font-size: 1.3rem; line-height: 1.55; color:#9fd8bd; max-width: 820px; font-family:'Fraunces',serif; font-style: italic;">
+      An informal ranking, emerging from the dispatch, of what actually moves the needle when AI writes the code.
+    </p>
+    <div class="neon-grid">
+      <div class="neon-card reveal">
+        <div class="n">i.</div>
+        <h3>Single-model self-review</h3>
+        <p>Echo chamber. The author defends the author. Finds typos; misses architecture. A comfortable mirror.</p>
+      </div>
+      <div class="neon-card reveal">
+        <div class="n">ii.</div>
+        <h3>Human spot-checks</h3>
+        <p>Works until velocity exceeds attention. The reviewer — you — becomes a bottleneck within a week.</p>
+      </div>
+      <div class="neon-card reveal">
+        <div class="n">iii.</div>
+        <h3>Static analysis only</h3>
+        <p>Catches patterns. Misses intent. A linter cannot tell you the feature you shipped is the wrong feature.</p>
+      </div>
+      <div class="neon-card reveal" style="border-color: #5effb0; box-shadow: 0 0 60px rgba(94,255,176,0.2) inset;">
+        <div class="n">iv.</div>
+        <h3>Claude × Codex pairing</h3>
+        <p>Two writers. Different schools. They argue. The diff gets better. <em>This is the one.</em></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 CLOSER -->
+<section class="spread closer">
+  <div class="closer-wrap">
+    <div class="kicker reveal">Chapter IX — The Ask</div>
+    <h2 class="reveal">Comment <em>"review"</em><br/>and I'll send the link.</h2>
+    <div class="closer-grid">
+      <div class="reveal">
+        <p class="lead">
+          That is the whole offer. One word, one link, one second pair of eyes stapled to your existing workflow. The tool is free. The subscriptions are ones you already have. The only variable left is whether you ask.
+        </p>
+        <ul class="feature-list">
+          <li><span class="i">i.</span><span>Works with the Claude and ChatGPT accounts you're already paying for.</span></li>
+          <li><span class="i">ii.</span><span>Free to install. No vendor, no pilot, no procurement.</span></li>
+          <li><span class="i">iii.</span><span>Flags bugs, missing tests, and security holes on every change.</span></li>
+          <li><span class="i">iv.</span><span>Claude fixes what it agrees with. You stay the tiebreaker.</span></li>
+        </ul>
+      </div>
+      <aside class="cta-card reveal">
+        <div class="corner">The Link</div>
+        <h3>One word.<br/><em>One link.</em></h3>
+        <span class="word">review</span>
+        <p>Drop the word in the comments. The link to the tool comes back. That's the entirety of the call-to-action — honest to the source and honest to the reader.</p>
+      </aside>
+    </div>
+    <div class="colophon reveal">
+      <span>Source · "How to Catch Claude's Coding Mistakes Automatically"</span>
+      <span>End · Issue No. 20</span>
+      <span>Claude × Codex · A Field Report</span>
+    </div>
+  </div>
+</section>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e, idx) => {
+      if (e.isIntersecting) {
+        const siblings = Array.from(e.target.parentElement.querySelectorAll('.reveal'));
+        const i = siblings.indexOf(e.target);
+        e.target.style.transitionDelay = (Math.min(i, 6) * 90) + 'ms';
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

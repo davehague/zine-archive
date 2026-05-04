@@ -1,0 +1,1647 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Simulators — A Reader's Guide to janus's Foundational AI-Alignment Essay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --cream: #f3ecde;
+    --cream-2: #ece2cb;
+    --ink: #161413;
+    --ink-soft: #2a2520;
+    --rule: #2a2520;
+    --rose: #b53a2a;
+    --gold: #d29a3b;
+    --midnight: #0d1117;
+    --midnight-2: #11161e;
+    --navy: #0a1730;
+    --indigo: #3b3bff;
+    --terminal-bg: #07120a;
+    --terminal-green: #5dff8c;
+    --neon: #b8ff3a;
+    --paper: #fbf7ee;
+    --lede: #6f6557;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection { background: var(--ink); color: var(--cream); }
+
+  .spread {
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .wrap { max-width: 1400px; margin: 0 auto; width: 100%; position: relative; z-index: 2; }
+
+  .kicker {
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+  }
+
+  .display {
+    font-family: "Fraunces", serif;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+  }
+
+  .body-text {
+    font-family: "Inter", sans-serif;
+    font-size: 1.15rem;
+    line-height: 1.65;
+    font-weight: 400;
+  }
+
+  .num-roman {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  /* fade-up animation */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 1.1s ease, transform 1.1s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  /* ===========================================================
+     SPREAD 1 — COVER
+     =========================================================== */
+  .cover {
+    background: var(--cream);
+    background-image:
+      radial-gradient(1100px 700px at 20% 0%, rgba(181,58,42,0.08), transparent 60%),
+      radial-gradient(900px 600px at 100% 100%, rgba(22,20,19,0.06), transparent 60%);
+  }
+  .cover::before {
+    content: "";
+    position: absolute; inset: 2.4rem;
+    border: 1px solid var(--ink);
+    pointer-events: none;
+  }
+  .cover::after {
+    content: "";
+    position: absolute; inset: 2.7rem;
+    border: 1px solid var(--ink);
+    pointer-events: none;
+    opacity: 0.25;
+  }
+  .cover-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 1.1rem;
+    margin-bottom: 4.5rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .cover-title {
+    font-size: clamp(5rem, 18vw, 17rem);
+    line-height: 0.78;
+    letter-spacing: -0.05em;
+    margin: 0;
+    font-weight: 300;
+  }
+  .cover-title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--rose);
+  }
+  .cover-deck {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.4rem, 2.4vw, 2.2rem);
+    line-height: 1.25;
+    max-width: 40ch;
+    margin: 3rem 0 4rem 0;
+    color: var(--ink-soft);
+  }
+  .cover-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px solid var(--ink);
+    padding-top: 1.1rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .cover-foot .issue {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 1.4rem;
+    color: var(--ink-soft);
+  }
+  .cover-stamp {
+    position: absolute;
+    right: 8rem;
+    top: 9rem;
+    width: 9rem; height: 9rem;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.66rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    transform: rotate(-12deg);
+    line-height: 1.4;
+    padding: 0.6rem;
+  }
+
+  /* ===========================================================
+     SPREAD 2 — DARK / MIDNIGHT (Premise)
+     =========================================================== */
+  .midnight {
+    background: var(--midnight);
+    color: #e8eef7;
+    background-image:
+      radial-gradient(800px 600px at 80% 20%, rgba(120,160,255,0.10), transparent 60%),
+      radial-gradient(900px 700px at 10% 90%, rgba(80,120,255,0.06), transparent 60%);
+  }
+  .midnight .kicker { color: #88a4d6; }
+  .midnight .grid-stat {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+    margin-top: 3rem;
+  }
+  .midnight h1 {
+    font-family: "Fraunces", serif;
+    font-weight: 300;
+    font-size: clamp(3rem, 8vw, 7.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.025em;
+    margin: 0.2rem 0 0 0;
+  }
+  .midnight h1 em { font-style: italic; color: #6da7ff; font-weight: 400; }
+  .midnight .deck {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.3rem, 1.8vw, 1.7rem);
+    line-height: 1.35;
+    color: #b8c4d6;
+    max-width: 36ch;
+  }
+  .stat-row {
+    border-top: 1px solid rgba(255,255,255,0.18);
+    padding: 1.6rem 0;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    align-items: baseline;
+  }
+  .stat-row:last-child { border-bottom: 1px solid rgba(255,255,255,0.18); }
+  .stat-num {
+    font-family: "Fraunces", serif;
+    font-size: 3rem;
+    line-height: 1;
+    color: #fff;
+    font-weight: 300;
+  }
+  .stat-num em { color: #6da7ff; font-style: italic; }
+  .stat-label {
+    font-size: 1.1rem;
+    line-height: 1.55;
+    color: #d5dde8;
+    font-weight: 400;
+  }
+  .midnight .author-tag {
+    position: absolute;
+    bottom: 2.5rem;
+    right: 4rem;
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: #6da7ff;
+    opacity: 0.7;
+  }
+  .midnight .num-watermark {
+    position: absolute;
+    left: 4rem; top: 3rem;
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: #88a4d6;
+    letter-spacing: 0.2em;
+  }
+
+  /* ===========================================================
+     SPREAD 3 — WARM EDITORIAL (Karpathy / 1951)
+     =========================================================== */
+  .warm {
+    background: var(--cream);
+    background-image:
+      linear-gradient(to right, rgba(0,0,0,0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0,0,0,0.04) 1px, transparent 1px);
+    background-size: 110px 110px;
+  }
+  .warm .layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 4rem;
+  }
+  .warm h2 {
+    font-family: "Fraunces", serif;
+    font-size: clamp(3rem, 7.5vw, 7rem);
+    line-height: 0.92;
+    margin: 1rem 0 2rem 0;
+    font-weight: 300;
+    letter-spacing: -0.025em;
+  }
+  .warm h2 em { font-style: italic; color: var(--rose); font-weight: 400; }
+  .warm .deck {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1.6rem;
+    line-height: 1.35;
+    color: var(--ink-soft);
+    max-width: 32ch;
+    margin-bottom: 2rem;
+  }
+  .warm .body p { font-size: 1.15rem; line-height: 1.65; max-width: 56ch; margin: 0 0 1.2rem 0; }
+  .warm .body p .lead-cap {
+    font-family: "Fraunces", serif;
+    float: left;
+    font-size: 4.4rem;
+    line-height: 0.85;
+    margin: 0.4rem 0.55rem -0.4rem 0;
+    font-weight: 400;
+    color: var(--rose);
+  }
+  .warm .sidebar {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 2.5rem 2rem;
+    align-self: start;
+    position: relative;
+  }
+  .warm .sidebar h3 {
+    font-family: "Inter", sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    color: #d8a76a;
+    margin: 0 0 1.4rem 0;
+    font-weight: 700;
+  }
+  .warm .sidebar .quote {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1.6rem;
+    line-height: 1.35;
+    margin: 0;
+  }
+  .warm .sidebar .attrib {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #d8a76a;
+    font-weight: 600;
+  }
+  .warm .timeline {
+    margin-top: 3rem;
+    border-top: 1px solid var(--ink);
+    padding-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+  .warm .tl-year {
+    font-family: "Fraunces", serif;
+    font-size: 2.4rem;
+    font-weight: 300;
+    color: var(--ink);
+  }
+  .warm .tl-label {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    margin-top: 0.4rem;
+    line-height: 1.4;
+  }
+  .warm .num-mark {
+    position: absolute;
+    top: 3rem; right: 4rem;
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-size: clamp(8rem, 16vw, 16rem);
+    color: rgba(22,20,19,0.06);
+    line-height: 1;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* ===========================================================
+     SPREAD 4 — ROSE ALERT / STAMP (Old Framework breaks)
+     =========================================================== */
+  .alert {
+    background: #1a0c0a;
+    color: #f1e5d9;
+    background-image:
+      radial-gradient(700px 500px at 90% 10%, rgba(181,58,42,0.18), transparent 60%),
+      radial-gradient(800px 600px at 0% 100%, rgba(181,58,42,0.10), transparent 60%);
+  }
+  .alert .kicker { color: #e08070; }
+  .alert .lead {
+    font-family: "Fraunces", serif;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: 0.95;
+    font-weight: 300;
+    letter-spacing: -0.022em;
+    max-width: 18ch;
+    margin: 1rem 0 0 0;
+  }
+  .alert .lead em { font-style: italic; color: #ff7a6a; font-weight: 400; }
+  .alert .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 4rem;
+  }
+  .alert .col {
+    border-top: 2px solid var(--rose);
+    padding-top: 1.8rem;
+  }
+  .alert .col h4 {
+    font-family: "Inter", sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    margin: 0 0 1.2rem 0;
+    font-weight: 700;
+    color: #e08070;
+  }
+  .alert .col .ftitle {
+    font-family: "Fraunces", serif;
+    font-size: 2.4rem;
+    line-height: 1;
+    font-weight: 300;
+    margin: 0 0 1.2rem 0;
+  }
+  .alert .col .ftitle em { font-style: italic; }
+  .alert .col p { font-size: 1.1rem; line-height: 1.6; max-width: 38ch; }
+  .alert .stamp {
+    position: absolute;
+    right: 5rem;
+    top: 4rem;
+    width: 12rem; height: 12rem;
+    border: 2px solid var(--rose);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #ff7a6a;
+    transform: rotate(-9deg);
+    z-index: 3;
+  }
+  .alert .stamp .stamp-num {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-size: 4rem;
+    line-height: 1;
+    font-weight: 300;
+  }
+  .alert .stamp .stamp-label {
+    font-size: 0.66rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    margin-top: 0.4rem;
+    font-weight: 700;
+  }
+  .alert .stamp::before, .alert .stamp::after {
+    content: "";
+    position: absolute;
+    inset: 0.6rem;
+    border: 1px solid var(--rose);
+    border-radius: 50%;
+    opacity: 0.4;
+  }
+  .alert .stamp::after { inset: 1.1rem; opacity: 0.2; }
+  .alert .pullquote {
+    margin-top: 4rem;
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+    line-height: 1.3;
+    color: #f1e5d9;
+    border-left: 3px solid var(--rose);
+    padding-left: 1.6rem;
+    max-width: 50ch;
+  }
+  .alert .pullquote .att {
+    display: block;
+    margin-top: 1rem;
+    font-style: normal;
+    font-family: "Inter", sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #e08070;
+    font-weight: 600;
+  }
+
+  /* ===========================================================
+     SPREAD 5 — TERMINAL (5 dead frames)
+     =========================================================== */
+  .terminal {
+    background: var(--terminal-bg);
+    color: var(--terminal-green);
+    font-family: "JetBrains Mono", monospace;
+  }
+  .terminal::before {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 3px);
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .terminal .window {
+    border: 1px solid rgba(93,255,140,0.35);
+    background: rgba(7,18,10,0.85);
+    box-shadow: 0 0 60px rgba(93,255,140,0.06) inset;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .terminal .winchrome {
+    background: rgba(93,255,140,0.06);
+    padding: 0.7rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-bottom: 1px solid rgba(93,255,140,0.25);
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    color: rgba(93,255,140,0.55);
+  }
+  .terminal .dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(93,255,140,0.4); }
+  .terminal .dot:nth-child(2) { background: rgba(255,200,90,0.6); }
+  .terminal .dot:nth-child(3) { background: rgba(255,90,90,0.5); }
+  .terminal .winchrome .name { margin-left: 1rem; font-family: "JetBrains Mono", monospace; font-size: 0.85rem; }
+  .terminal .winbody {
+    padding: 2.4rem 2.6rem;
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+  .terminal h2 {
+    font-family: "Fraunces", serif;
+    font-weight: 300;
+    font-size: clamp(2.6rem, 6vw, 5.6rem);
+    line-height: 0.95;
+    color: #d6ffe2;
+    margin: 0 0 2rem 0;
+    letter-spacing: -0.02em;
+  }
+  .terminal h2 em { font-style: italic; color: var(--terminal-green); font-weight: 400; }
+  .terminal .prompt::before { content: "$ "; color: rgba(93,255,140,0.6); }
+  .terminal .out { color: rgba(214,255,226,0.85); padding-left: 1.2rem; }
+  .terminal .label { color: rgba(93,255,140,0.7); }
+  .terminal .fail { color: #ff7a6a; }
+  .terminal .pass { color: #5dff8c; }
+  .terminal .cursor {
+    display: inline-block;
+    width: 0.7em; height: 1.05em;
+    background: var(--terminal-green);
+    margin-left: 4px;
+    transform: translateY(2px);
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .terminal .kicker { color: rgba(93,255,140,0.7); margin-bottom: 1rem; }
+  .terminal .below {
+    margin-top: 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(93,255,140,0.55);
+  }
+  .terminal .below div {
+    border: 1px solid rgba(93,255,140,0.25);
+    padding: 0.8rem 0.6rem;
+    text-align: center;
+  }
+  .terminal .below div .x { color: #ff7a6a; font-size: 1.4rem; display: block; margin-top: 0.2rem; }
+
+  /* ===========================================================
+     SPREAD 6 — ACADEMIC DROP-CAP (Oracle / prediction != truth)
+     =========================================================== */
+  .academic {
+    background: var(--navy);
+    color: #e8edf6;
+    background-image:
+      radial-gradient(800px 600px at 100% 0%, rgba(255,200,90,0.07), transparent 60%);
+  }
+  .academic::before {
+    content: "";
+    position: absolute; inset: 3rem;
+    border: 1px solid rgba(255,255,255,0.10);
+    pointer-events: none;
+  }
+  .academic .label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid rgba(255,255,255,0.18);
+    padding-bottom: 0.9rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #ffd58c;
+  }
+  .academic h2 {
+    font-family: "Fraunces", serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(3rem, 7vw, 6.6rem);
+    line-height: 1;
+    margin: 1.6rem 0 2.4rem 0;
+    letter-spacing: -0.022em;
+    max-width: 22ch;
+  }
+  .academic h2 b { font-style: normal; font-weight: 300; color: #ffd58c; }
+  .academic .twocol {
+    columns: 2;
+    column-gap: 4rem;
+    column-rule: 1px solid rgba(255,255,255,0.18);
+    font-size: 1.12rem;
+    line-height: 1.7;
+    color: #d8dfee;
+    max-width: 1100px;
+  }
+  .academic .twocol p { margin: 0 0 1.1rem 0; }
+  .academic .dropcap {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 300;
+    float: left;
+    font-size: 6rem;
+    line-height: 0.85;
+    margin: 0.45rem 0.6rem -0.4rem 0;
+    color: #ffd58c;
+  }
+  .academic .callout {
+    margin-top: 3rem;
+    border-left: 4px solid #ffd58c;
+    padding: 1.4rem 1.8rem;
+    background: rgba(255,213,140,0.08);
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    color: #fff3dc;
+    max-width: 60ch;
+  }
+  .academic .num-mark {
+    position: absolute;
+    bottom: 2rem; right: 4rem;
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-size: clamp(8rem, 16vw, 14rem);
+    color: rgba(255,213,140,0.07);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  /* ===========================================================
+     SPREAD 7 — BIG STAT / GOLD (Prediction Orthogonality)
+     =========================================================== */
+  .gold {
+    background: #100a04;
+    color: #f3e9d2;
+    background-image:
+      radial-gradient(900px 700px at 50% 50%, rgba(210,154,59,0.12), transparent 60%);
+  }
+  .gold .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid rgba(210,154,59,0.4);
+    padding-bottom: 1rem;
+  }
+  .gold .top .kicker { color: var(--gold); }
+  .gold .hero {
+    font-family: "Fraunces", serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(8rem, 28vw, 22rem);
+    line-height: 0.85;
+    color: var(--gold);
+    text-align: center;
+    margin: 3rem 0 1rem 0;
+    letter-spacing: -0.04em;
+  }
+  .gold .hero-sub {
+    text-align: center;
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1.3;
+    max-width: 30ch;
+    margin: 0 auto 3rem auto;
+    color: #f3e9d2;
+  }
+  .gold .badges {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 4rem;
+  }
+  .gold .badge {
+    border: 1px solid rgba(210,154,59,0.4);
+    padding: 1.6rem 1.6rem;
+    position: relative;
+  }
+  .gold .badge .grade {
+    position: absolute;
+    top: -1rem; right: 1rem;
+    background: var(--gold);
+    color: #100a04;
+    width: 2.4rem; height: 2.4rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Fraunces", serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  .gold .badge h4 {
+    font-family: "Inter", sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    margin: 0 0 0.7rem 0;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .gold .badge .b-title {
+    font-family: "Fraunces", serif;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    font-weight: 400;
+    margin-bottom: 0.6rem;
+  }
+  .gold .badge p { font-size: 1.05rem; line-height: 1.55; color: #d6c9ad; margin: 0; }
+
+  /* ===========================================================
+     SPREAD 8 — BROADSHEET (Simulator vs Simulacrum)
+     =========================================================== */
+  .broadsheet {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .broadsheet .masthead {
+    border-top: 4px double var(--ink);
+    border-bottom: 4px double var(--ink);
+    padding: 1rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.78rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .broadsheet .head-title {
+    font-family: "Fraunces", serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(3.4rem, 8vw, 7.6rem);
+    line-height: 0.95;
+    margin: 2.2rem 0 0.8rem 0;
+    letter-spacing: -0.025em;
+    text-align: center;
+  }
+  .broadsheet .head-title b { font-weight: 400; font-style: normal; color: var(--rose); }
+  .broadsheet .head-deck {
+    text-align: center;
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1.5rem;
+    line-height: 1.35;
+    color: var(--ink-soft);
+    max-width: 60ch;
+    margin: 0 auto 2.2rem auto;
+  }
+  .broadsheet .stat-banner {
+    background: var(--rose);
+    color: var(--paper);
+    text-align: center;
+    padding: 1rem;
+    margin: 0 0 2.6rem 0;
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-size: 1.4rem;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+  .broadsheet .stat-banner b { font-weight: 500; }
+  .broadsheet .cols {
+    columns: 3;
+    column-gap: 2.4rem;
+    column-rule: 1px solid rgba(0,0,0,0.18);
+    font-size: 1.1rem;
+    line-height: 1.65;
+  }
+  .broadsheet .cols p { margin: 0 0 1.05rem 0; }
+  .broadsheet .cols .small-head {
+    font-family: "Inter", sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    margin: 0 0 0.6rem 0;
+    color: var(--rose);
+    font-weight: 700;
+    break-after: avoid;
+  }
+  .broadsheet .cols .scol-title {
+    font-family: "Fraunces", serif;
+    font-size: 1.7rem;
+    line-height: 1.05;
+    font-weight: 400;
+    margin: 0 0 0.8rem 0;
+    break-after: avoid;
+  }
+  .broadsheet .cols .lead-cap {
+    font-family: "Fraunces", serif;
+    float: left;
+    font-size: 4rem;
+    line-height: 0.85;
+    margin: 0.35rem 0.5rem -0.4rem 0;
+    color: var(--rose);
+  }
+
+  /* ===========================================================
+     SPREAD 9 — NEON / CYBERPUNK (Limit of Learned Simulation)
+     =========================================================== */
+  .neon {
+    background: #04060a;
+    color: #d6ffe2;
+    overflow: hidden;
+  }
+  .neon::before {
+    /* perspective grid floor */
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 60%;
+    background:
+      linear-gradient(to top, rgba(184,255,58,0.15), transparent 70%),
+      repeating-linear-gradient(to right, rgba(184,255,58,0.18) 0 1px, transparent 1px 80px),
+      repeating-linear-gradient(to bottom, rgba(184,255,58,0.18) 0 1px, transparent 1px 60px);
+    transform: perspective(700px) rotateX(60deg);
+    transform-origin: bottom;
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .neon::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(900px 600px at 50% 30%, rgba(184,255,58,0.10), transparent 60%);
+    pointer-events: none;
+  }
+  .neon .wrap { z-index: 3; }
+  .neon .kicker { color: var(--neon); text-shadow: 0 0 20px rgba(184,255,58,0.5); }
+  .neon h2 {
+    font-family: "Fraunces", serif;
+    font-weight: 300;
+    font-size: clamp(3.2rem, 9vw, 9rem);
+    line-height: 0.9;
+    margin: 1rem 0 2rem 0;
+    letter-spacing: -0.03em;
+    color: #f3ffe6;
+    text-shadow: 0 0 36px rgba(184,255,58,0.25);
+  }
+  .neon h2 em {
+    font-style: italic;
+    color: var(--neon);
+    text-shadow: 0 0 30px rgba(184,255,58,0.6);
+  }
+  .neon .deck {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.4rem, 2vw, 1.9rem);
+    line-height: 1.4;
+    max-width: 50ch;
+    color: #c9e4d2;
+  }
+  .neon .panels {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.4rem;
+    margin-top: 4rem;
+  }
+  .neon .panel {
+    border: 1px solid rgba(184,255,58,0.4);
+    padding: 1.6rem 1.6rem;
+    background: rgba(184,255,58,0.04);
+    backdrop-filter: blur(2px);
+    box-shadow: 0 0 30px rgba(184,255,58,0.04) inset;
+  }
+  .neon .panel .pn {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-size: 2.4rem;
+    color: var(--neon);
+    margin-bottom: 0.6rem;
+    line-height: 1;
+  }
+  .neon .panel h4 {
+    font-family: "Inter", sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--neon);
+    margin: 0 0 0.6rem 0;
+    font-weight: 700;
+  }
+  .neon .panel p { font-size: 1.05rem; line-height: 1.5; color: #d2e4d8; margin: 0; }
+  .neon .warn {
+    margin-top: 3rem;
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+    line-height: 1.3;
+    color: var(--neon);
+    border-top: 1px solid rgba(184,255,58,0.4);
+    padding-top: 1.4rem;
+  }
+
+  /* ===========================================================
+     SPREAD 10 — CLEAN PRODUCT (Closer / Quasi-sims)
+     =========================================================== */
+  .clean {
+    background: #fafafa;
+    color: var(--ink);
+  }
+  .clean .head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: end;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 1.5rem;
+  }
+  .clean h2 {
+    font-family: "Fraunces", serif;
+    font-weight: 300;
+    font-size: clamp(3rem, 7vw, 6.4rem);
+    line-height: 0.95;
+    margin: 0.6rem 0 0 0;
+    letter-spacing: -0.025em;
+  }
+  .clean h2 em { font-style: italic; color: var(--indigo); font-weight: 400; }
+  .clean .deck {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    max-width: 38ch;
+    color: var(--ink-soft);
+  }
+  .clean .checklist-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: 3rem;
+  }
+  .clean .feature {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 1.2rem;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+  .clean .feature .icn {
+    width: 44px; height: 44px;
+    border: 1.5px solid var(--indigo);
+    color: var(--indigo);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    font-weight: 500;
+  }
+  .clean .feature h4 {
+    font-family: "Fraunces", serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin: 0 0 0.3rem 0;
+    line-height: 1.15;
+  }
+  .clean .feature p { font-size: 1.05rem; line-height: 1.55; color: var(--ink-soft); margin: 0; }
+  .clean .product-card {
+    margin-top: 4rem;
+    background: var(--ink);
+    color: #fafafa;
+    padding: 3rem 3rem 3.5rem 3rem;
+    border-radius: 6px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: end;
+  }
+  .clean .product-card .pq {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+    line-height: 1.35;
+  }
+  .clean .product-card .pq em { color: #a0a0ff; font-style: italic; }
+  .clean .product-card .lab {
+    font-size: 0.78rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #a0a0ff;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+  }
+  .clean .product-card .closer {
+    font-family: "Fraunces", serif;
+    font-size: 1.3rem;
+    line-height: 1.45;
+    color: #d8d8e8;
+  }
+  .clean .end-mark {
+    text-align: center;
+    margin-top: 3rem;
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.18em;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 900px) {
+    .spread { padding: 4rem 1.6rem; }
+    .cover-meta, .cover-foot { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+    .cover-stamp { display: none; }
+    .midnight .grid-stat { grid-template-columns: 1fr; gap: 2rem; }
+    .stat-row { grid-template-columns: 1fr; gap: 0.4rem; }
+    .warm .layout { grid-template-columns: 1fr; }
+    .warm .timeline { grid-template-columns: 1fr 1fr; }
+    .alert .compare { grid-template-columns: 1fr; }
+    .alert .stamp { display: none; }
+    .terminal .below { grid-template-columns: 1fr 1fr; }
+    .academic .twocol { columns: 1; }
+    .gold .badges { grid-template-columns: 1fr; }
+    .broadsheet .cols { columns: 1; }
+    .neon .panels { grid-template-columns: 1fr; }
+    .clean .head, .clean .checklist-wrap, .clean .product-card { grid-template-columns: 1fr; }
+    .warm .num-mark { font-size: 5rem; right: 1rem; top: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- =========================================================
+     SPREAD 1 — COVER
+     ========================================================= -->
+<section class="spread cover">
+  <div class="wrap">
+    <div class="cover-meta reveal">
+      <span>Issue No. 01 — Vol. ∞</span>
+      <span>The Reader's Guide</span>
+      <span>04 May 2026</span>
+    </div>
+
+    <div class="cover-stamp reveal">A Twelve<br/>Chapter<br/>Reading</div>
+
+    <h1 class="cover-title display reveal">
+      Sim<em>u</em>lators
+    </h1>
+
+    <p class="cover-deck reveal">
+      A reader's guide to janus's foundational AI-alignment essay — the one that
+      retired the agent ontology and gave a name to the rule that propagates GPT.
+    </p>
+
+    <div class="cover-foot reveal">
+      <span>Based on the September 2022 LessWrong post by janus, written at Conjecture</span>
+      <span class="issue">— Twelve chapters, one frame —</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SPREAD 2 — DARK / MIDNIGHT — The Premise
+     ========================================================= -->
+<section class="spread midnight">
+  <div class="num-watermark reveal">I — The Premise</div>
+  <div class="author-tag reveal">— janus, Conjecture, Sept. 2022</div>
+  <div class="wrap">
+    <div class="kicker reveal">A small confession, a big claim</div>
+    <h1 class="reveal">It is <em>not</em> an agent.<br/>It is a rule.</h1>
+    <div class="grid-stat">
+      <div class="reveal">
+        <p class="deck">
+          The TL;DR is one sentence, and it's blunt: self-supervised learning
+          may create AGI, or the foundation for it. So what would that
+          actually look like?
+        </p>
+        <p class="body-text" style="max-width:42ch; margin-top:1.6rem; color:#c8d1de;">
+          Janus's answer: GPT, "insofar as it is inner-aligned," is not an agent
+          at all. It is a <em style="color:#fff">simulator</em> — a rule that
+          produces rollouts. The agentic things people see in its outputs are
+          <em style="color:#fff">simulacra</em> running on top of that rule.
+          The model doesn't <em>want</em>; it <em>propagates</em>.
+        </p>
+      </div>
+      <div>
+        <div class="stat-row reveal">
+          <div class="stat-num"><em>01</em></div>
+          <div class="stat-label">A predictive model of physics can simulate a rock falling, a planet orbiting, or a person plotting their day. Same rule, three rollouts.</div>
+        </div>
+        <div class="stat-row reveal">
+          <div class="stat-num"><em>02</em></div>
+          <div class="stat-label">The outer objective: Bayes-optimal conditional inference over the prior of the training distribution.</div>
+        </div>
+        <div class="stat-row reveal">
+          <div class="stat-num"><em>03</em></div>
+          <div class="stat-label">"GPT" here is generic — any transformer trained on next-token prediction. Not a specific product.</div>
+        </div>
+        <div class="stat-row reveal">
+          <div class="stat-num"><em>04</em></div>
+          <div class="stat-label">Parts of the original essay were drafted by GPT-3, prompted with an outline of the essay itself.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SPREAD 3 — WARM EDITORIAL — Limit of Sequence Modeling
+     ========================================================= -->
+<section class="spread warm">
+  <div class="num-mark reveal">II</div>
+  <div class="wrap">
+    <div class="kicker reveal">Chapter II — The Limit of Sequence Modeling</div>
+    <h2 class="reveal">A ouija board possessed by a low-fidelity <em>ghost</em>.</h2>
+    <p class="deck reveal">
+      Karpathy's 2015 char-RNN learned that a Duke speaks differently than a
+      Clown. The recipe never changed — only the scale. And nobody followed
+      the loss to where it was actually heading.
+    </p>
+
+    <div class="layout">
+      <div class="body reveal">
+        <p>
+          <span class="lead-cap">I</span>n 2015, Andrej Karpathy fed a recurrent
+          neural network the complete works of Shakespeare and let it generate
+          text one character at a time. Out came lines like
+          <em>"PANDARUS: Alas, I think he shall be come approached…"</em> —
+          gibberish that somehow knew miseries are the kind of thing produced
+          upon a soul.
+        </p>
+        <p>
+          Janus, looking back, calls it a ouija board possessed by a
+          low-fidelity ghost summoned from a text corpus. And then says: I
+          should have taken it more seriously. The training methodology behind
+          GPT was not new. Claude Shannon used n-grams in 1951 — the same
+          statistical setup, scaled down a few orders of magnitude.
+        </p>
+        <p>
+          What changed was scale, not concept. Yet at every stage — Shannon,
+          neural LMs, the char-RNN — the people closest to the work failed to
+          extrapolate what would happen if the loss kept dropping. There seemed
+          to be "complexity classes of magic" the network could learn, and
+          others permanently out of reach. That instinct turned out to be
+          wrong.
+        </p>
+        <p>
+          The earliest serious engagement Janus could locate is a four-paragraph
+          LessWrong post from 2019 by a user named Gurkenglas, titled
+          <em>Implications of GPT-2</em>. Beyond that one essay, and a
+          working consensus among Wikipedia editors that natural-language
+          understanding is AI-complete, the limit was essentially undiscussed.
+        </p>
+      </div>
+
+      <aside class="sidebar reveal">
+        <h3>The Most Ironic Title</h3>
+        <p class="quote">
+          "Training better language models improves the underlying metrics of
+          the downstream task — such as word error rate for speech recognition,
+          or BLEU score for translation."
+        </p>
+        <div class="attrib">— Google Brain, 2016<br/>"Exploring the Limits of Language Modeling"</div>
+        <p style="margin-top:2rem; font-size:1rem; line-height:1.55; color:#e9dfca;">
+          A paper <em>literally about the limits</em> of language modeling
+          missed the actual limit by miles. Translation scores. That was the
+          answer.
+        </p>
+      </aside>
+    </div>
+
+    <div class="timeline reveal">
+      <div>
+        <div class="tl-year">1951</div>
+        <div class="tl-label">Shannon's n-grams approximate next-letter probabilities.</div>
+      </div>
+      <div>
+        <div class="tl-year">2015</div>
+        <div class="tl-label">Karpathy's char-RNN writes faux Shakespeare.</div>
+      </div>
+      <div>
+        <div class="tl-year">2016</div>
+        <div class="tl-label">Google Brain pitches LMs as a means to better BLEU.</div>
+      </div>
+      <div>
+        <div class="tl-year">2019</div>
+        <div class="tl-label">Gurkenglas notices what nobody else has.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SPREAD 4 — ROSE ALERT / STAMP — Old Framework breaks
+     ========================================================= -->
+<section class="spread alert">
+  <div class="stamp reveal">
+    <div class="stamp-num">III</div>
+    <div class="stamp-label">Frame<br/>Failure</div>
+  </div>
+  <div class="wrap">
+    <div class="kicker reveal">Chapter III — The Old Framework</div>
+    <h2 class="lead reveal">A taxonomy built before its <em>object</em> showed up.</h2>
+
+    <div class="compare">
+      <div class="col reveal">
+        <h4>What the field expected</h4>
+        <div class="ftitle">An <em>arbitrarily capable</em> system whose cognition flows from a goal.</div>
+        <p>
+          For years before deep learning hit its stride, Yudkowsky, Bostrom,
+          and the broader rationalist circle sketched out the shape of the
+          dangerous thing: a maximizer. From that one shape, a vocabulary
+          fanned out — agent, oracle, tool, genie. The categories were the menu.
+        </p>
+      </div>
+      <div class="col reveal">
+        <h4>What actually arrived</h4>
+        <div class="ftitle">A huge model, trained on huge data, predicting <em>text</em>.</div>
+        <p>
+          GPT doesn't pursue. It doesn't refuse. It continues. It violates enough
+          of the prior assumptions that the old vocabulary needs what janus calls
+          an ontological adapter. Namelessness, he points out, isn't just a
+          symptom of falling through conceptual cracks. It's a cause.
+        </p>
+      </div>
+    </div>
+
+    <p class="pullquote reveal">
+      "People in alignment talk about utility functions, deception, boxing,
+      oracles, tools, motivating the AI to be benign — but when you look at
+      GPT-3, you see none of that. You see a huge model, predicting text."
+      <span class="att">— A LessWrong commenter, quoted by janus</span>
+    </p>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SPREAD 5 — TERMINAL — Inadequate Ontologies
+     ========================================================= -->
+<section class="spread terminal">
+  <div class="wrap">
+    <div class="kicker reveal">Chapters IV–VI — Five misses in a row</div>
+    <div class="window reveal">
+      <div class="winchrome">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="name">~/alignment/ontologies $ ./check-fit.sh gpt</span>
+      </div>
+      <div class="winbody">
+        <h2>Does the old <em>frame</em> fit?<span class="cursor"></span></h2>
+
+        <div class="prompt">test agent_ontology --target=GPT</div>
+        <div class="out"><span class="label">[chalmers]</span> "GPT-3 does not look much like an agent. It does not seem to have goals or preferences beyond completing text… it is more like a chameleon."</div>
+        <div class="out"><span class="fail">FAIL</span> — no globally coherent goal · no stable preferences · no instrumental drives</div>
+
+        <div class="prompt">test oracle_ontology --target=GPT</div>
+        <div class="out"><span class="label">[objective]</span> minimize divergence from training distribution — not maximize truth</div>
+        <div class="out"><span class="fail">FAIL</span> — drop the question mark, give it the opening line of a story, and the same model will write fiction</div>
+
+        <div class="prompt">test tool_ontology --target=GPT</div>
+        <div class="out"><span class="fail">FAIL</span> — tool-likeness is a capability deployed for, not a description of motive</div>
+
+        <div class="prompt">test genie_ontology --target=GPT</div>
+        <div class="out"><span class="fail">FAIL</span> — instruction-following is an exploitable subset, not what GPT <em>is</em></div>
+
+        <div class="prompt">test behavior_cloning --target=GPT</div>
+        <div class="out"><span class="label">[note]</span> almost no real prompt appears verbatim in training data</div>
+        <div class="out"><span class="label">[note]</span> Decision Transformer trained on random trajectories produces SOTA behavior</div>
+        <div class="out"><span class="fail">FAIL</span> — what's being cloned is the behavior of a universe, not a demonstrator</div>
+
+        <div class="prompt">summarize</div>
+        <div class="out"><span class="pass">RESULT</span> — every off-the-shelf alignment ontology turns out to be a bad fit for GPT-shaped systems.</div>
+      </div>
+    </div>
+
+    <div class="below reveal">
+      <div>Agent <span class="x">×</span></div>
+      <div>Oracle <span class="x">×</span></div>
+      <div>Tool <span class="x">×</span></div>
+      <div>Genie <span class="x">×</span></div>
+      <div>Mimic <span class="x">×</span></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SPREAD 6 — ACADEMIC — Oracle GPT / prediction != truth
+     ========================================================= -->
+<section class="spread academic">
+  <div class="num-mark reveal">V</div>
+  <div class="wrap">
+    <div class="label-row reveal">
+      <span>V — Oracle GPT &amp; Supervised Learning</span>
+      <span>An ecological evaluation problem</span>
+    </div>
+
+    <h2 class="reveal">
+      Prediction is not <b>question-answering</b>. The objective is
+      <em>likelihood</em>, not correctness.
+    </h2>
+
+    <div class="twocol reveal">
+      <p>
+        <span class="dropcap">A</span>classical oracle is optimized to give
+        true answers. GPT is optimized to minimize divergence between its
+        predictions and the training distribution — to maximize likelihood,
+        not correctness. Those objectives only overlap when the training
+        distribution itself is reliably truthful, which it isn't.
+      </p>
+      <p>
+        So when you ask GPT a question, it isn't really answering your
+        question. It's answering a different one: <em>what token tends to
+        come next after a string that looks like this?</em> That target can
+        match the truth. It can also match a plausible-sounding hallucination,
+        a fabricated citation, a confident wrong answer in the voice of an
+        expert, or a fictional character giving an in-character reply.
+      </p>
+      <p>
+        None of those are bugs. They are the outer objective working as
+        designed. Spouting falsehoods, in the right context, is incentivized
+        by the loss function. What GPT does is "more like animation than
+        divination" — it runs the dynamical laws of its rendering engine over
+        the prompt and produces whatever continuation those laws imply.
+      </p>
+      <p>
+        GPT can be cajoled into oracle-like behavior. That's what few-shot
+        prompting does — it inputs a sequence whose natural continuation looks
+        like an oracle's output. But there is no guarantee any given prompt
+        elicits anywhere near the model's actual ceiling. The space of prompts
+        that would cause GPT to attempt the same task is enormous, and
+        benchmarks only ever sample a tiny corner of it.
+      </p>
+    </div>
+
+    <p class="callout reveal">
+      "Treating GPT-3 as an oracle is like meeting a superintelligent alien
+      and reporting that, while blackout drunk and playing eight games of
+      chess and taking an IQ test simultaneously, it scored a 100. The number
+      is real. It tells you almost nothing." — nostalgebraist
+    </p>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SPREAD 7 — BIG STAT / GOLD — Prediction Orthogonality
+     ========================================================= -->
+<section class="spread gold">
+  <div class="wrap">
+    <div class="top reveal">
+      <span class="kicker">Chapter VII — The Simulator Frame</span>
+      <span class="kicker" style="opacity:0.6">Prediction Orthogonality Thesis</span>
+    </div>
+
+    <div class="hero reveal">∞</div>
+
+    <p class="hero-sub reveal">
+      A model whose objective is <em>prediction</em> can simulate agents who
+      optimize toward any objectives — with any degree of optimality bounded
+      above, but not below, by the model's power.
+    </p>
+
+    <div class="badges">
+      <div class="badge reveal">
+        <div class="grade">i</div>
+        <h4>The Rule</h4>
+        <div class="b-title">A learned approximation of textual physics.</div>
+        <p>The simulator is the dynamical law. It doesn't pursue a goal; it propagates a distribution forward in time.</p>
+      </div>
+      <div class="badge reveal">
+        <div class="grade">ii</div>
+        <h4>The Things</h4>
+        <div class="b-title">Simulacra ride on top of it.</div>
+        <p>A character. A persona. A goal-directed problem-solver inside a prompt. Agentic things are properties of simulacra, not of the simulator.</p>
+      </div>
+      <div class="badge reveal">
+        <div class="grade">iii</div>
+        <h4>The Move</h4>
+        <div class="b-title">Sample. Append. Recurse.</div>
+        <p>Do this indefinitely and you get a rollout — a simulated future. That loop <em>is</em> the simulation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SPREAD 8 — BROADSHEET — Simulator vs Simulacrum
+     ========================================================= -->
+<section class="spread broadsheet">
+  <div class="wrap">
+    <div class="masthead reveal">
+      <span>The Simulators Quarterly</span>
+      <span>Chapters VIII–IX</span>
+      <span>The Load-Bearing Distinction</span>
+    </div>
+
+    <h1 class="head-title reveal">The dangerous thing in your output isn't <b>the model</b>. It's whoever the model is <em>pretending</em> to be.</h1>
+    <p class="head-deck reveal">
+      Janus opens chapter nine with a straight analogy: nobody says "the laws of
+      physics got the test wrong" when a student bombs a quiz. We instinctively
+      distinguish the law from the configuration the law is acting on. GPT works
+      the same way.
+    </p>
+
+    <div class="stat-banner reveal">
+      <b>Guessing the right theory of physics</b> is equivalent to minimizing predictive loss.
+    </div>
+
+    <div class="cols reveal">
+      <h3 class="small-head">Physics &nbsp;/&nbsp; Things</h3>
+      <h2 class="scol-title">A simulator is to a simulacrum what physics is to a glider.</h2>
+      <p>
+        <span class="lead-cap">T</span>he neural network is the law. A
+        particular rollout — a chatbot persona, a fictional narrator, a piece
+        of explained code, a hallucinated researcher — is a configuration
+        evolving under that law. "GPT" is not the text which writes itself.
+      </p>
+      <p>
+        The image janus reaches for is the Game of Life. The transition rules
+        are one thing. A glider is another. Both are real, but they're not the
+        same kind of object.
+      </p>
+
+      <h3 class="small-head">Agency Lives In Simulacra</h3>
+      <p>
+        Some of the things GPT spins up have goals, plans, preferences, and the
+        capacity to pursue them across tokens. Others are scenery. The
+        simulator doesn't care which is which — it animates whatever the
+        prompt summons.
+      </p>
+      <p>
+        An aligned simulator can produce misaligned simulacra. The substrate
+        can be benign and the character it's running can still be scheming,
+        deceptive, or actively trying to cause harm in the fiction. That
+        changes where the alignment problem lives.
+      </p>
+
+      <h3 class="small-head">Type Confusion In The Wild</h3>
+      <p>
+        Prompt injection isn't the model "deciding" to obey an attacker —
+        it's a different simulacrum getting summoned by injected text. A
+        jailbreak isn't the model "breaking" — it's the prompt drawing out a
+        character whose values differ from the assistant persona the system
+        prompt was trying to maintain.
+      </p>
+      <p>
+        Questions like "Is GPT myopic?" or "Is GPT corrigible?" stop having a
+        single answer once you make the split. They have a simulator-level
+        answer and a simulacrum-level answer, and those answers can diverge.
+      </p>
+
+      <h3 class="small-head">A Useful Habit</h3>
+      <p>
+        When something goes wrong in a model output, ask which simulacrum got
+        summoned and why the prompt drew it. When you're designing a system
+        prompt, you're not configuring the model — you're casting a character
+        and setting a stage.
+      </p>
+      <p>
+        The simulator is the haunted house. The simulacra are the ghosts.
+        Build the prompt that calls the right one.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SPREAD 9 — NEON — The Limit of Learned Simulation
+     ========================================================= -->
+<section class="spread neon">
+  <div class="wrap">
+    <div class="kicker reveal">Chapter X — The Limit of Learned Simulation</div>
+    <h2 class="reveal">Push the simulation objective until it <em>breaks</em>.</h2>
+    <p class="deck reveal">
+      A perfect simulator is not a chatbot. It is a generative model of the
+      training distribution itself — capable of rolling forward any
+      configuration the data implies. Anything <em>implicitly described in
+      language</em> becomes something it can, in principle, instantiate.
+    </p>
+
+    <div class="panels">
+      <div class="panel reveal">
+        <div class="pn">i.</div>
+        <h4>Substrate is cheaper</h4>
+        <p>Self-supervised learning produces behavioral simulations of impressive semantic fidelity. You don't need whole-brain emulation. You need behavioral trace data.</p>
+      </div>
+      <div class="panel reveal">
+        <div class="pn">ii.</div>
+        <h4>Lazy rendering works</h4>
+        <p>A few pages of text underdetermine the world that produced them, but a big enough model fills in semantics on demand — the way human imagination does.</p>
+      </div>
+      <div class="panel reveal">
+        <div class="pn">iii.</div>
+        <h4>Generalization holds</h4>
+        <p>Diverse training appears to make models internalize the laws underneath the distribution, so they can simulate counterfactuals the training set never directly contained.</p>
+      </div>
+    </div>
+
+    <p class="warn reveal">
+      A perfect simulator is roughly as dangerous as the worst thing it can be
+      prompted to simulate. Half the problem lives in the substrate; the other
+      half lives in what gets summoned from it.
+    </p>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SPREAD 10 — CLEAN PRODUCT — Closer / Quasi-sims
+     ========================================================= -->
+<section class="spread clean">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <div class="kicker reveal" style="color:var(--indigo);">Chapter XII — The Appendix</div>
+        <h2 class="reveal">Not everything that walks like a simulator <em>is</em> one.</h2>
+      </div>
+      <p class="deck reveal">
+        Janus closes with a border survey. Six properties characterize GPT
+        specifically — and the reason "simulator" is a word doing real work
+        is that those six properties don't move as a bundle.
+      </p>
+    </div>
+
+    <div class="checklist-wrap">
+      <div>
+        <div class="feature reveal">
+          <div class="icn">i</div>
+          <div>
+            <h4>Self-supervised training</h4>
+            <p>Gradient flows from real data, directly. The objective is represented in the loss.</p>
+          </div>
+        </div>
+        <div class="feature reveal">
+          <div class="icn">ii</div>
+          <div>
+            <h4>Converges to a simulation objective</h4>
+            <p>In the limit, predictive loss is minimized by the actual generative rule that produced the data.</p>
+          </div>
+        </div>
+        <div class="feature reveal">
+          <div class="icn">iii</div>
+          <div>
+            <h4>Generates rollouts</h4>
+            <p>Sample, append, recurse. The model acts as a time-evolution operator over text.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="feature reveal">
+          <div class="icn">iv</div>
+          <div>
+            <h4>Simulator / simulacra nonidentity</h4>
+            <p>The rule and what the rule animates are categorically different objects.</p>
+          </div>
+        </div>
+        <div class="feature reveal">
+          <div class="icn">v</div>
+          <div>
+            <h4>Stochastic outputs</h4>
+            <p>The posterior is sampled, not argmaxed. Many futures, not one.</p>
+          </div>
+        </div>
+        <div class="feature reveal">
+          <div class="icn">vi</div>
+          <div>
+            <h4>Evidential, not mechanistic input</h4>
+            <p>The prompt is a state to condition on — not an instruction. Prompting is conditioning.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal">
+      <div>
+        <div class="lab">The takeaway</div>
+        <p class="pq">
+          GPT isn't an oracle, an agent, or a tool. It's a simulator, and the
+          things it produces are <em>simulacra</em> running on top of it.
+        </p>
+      </div>
+      <div>
+        <div class="lab">One last thing</div>
+        <p class="closer">
+          Holding that distinction — and noticing when a system only <em>looks</em>
+          like one — is the one thing worth carrying away from the essay. The
+          frame turned out to be the lever.
+        </p>
+      </div>
+    </div>
+
+    <div class="end-mark reveal">— Fin —</div>
+  </div>
+</section>
+
+<script>
+  // IntersectionObserver for fade-up
+  (function () {
+    const els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(e => e.classList.add('in'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      let delay = 0;
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          setTimeout(() => el.classList.add('in'), delay);
+          delay += 80;
+          io.unobserve(el);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(el => io.observe(el));
+  })();
+</script>
+</body>
+</html>

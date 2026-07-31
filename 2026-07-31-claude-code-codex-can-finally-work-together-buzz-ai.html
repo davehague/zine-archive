@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ONE HUMAN, MANY AGENTS — The Buzz Dispatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300..900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ONE HUMAN, MANY AGENTS — editorial system
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{
+  margin:0;
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:18px;
+  background:#0b0c0e;
+  color:#111;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{max-width:100%;display:block;}
+
+:root{
+  --cream:#f4ede0;
+  --cream-2:#efe5d3;
+  --ink:#16130f;
+  --rule:1px;
+  --pad:clamp(1.6rem,5vw,6rem);
+  --max:1400px;
+}
+
+/* ---------- shared primitives ---------- */
+.spread{
+  min-height:100vh;
+  padding:clamp(4rem,9vh,8rem) var(--pad);
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.wrap{width:100%;max-width:var(--max);margin:0 auto;position:relative;z-index:3;}
+
+.kicker{
+  font-family:'Inter',sans-serif;
+  font-size:0.95rem;
+  font-weight:700;
+  letter-spacing:0.34em;
+  text-transform:uppercase;
+  line-height:1.4;
+}
+.deck{
+  font-size:1.35rem;
+  line-height:1.55;
+  font-weight:300;
+  letter-spacing:-0.005em;
+  max-width:56ch;
+}
+p{font-size:1.15rem;line-height:1.72;font-weight:350;}
+.big{
+  font-family:'Fraunces',Georgia,serif;
+  font-variation-settings:'SOFT' 0,'WONK' 1,'opsz' 144;
+  line-height:0.86;
+  letter-spacing:-0.035em;
+  font-weight:700;
+  margin:0;
+}
+.serif{font-family:'Fraunces',Georgia,serif;}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;}
+
+/* folio */
+.folio{
+  position:absolute;
+  bottom:clamp(1.2rem,3vh,2.6rem);
+  left:var(--pad);right:var(--pad);
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-size:0.82rem;letter-spacing:0.28em;text-transform:uppercase;font-weight:600;
+  z-index:5;pointer-events:none;
+}
+.folio span{opacity:.55;}
+
+/* ghost numeral */
+.ghost{
+  position:absolute;
+  font-family:'Fraunces',serif;
+  font-weight:900;
+  line-height:0.7;
+  pointer-events:none;
+  z-index:1;
+  user-select:none;
+}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(34px);transition:opacity .95s cubic-bezier(.2,.7,.2,1),transform .95s cubic-bezier(.2,.7,.2,1);}
+.rv.in{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none;}}
+
+/* progress rail */
+#rail{position:fixed;top:0;left:0;height:3px;width:0%;z-index:99;
+  background:linear-gradient(90deg,#e8b53c,#e0483f,#3ee08a);mix-blend-mode:normal;}
+
+/* ============================================================
+   1 — COVER
+   ============================================================ */
+#s1{
+  background:
+    radial-gradient(120% 80% at 70% 10%,#fbf6ea 0%,transparent 60%),
+    radial-gradient(90% 70% at 10% 100%,#e6d8bd 0%,transparent 55%),
+    var(--cream);
+  color:var(--ink);
+  justify-content:space-between;
+}
+#s1::after{
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.5;
+  background-image:
+    repeating-linear-gradient(0deg,rgba(22,19,15,.055) 0 1px,transparent 1px 46px),
+    repeating-linear-gradient(90deg,rgba(22,19,15,.055) 0 1px,transparent 1px 46px);
+}
+.cover-top{display:flex;justify-content:space-between;align-items:flex-start;gap:2rem;flex-wrap:wrap;
+  border-bottom:2px solid var(--ink);padding-bottom:1.1rem;}
+.cover-top .kicker{font-size:0.86rem;}
+.cover-mid{padding:clamp(2rem,7vh,5rem) 0;}
+.cover-mid h1{
+  font-size:clamp(3.4rem,13.5vw,11rem);
+  font-variation-settings:'SOFT' 0,'WONK' 1,'opsz' 144;
+}
+.cover-mid h1 em{
+  font-style:italic;font-weight:300;display:block;
+  font-variation-settings:'SOFT' 100,'WONK' 1,'opsz' 144;
+  letter-spacing:-0.02em;
+}
+.cover-rule{display:flex;align-items:center;gap:1.4rem;margin:2.2rem 0;}
+.cover-rule .bar{flex:1;height:1px;background:var(--ink);opacity:.35;}
+.cover-rule .dot{width:11px;height:11px;border-radius:50%;background:#c9452f;}
+.cover-bottom{display:grid;grid-template-columns:1.35fr .9fr;gap:clamp(2rem,5vw,5rem);align-items:end;
+  border-top:2px solid var(--ink);padding-top:1.6rem;}
+.cover-bottom .deck{font-size:clamp(1.15rem,1.7vw,1.5rem);}
+.credits{font-size:1.05rem;line-height:1.9;letter-spacing:.02em;}
+.credits b{font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:.82rem;display:block;opacity:.55;margin-bottom:.4rem;}
+.stamp-cover{
+  position:absolute;right:calc(var(--pad) - .5rem);top:26vh;z-index:4;
+  width:clamp(120px,15vw,190px);height:clamp(120px,15vw,190px);
+  border:2px solid #c9452f;border-radius:50%;
+  display:grid;place-content:center;text-align:center;
+  color:#c9452f;transform:rotate(-11deg);
+  font-family:'Inter';font-weight:800;font-size:.78rem;letter-spacing:.2em;line-height:2.1;
+  background:rgba(244,237,224,.6);backdrop-filter:blur(2px);
+}
+.stamp-cover .n{font-family:'Fraunces',serif;font-size:2.6rem;letter-spacing:-.02em;display:block;line-height:1;margin:.35rem 0;}
+
+/* ============================================================
+   2 — MIDNIGHT
+   ============================================================ */
+#s2{
+  background:#0d1117;color:#dbe4f0;
+  background-image:
+    radial-gradient(70% 55% at 82% 12%,rgba(56,132,255,.22),transparent 70%),
+    radial-gradient(60% 50% at 8% 92%,rgba(20,190,180,.14),transparent 70%);
+}
+#s2::before{
+  content:"";position:absolute;inset:0;opacity:.35;z-index:1;pointer-events:none;
+  background-image:repeating-linear-gradient(90deg,rgba(120,160,220,.09) 0 1px,transparent 1px 80px);
+}
+.mid-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,5.5rem);align-items:center;}
+#s2 .kicker{color:#57a2ff;}
+#s2 h2{font-size:clamp(3rem,7.5vw,6.6rem);color:#fff;margin:1.4rem 0 1.6rem;}
+#s2 h2 span{color:#57a2ff;font-style:italic;font-weight:300;}
+#s2 .deck{color:#9fb2ca;}
+.statrow{border-top:1px solid rgba(140,175,225,.28);}
+.statrow div{
+  display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:baseline;
+  padding:1.35rem 0;border-bottom:1px solid rgba(140,175,225,.18);
+}
+.statrow .n{font-family:'Fraunces',serif;font-size:clamp(2.4rem,4.4vw,3.6rem);font-weight:700;color:#fff;line-height:1;letter-spacing:-.04em;min-width:4.5ch;}
+.statrow .n small{font-size:.42em;color:#57a2ff;font-family:'Inter';font-weight:700;letter-spacing:.1em;vertical-align:super;}
+.statrow .l{font-size:1.05rem;line-height:1.5;color:#8fa4bd;letter-spacing:.01em;}
+.glowquote{
+  margin-top:2.6rem;padding:1.7rem 1.9rem;border-left:3px solid #57a2ff;
+  background:linear-gradient(90deg,rgba(87,162,255,.13),transparent);
+  font-family:'Fraunces',serif;font-size:clamp(1.3rem,2vw,1.75rem);line-height:1.4;color:#eaf2ff;font-weight:400;font-style:italic;
+}
+
+/* ============================================================
+   3 — WARM EDITORIAL
+   ============================================================ */
+#s3{background:var(--cream-2);color:var(--ink);}
+#s3::before{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.6;
+  background-image:repeating-linear-gradient(0deg,rgba(22,19,15,.05) 0 1px,transparent 1px 38px);
+}
+.ed-head{border-bottom:3px double var(--ink);padding-bottom:1.4rem;margin-bottom:2.6rem;}
+#s3 h2{font-size:clamp(2.8rem,7vw,6rem);max-width:16ch;margin:1rem 0 0;}
+.ed-grid{display:grid;grid-template-columns:1.25fr .85fr;gap:clamp(2rem,4.5vw,4.5rem);align-items:start;}
+.ed-body p{margin:0 0 1.35rem;}
+.ed-body p:first-of-type::first-letter{
+  font-family:'Fraunces',serif;font-size:4.6rem;float:left;line-height:.78;
+  padding:.1em .14em 0 0;font-weight:800;color:#c9452f;
+}
+.panel{background:#16130f;color:#e9dfcc;padding:2.2rem 2rem;border-radius:2px;box-shadow:14px 14px 0 rgba(22,19,15,.12);}
+.panel h3{font-family:'Fraunces',serif;font-size:1.7rem;margin:0 0 1.2rem;font-weight:700;letter-spacing:-.02em;}
+.panel ol{margin:0;padding:0;list-style:none;counter-reset:step;}
+.panel ol li{
+  counter-increment:step;padding:.95rem 0 .95rem 3.1rem;position:relative;
+  border-top:1px solid rgba(233,223,204,.18);font-size:1.08rem;line-height:1.55;color:#cdbfa5;
+}
+.panel ol li::before{
+  content:counter(step,decimal-leading-zero);position:absolute;left:0;top:.95rem;
+  font-family:'Fraunces',serif;font-size:1.15rem;color:#e0a83c;font-weight:700;
+}
+.pull{
+  font-family:'Fraunces',serif;font-size:clamp(1.6rem,3vw,2.6rem);line-height:1.22;
+  letter-spacing:-.03em;font-weight:600;margin:2.6rem 0 0;padding-top:1.8rem;border-top:1px solid rgba(22,19,15,.3);
+}
+.pull cite{display:block;font-family:'Inter';font-size:.85rem;font-style:normal;letter-spacing:.24em;text-transform:uppercase;font-weight:700;opacity:.5;margin-top:1.1rem;}
+
+/* ============================================================
+   4 — ROSE / STAMP
+   ============================================================ */
+#s4{
+  background:#140b0e;color:#f0dcdc;
+  background-image:radial-gradient(80% 60% at 15% 15%,rgba(214,54,72,.2),transparent 65%),
+                   radial-gradient(60% 60% at 95% 95%,rgba(214,54,72,.13),transparent 60%);
+}
+#s4 .kicker{color:#ff5f6f;}
+#s4 h2{font-size:clamp(2.9rem,7vw,6.2rem);color:#fff;margin:1.2rem 0 2.4rem;max-width:15ch;}
+.stamp{
+  position:absolute;right:clamp(1rem,4vw,5rem);top:clamp(3rem,12vh,9rem);z-index:4;
+  width:clamp(140px,17vw,230px);height:clamp(140px,17vw,230px);border-radius:50%;
+  border:3px double #e0374a;color:#ff6b78;display:grid;place-content:center;text-align:center;
+  transform:rotate(9deg);font-weight:800;font-size:.74rem;letter-spacing:.22em;line-height:2.4;
+}
+.stamp .b{font-family:'Fraunces',serif;font-size:clamp(1.5rem,2.6vw,2.3rem);letter-spacing:-.02em;line-height:1.05;display:block;margin:.4rem 0;}
+.compare{display:grid;grid-template-columns:1fr auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:stretch;}
+.col{padding:2rem 1.9rem;border:1px solid rgba(240,120,130,.3);background:rgba(255,255,255,.02);}
+.col.b{border-color:#e0374a;background:linear-gradient(180deg,rgba(224,55,74,.14),transparent);}
+.col h4{font-family:'Inter';font-size:.82rem;letter-spacing:.26em;text-transform:uppercase;margin:0 0 1.3rem;color:#ff8a94;font-weight:800;}
+.col .t{font-family:'Fraunces',serif;font-size:clamp(1.5rem,2.6vw,2.2rem);line-height:1.15;letter-spacing:-.025em;margin:0 0 1.2rem;color:#fff;font-weight:600;}
+.col p{color:#d6b3b6;font-size:1.1rem;margin:0;}
+.vs{display:grid;place-content:center;font-family:'Fraunces',serif;font-size:2.4rem;color:#e0374a;font-style:italic;}
+#s4 .pullr{
+  margin-top:2.8rem;font-family:'Fraunces',serif;font-style:italic;font-weight:300;
+  font-size:clamp(1.3rem,2.4vw,2rem);line-height:1.4;color:#ffd9dc;max-width:44ch;
+}
+#s4 .pullr cite{display:block;font-family:'Inter';font-style:normal;font-size:.8rem;letter-spacing:.24em;text-transform:uppercase;color:#ff5f6f;font-weight:700;margin-top:1rem;}
+
+/* ============================================================
+   5 — TERMINAL
+   ============================================================ */
+#s5{background:#04070a;color:#5ef2a2;padding-left:var(--pad);padding-right:var(--pad);}
+#s5::before{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(94,242,162,.045) 0 1px,transparent 1px 4px);
+}
+.term-head{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap;margin-bottom:2rem;}
+#s5 .kicker{color:#5ef2a2;}
+#s5 h2{font-size:clamp(2.6rem,6.4vw,5.4rem);color:#dffff0;margin:.9rem 0 0;}
+.window{
+  border:1px solid rgba(94,242,162,.38);background:rgba(6,20,14,.72);
+  box-shadow:0 0 60px rgba(94,242,162,.09),inset 0 0 90px rgba(94,242,162,.04);
+}
+.chrome{display:flex;align-items:center;gap:.55rem;padding:.85rem 1.1rem;border-bottom:1px solid rgba(94,242,162,.28);}
+.chrome i{width:11px;height:11px;border-radius:50%;display:block;}
+.chrome .t{margin-left:1rem;font-family:'JetBrains Mono';font-size:.9rem;color:#4fbd87;letter-spacing:.06em;}
+.termbody{padding:1.7rem clamp(1rem,2.5vw,2.2rem);font-family:'JetBrains Mono';font-size:1.1rem;line-height:2;}
+.termbody .p{color:#3ba873;}
+.termbody .u{color:#dffff0;}
+.termbody .a{color:#e0a83c;}
+.termbody .c{color:#3d6b55;}
+.termbody .g{color:#5ef2a2;}
+.cursor{display:inline-block;width:.62em;height:1.05em;background:#5ef2a2;vertical-align:-.16em;animation:blink 1.05s steps(1) infinite;}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+.term-foot{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1rem,2.5vw,2.6rem);margin-top:2.4rem;}
+.term-foot div{border-top:1px solid rgba(94,242,162,.3);padding-top:1rem;}
+.term-foot .h{font-family:'Fraunces',serif;font-size:clamp(1.6rem,2.6vw,2.3rem);color:#dffff0;line-height:1;letter-spacing:-.03em;}
+.term-foot .s{font-size:1rem;color:#3ba873;margin-top:.55rem;line-height:1.5;}
+
+/* ============================================================
+   6 — ACADEMIC NAVY
+   ============================================================ */
+#s6{background:#0f1a34;color:#d7e0f2;
+  background-image:radial-gradient(85% 65% at 100% 0%,rgba(90,120,220,.2),transparent 65%);}
+#s6::after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
+  background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.03) 0 1px,transparent 1px 13px);
+}
+#s6 .kicker{color:#8fa8e8;}
+#s6 h2{font-size:clamp(2.7rem,6.6vw,5.6rem);color:#fff;margin:1.1rem 0 2.4rem;max-width:17ch;}
+.acad{columns:2;column-gap:clamp(2rem,4.5vw,4.5rem);column-rule:1px solid rgba(160,185,240,.25);}
+.acad p{margin:0 0 1.3rem;color:#b6c4de;break-inside:avoid;}
+.acad p.drop::first-letter{
+  font-family:'Fraunces',serif;font-size:5.4rem;float:left;line-height:.74;padding:.09em .12em 0 0;
+  font-weight:900;color:#ffce5c;
+}
+.callout{
+  break-inside:avoid;margin:0 0 1.4rem;padding:1.5rem 1.5rem;border:1px solid rgba(160,185,240,.35);
+  background:rgba(255,255,255,.035);
+}
+.callout .h{font-family:'Inter';font-size:.76rem;letter-spacing:.24em;text-transform:uppercase;color:#ffce5c;font-weight:800;margin-bottom:.75rem;}
+.callout .b{font-family:'Fraunces',serif;font-size:1.3rem;line-height:1.35;color:#fff;letter-spacing:-.015em;}
+
+/* ============================================================
+   7 — GOLD BIG STAT
+   ============================================================ */
+#s7{background:#100d07;color:#f0e3c6;
+  background-image:radial-gradient(75% 60% at 50% 105%,rgba(224,168,60,.24),transparent 62%);}
+#s7 .kicker{color:#e0a83c;}
+.statbig{font-family:'Fraunces',serif;font-weight:900;line-height:.78;letter-spacing:-.05em;
+  font-size:clamp(6rem,26vw,21rem);color:#e8b53c;margin:.4rem 0;
+  background:linear-gradient(180deg,#ffdf94,#c98a1c);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.statbig sup{font-size:.22em;vertical-align:super;-webkit-text-fill-color:#e0a83c;letter-spacing:0;}
+.stat-lead{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap;}
+#s7 h2{font-size:clamp(1.9rem,3.6vw,3.2rem);color:#fff;max-width:22ch;margin:0;letter-spacing:-.03em;line-height:1.08;}
+.badges{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.4rem;margin-top:3rem;
+  border-top:1px solid rgba(224,168,60,.35);padding-top:2rem;}
+.badge{display:grid;grid-template-columns:auto 1fr;gap:1.1rem;align-items:center;}
+.badge .g{
+  width:62px;height:62px;border:2px solid #e0a83c;border-radius:50%;display:grid;place-content:center;
+  font-family:'Fraunces',serif;font-size:1.5rem;color:#ffd475;font-weight:700;flex:none;
+}
+.badge .txt{font-size:1.02rem;line-height:1.45;color:#bfae8b;}
+.badge .txt b{display:block;color:#fff;font-weight:700;letter-spacing:.02em;font-size:1.06rem;margin-bottom:.15rem;}
+
+/* ============================================================
+   8 — BROADSHEET
+   ============================================================ */
+#s8{background:#f6f2e8;color:#191510;}
+#s8::before{
+  content:"";position:absolute;inset:0;opacity:.55;z-index:1;pointer-events:none;
+  background-image:radial-gradient(circle at 1px 1px,rgba(25,21,16,.13) 1px,transparent 0);
+  background-size:5px 5px;
+}
+.bs-masthead{border-top:5px solid #191510;border-bottom:1px solid #191510;padding:.7rem 0;
+  display:flex;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;
+  font-size:.8rem;letter-spacing:.28em;text-transform:uppercase;font-weight:800;}
+#s8 h2{font-size:clamp(2.6rem,7.6vw,6.4rem);margin:1.8rem 0 .5rem;text-align:center;line-height:.9;}
+.bs-sub{text-align:center;font-family:'Fraunces',serif;font-style:italic;font-weight:300;
+  font-size:clamp(1.15rem,2vw,1.7rem);border-bottom:3px double #191510;padding-bottom:1.6rem;margin:0 auto 2.2rem;max-width:60ch;}
+.banner{background:#b3241c;color:#fff;padding:1rem 1.6rem;display:flex;align-items:baseline;gap:1.4rem;flex-wrap:wrap;margin-bottom:2.2rem;}
+.banner .n{font-family:'Fraunces',serif;font-size:clamp(1.7rem,3.2vw,2.6rem);font-weight:800;letter-spacing:-.03em;line-height:1;}
+.banner .l{font-size:.92rem;letter-spacing:.2em;text-transform:uppercase;font-weight:700;opacity:.92;}
+.bs-cols{columns:3;column-gap:clamp(1.6rem,3vw,3rem);column-rule:1px solid rgba(25,21,16,.3);}
+.bs-cols p{margin:0 0 1.15rem;break-inside:avoid;font-size:1.12rem;}
+.bs-cols p.lede{font-weight:600;}
+.bs-cols .sub{font-family:'Inter';font-weight:800;font-size:.78rem;letter-spacing:.24em;text-transform:uppercase;
+  margin:0 0 .8rem;break-after:avoid;}
+.bs-quote{break-inside:avoid;margin:0 0 1.3rem;padding:1.2rem 0;border-top:1px solid #191510;border-bottom:1px solid #191510;
+  font-family:'Fraunces',serif;font-size:1.42rem;line-height:1.25;letter-spacing:-.02em;font-weight:600;}
+
+/* ============================================================
+   9 — NEON
+   ============================================================ */
+#s9{background:#05060a;color:#c9f7ff;overflow:hidden;}
+.floor{
+  position:absolute;left:-25%;right:-25%;bottom:-6%;height:58%;z-index:1;pointer-events:none;
+  background-image:
+    repeating-linear-gradient(90deg,rgba(0,240,255,.28) 0 1px,transparent 1px 62px),
+    repeating-linear-gradient(0deg,rgba(0,240,255,.22) 0 1px,transparent 1px 44px);
+  transform:perspective(340px) rotateX(69deg);
+  transform-origin:bottom center;
+  mask-image:linear-gradient(to top,#000 5%,transparent 82%);
+  -webkit-mask-image:linear-gradient(to top,#000 5%,transparent 82%);
+}
+#s9::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(60% 45% at 50% 30%,rgba(255,44,120,.14),transparent 70%);}
+#s9 .kicker{color:#ff2c78;}
+#s9 h2{font-size:clamp(2.8rem,8vw,7rem);color:#fff;margin:1.1rem 0 1.8rem;max-width:14ch;
+  text-shadow:0 0 34px rgba(0,240,255,.35);}
+#s9 h2 span{color:#00f0ff;}
+.neon-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,5vw,5rem);align-items:start;}
+#s9 .deck{color:#7fb6c4;}
+.emerge{border:1px solid rgba(0,240,255,.4);background:rgba(0,240,255,.045);padding:1.5rem 1.6rem;margin-bottom:1.2rem;
+  box-shadow:0 0 34px rgba(0,240,255,.09) inset;}
+.emerge .h{font-family:'Inter';font-size:.76rem;letter-spacing:.26em;text-transform:uppercase;font-weight:800;color:#ff2c78;margin-bottom:.7rem;}
+.emerge .b{font-family:'Fraunces',serif;font-size:1.3rem;line-height:1.35;color:#eafcff;letter-spacing:-.015em;}
+.emerge p{color:#7fb6c4;margin:.7rem 0 0;font-size:1.05rem;}
+.failbox{border-left:3px solid #ff2c78;padding:1.2rem 0 1.2rem 1.5rem;margin-top:2rem;
+  font-family:'JetBrains Mono';font-size:1.02rem;line-height:1.75;color:#ff8fb4;}
+
+/* ============================================================
+   10 — CLEAN PRODUCT / CLOSER
+   ============================================================ */
+#s10{background:#fbfbfd;color:#14161f;}
+#s10::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(60% 45% at 88% 6%,rgba(79,70,229,.09),transparent 62%);}
+#s10 .kicker{color:#4f46e5;}
+#s10 h2{font-size:clamp(2.6rem,6.4vw,5.4rem);margin:1.1rem 0 2.4rem;max-width:16ch;letter-spacing:-.04em;}
+.prod{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,5rem);align-items:start;}
+.feat{list-style:none;margin:0;padding:0;}
+.feat li{display:grid;grid-template-columns:auto 1fr;gap:1.2rem;padding:1.25rem 0;border-bottom:1px solid #e6e6ef;align-items:start;}
+.feat .ic{width:38px;height:38px;border-radius:9px;background:#4f46e5;color:#fff;display:grid;place-content:center;
+  font-family:'Fraunces',serif;font-size:1rem;font-weight:700;flex:none;}
+.feat b{display:block;font-size:1.12rem;font-weight:700;letter-spacing:-.01em;margin-bottom:.25rem;}
+.feat span{color:#5b5f72;font-size:1.05rem;line-height:1.55;}
+.card{border:1px solid #e2e2ec;border-radius:16px;background:#fff;box-shadow:0 26px 60px -34px rgba(20,22,31,.4);overflow:hidden;}
+.card .bar{display:flex;gap:.45rem;padding:.9rem 1.1rem;border-bottom:1px solid #eeeef5;align-items:center;}
+.card .bar i{width:10px;height:10px;border-radius:50%;background:#dcdce8;display:block;}
+.card .bar .t{margin-left:.7rem;font-size:.9rem;color:#8a8fa3;font-weight:600;letter-spacing:.04em;}
+.msg{padding:1.1rem 1.3rem;border-bottom:1px solid #f2f2f7;display:grid;grid-template-columns:auto 1fr;gap:.95rem;}
+.av{width:34px;height:34px;border-radius:9px;display:grid;place-content:center;color:#fff;font-weight:800;font-size:.82rem;flex:none;}
+.msg .nm{font-weight:700;font-size:1rem;letter-spacing:-.01em;}
+.msg .nm em{font-style:normal;font-weight:500;color:#9a9fb2;font-size:.82rem;margin-left:.5rem;letter-spacing:.04em;}
+.msg .tx{color:#4a4e60;font-size:1.02rem;line-height:1.5;margin-top:.25rem;}
+.closer{
+  margin-top:clamp(3rem,8vh,6rem);border-top:3px solid #14161f;padding-top:2.4rem;
+}
+.closer q{
+  display:block;font-family:'Fraunces',serif;font-weight:600;
+  font-size:clamp(1.9rem,5.2vw,4.3rem);line-height:1.03;letter-spacing:-.04em;quotes:none;max-width:22ch;
+}
+.closer q b{color:#4f46e5;font-weight:600;}
+.closer .att{margin-top:1.8rem;display:flex;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;align-items:baseline;
+  font-size:.85rem;letter-spacing:.24em;text-transform:uppercase;font-weight:700;color:#8a8fa3;}
+.closer .att a{color:#4f46e5;text-decoration:none;border-bottom:1px solid rgba(79,70,229,.35);}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1000px){
+  .bs-cols{columns:2;}
+}
+@media (max-width:900px){
+  body{font-size:17px;}
+  .mid-grid,.ed-grid,.acad,.neon-grid,.prod,.cover-bottom{grid-template-columns:1fr;columns:1;column-rule:none;}
+  .compare{grid-template-columns:1fr;}
+  .vs{padding:.4rem 0;}
+  .bs-cols{columns:1;}
+  .term-foot{grid-template-columns:1fr;}
+  .stamp,.stamp-cover{position:static;transform:none;margin:2rem 0;width:150px;height:150px;}
+  .ghost{opacity:.35 !important;}
+  .folio{position:static;margin-top:3rem;}
+}
+</style>
+</head>
+<body>
+<div id="rail"></div>
+
+<!-- ===================== 1 · COVER ===================== -->
+<section class="spread" id="s1">
+  <div class="ghost serif" style="left:-4vw;bottom:-6vh;font-size:34vw;color:rgba(22,19,15,.045);">I</div>
+  <div class="wrap cover-top rv">
+    <div class="kicker">Agent&nbsp;Native · Field&nbsp;Dispatch № 01</div>
+    <div class="kicker">Free · Open Source · buzz.xyz</div>
+  </div>
+
+  <div class="wrap cover-mid">
+    <div class="kicker rv" style="color:#c9452f;margin-bottom:1.6rem;">The Slack-shaped thing that runs your agents</div>
+    <h1 class="big rv" style="transition-delay:.1s">ONE HUMAN,<br><em>many agents</em></h1>
+    <div class="cover-rule rv" style="transition-delay:.2s"><span class="dot"></span><span class="bar"></span><span class="dot"></span></div>
+    <div class="stamp-cover rv" style="transition-delay:.45s">JACK<span class="n">D.</span>BLOCK</div>
+  </div>
+
+  <div class="wrap cover-bottom rv" style="transition-delay:.3s">
+    <p class="deck">Claude Code and Codex have spent two years in separate windows, on separate context, ignoring each other. Buzz put them in the same channel — and then let them argue. A working report from inside a week-old workspace.</p>
+    <div class="credits">
+      <b>Source</b>
+      Claude Code + Codex Can<br>FINALLY Work Together<br>
+      <span style="opacity:.6">Riley Brown &amp; Vinnie · Agent Native</span><br>
+      <span style="opacity:.6">Runtime 55:13 · Ten spreads</span>
+    </div>
+  </div>
+
+  <div class="folio"><span>One Human, Many Agents</span><span>Cover</span></div>
+</section>
+
+<!-- ===================== 2 · MIDNIGHT ===================== -->
+<section class="spread" id="s2">
+  <div class="ghost serif" style="right:-2vw;top:-4vh;font-size:30vw;color:rgba(87,162,255,.055);">II</div>
+  <div class="wrap mid-grid">
+    <div>
+      <div class="kicker rv">Why a million people watched</div>
+      <h2 class="big rv" style="transition-delay:.08s">Not a Slack<br>killer. A <span>context</span><br>harvester.</h2>
+      <p class="deck rv" style="transition-delay:.16s">Vinnie's demo video crossed a million views in a week. Riley asked him the obvious question — why this, why now — and the answer had almost nothing to do with hating Slack.</p>
+      <div class="glowquote rv" style="transition-delay:.24s">“People are very interested in seeing something that could replace Slack. But that is like a very superficial reason.”</div>
+    </div>
+    <div class="rv" style="transition-delay:.2s">
+      <div class="statrow">
+        <div><span class="n">1<small>M+</small></span><span class="l">Views on Vinnie's launch video on X, inside its first week live</span></div>
+        <div><span class="n">7<small>DAYS</small></span><span class="l">How long Buzz had existed at the time of this conversation</span></div>
+        <div><span class="n">$0</span><span class="l">Cost of the desktop app, the iOS app, and the source code</span></div>
+        <div><span class="n">4</span><span class="l">Harnesses answering one message: Claude Code, Grok on Cursor, Kimi on Kevin, Codex</span></div>
+      </div>
+      <p class="rv" style="transition-delay:.3s;color:#8fa4bd;margin-top:2rem;">“Buzz is a giant context harvester — a place where all your context lives and can be shared between your teammates and your agents, and your agents just kind of function as teammates.”</p>
+    </div>
+  </div>
+  <div class="folio" style="color:#8fa4bd"><span>Spread II · The Premise</span><span>02</span></div>
+</section>
+
+<!-- ===================== 3 · WARM EDITORIAL ===================== -->
+<section class="spread" id="s3">
+  <div class="ghost serif" style="right:-3vw;bottom:-8vh;font-size:32vw;color:rgba(22,19,15,.05);">III</div>
+  <div class="wrap">
+    <div class="ed-head rv">
+      <div class="kicker">The handshake · Agent Client Protocol</div>
+      <h2 class="big">Your Codex sessions show up in ChatGPT</h2>
+    </div>
+    <div class="ed-grid">
+      <div class="ed-body rv" style="transition-delay:.1s">
+        <p>Riley's first real confusion was mechanical. He typed a message to Codex inside Buzz — and then opened the ChatGPT desktop app, where the session was sitting in his recent chats like he'd started it there himself.</p>
+        <p>The answer is that nothing is being re-implemented. Buzz speaks the agent client protocol, an open handshake for talking to coding harnesses. Every one of these tools is a CLI running in a terminal. Buzz connects to that terminal, injects the context, and runs the same commands you would have typed.</p>
+        <p>Which is why the skills already survive. Riley has roughly thirty of them in Codex — a YouTube researcher, a thumbnail generator, a stack of Notion research skills. None of that moves. Buzz just picks up the phone.</p>
+        <p>The demo he ran during the interview: <em>take the lead on a new educational page for Buzz, deploy it to Vercel, consult with Claude Code first.</em> Codex claimed the lead, put questions to Claude Code, pulled his episode notes out of Notion, and shipped a live URL he hadn't opened until the camera was rolling.</p>
+        <div class="pull rv">“It's just a layer on top of the agent. It has its own system prompt so it knows how to use Buzz and leverage the tools within Buzz.”<cite>Vinnie, on what an “agent” actually is</cite></div>
+      </div>
+      <aside class="panel rv" style="transition-delay:.2s">
+        <h3>Anatomy of a Buzz agent</h3>
+        <ol>
+          <li>A harness — Codex, Claude Code, Cursor, Grok Build, or anything speaking ACP</li>
+          <li>A pinned model, so the fast one handles summaries and the expensive one handles plans</li>
+          <li>A system prompt, one paragraph, describing the job and where the key information lives</li>
+          <li>A parallelism setting under Advanced — how many sessions it may spin up at once</li>
+          <li>Everything else it already knew: your skills, your memory, your machine</li>
+        </ol>
+      </aside>
+    </div>
+  </div>
+  <div class="folio"><span>Spread III · Under the Hood</span><span>03</span></div>
+</section>
+
+<!-- ===================== 4 · ROSE / STAMP ===================== -->
+<section class="spread" id="s4">
+  <div class="ghost serif" style="left:-3vw;bottom:-9vh;font-size:33vw;color:rgba(224,55,74,.07);">IV</div>
+  <div class="stamp rv">CONTEXT<span class="b">SURVIVES<br>THE SWAP</span>ALWAYS</div>
+  <div class="wrap">
+    <div class="kicker rv">The feature nobody expected to care about</div>
+    <h2 class="big rv" style="transition-delay:.08s">Change the model. Keep the memory.</h2>
+    <div class="compare">
+      <div class="col rv" style="transition-delay:.14s">
+        <h4>The old way</h4>
+        <div class="t">Skills live in one place</div>
+        <p>You don't move between Codex, Claude Code, Cursor and Devin, because your skills, your memory and your setup all live inside whichever one you picked first. You can merge them — but they never behave the same.</p>
+      </div>
+      <div class="vs">→</div>
+      <div class="col b rv" style="transition-delay:.2s">
+        <h4>Inside Buzz</h4>
+        <div class="t">The thread is the memory</div>
+        <p>Say you built an agent named Harry for copy editing, and you decide Opus isn't right for it. Open preferences, switch it to Codex. Everything Claude Code and Opus knew gets handed over with it.</p>
+      </div>
+    </div>
+    <p class="pullr rv" style="transition-delay:.26s">“It doesn't matter how often you switch, which models you choose, which harnesses you choose — the context will always get passed over to those new harnesses.”<cite>Vinnie</cite></p>
+  </div>
+  <div class="folio" style="color:#d6b3b6"><span>Spread IV · Portability</span><span>04</span></div>
+</section>
+
+<!-- ===================== 5 · TERMINAL ===================== -->
+<section class="spread" id="s5">
+  <div class="wrap">
+    <div class="term-head rv">
+      <div>
+        <div class="kicker">Live capture · #research</div>
+        <h2 class="big">Don't be afraid<br>to disagree</h2>
+      </div>
+      <div class="mono" style="color:#3ba873;font-size:.95rem;line-height:1.9;text-align:right;">
+        agents_present: 5<br>parallelism: 1..20<br>status: <span style="color:#5ef2a2">thinking</span>
+      </div>
+    </div>
+
+    <div class="window rv" style="transition-delay:.12s">
+      <div class="chrome">
+        <i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i>
+        <span class="t">buzz — #research — harry(codex) · claude-code · grok · kimi</span>
+      </div>
+      <div class="termbody">
+        <div><span class="p">riley@buzz</span> <span class="c">~</span> <span class="u">fizz, please create a new agent named Harry who does research on the best models and AI tools in the world. Powered by Codex. Also make a new public channel called research.</span></div>
+        <div><span class="c">›› approval requested — create agent · create channel ................ [approved]</span></div>
+        <div style="height:.9rem"></div>
+        <div><span class="p">riley@buzz</span> <span class="c">#research</span> <span class="u">Harry, take the lead. Talk to the agents here. Come up with the best way to structure automation so that this research channel is the most productive for finding ideas for my podcast Agent Native. Take turns discussing ideas. Don't be afraid to disagree.</span></div>
+        <div style="height:.9rem"></div>
+        <div><span class="a">@harry</span> <span class="g">I'm taking the editor role.</span> <span class="c">→ mentions @claude-code @grok @kimi</span></div>
+        <div><span class="c">👀 seen by 4 · ⏳ 3 working · hover to inspect activity</span></div>
+        <div><span class="a">@grok</span> <span class="g">responds first — really fast model</span></div>
+        <div><span class="a">@codex</span> <span class="g">responded</span></div>
+        <div><span class="a">@kimi</span> <span class="g">responded</span></div>
+        <div><span class="c">thread resolves · minimum turns · stops<span class="cursor"></span></span></div>
+      </div>
+    </div>
+
+    <div class="term-foot">
+      <div class="rv" style="transition-delay:.18s"><div class="h">30 min</div><div class="s">Fable and 5.6 Soul Ultra debating clauses of a real legal contract, cross-referencing old signed contracts in email, before settling on a final agreement.</div></div>
+      <div class="rv" style="transition-delay:.24s"><div class="h">No loops</div><div class="s">Riley's hand-rolled version always ran too long. Buzz's harness holds agents to the minimum turns the request needs — then the thread just stops.</div></div>
+      <div class="rv" style="transition-delay:.3s"><div class="h">1 → 20</div><div class="s">If you only pay for one harness, raise its parallelism. One Codex subscription can hold both sides of the room.</div></div>
+    </div>
+  </div>
+  <div class="folio" style="color:#3ba873"><span>Spread V · The Debate</span><span>05</span></div>
+</section>
+
+<!-- ===================== 6 · ACADEMIC NAVY ===================== -->
+<section class="spread" id="s6">
+  <div class="ghost serif" style="left:-2vw;top:-5vh;font-size:30vw;color:rgba(255,255,255,.035);">VI</div>
+  <div class="wrap">
+    <div class="kicker rv">On relays, ownership, and a second target</div>
+    <h2 class="big rv" style="transition-delay:.08s">Every workspace ships with a server you own</h2>
+    <div class="acad rv" style="transition-delay:.16s">
+      <p class="drop">Slack is the company that controls the data. You write a message; it lands in their database, on their servers, under their terms. Buzz inverts the arrangement in a way Vinnie admits is hard to hold in your head at first.</p>
+      <p>When you start a community, you get a relay — which, stripped of the vocabulary, is a server with a database. Block will spin one up and host it for you, and day to day it behaves exactly like Slack: you send an invite, someone joins, channels work. The difference is that you can also self-host it, and either way the data is yours.</p>
+      <div class="callout">
+        <div class="h">The side effect</div>
+        <div class="b">You now have a server and a database. You can push your code there with Git — instead of GitHub.</div>
+      </div>
+      <p>That side effect is the part Vinnie thinks Buzz isn't talking about loudly enough. The Projects tab still works with GitHub. It will also push straight to your relay, as a remote, cloud-hosted alternative. His read: they may be going after too many tools at once — Slack killer, agent orchestrator, and quietly a GitHub killer.</p>
+      <p>Locally, it's simpler than it sounds. Every time an agent codes something, Buzz creates a folder and clones copies of it, so three agents can chase three different versions of the same app without stepping on each other. Then you tell them where it goes: upload to GitHub, or save it to the relay.</p>
+      <div class="callout">
+        <div class="h">Vinnie, on Jack Dorsey's philosophy</div>
+        <div class="b">“Openness is a big part. This idea of choice — the future of being able to run and share compute on local models is a big driver behind Buzz.”</div>
+      </div>
+      <p>The caveat Riley hit live on camera: he'd never set up a hosted community. Everything was running locally on his laptop. Which raises the question that ends every honest demo of this thing — when the computer is off, the team is off.</p>
+    </div>
+  </div>
+  <div class="folio" style="color:#8fa8e8"><span>Spread VI · Ownership</span><span>06</span></div>
+</section>
+
+<!-- ===================== 7 · GOLD BIG STAT ===================== -->
+<section class="spread" id="s7">
+  <div class="ghost serif" style="right:-4vw;top:2vh;font-size:34vw;color:rgba(224,168,60,.05);">VII</div>
+  <div class="wrap">
+    <div class="kicker rv">Setup cost, measured honestly</div>
+    <div class="stat-lead rv" style="transition-delay:.08s">
+      <h2 class="big" style="font-family:'Fraunces',serif;">Riley braced for a twenty-minute setup. It took one scan.</h2>
+    </div>
+    <div class="statbig rv" style="transition-delay:.14s">1<sup>QR</sup></div>
+    <p class="deck rv" style="transition-delay:.2s;color:#bfae8b;max-width:52ch;">One code, one scan, and the free iOS app is holding the same channels as the laptop — same threads, same agents, same skills, perfectly in sync. He mentions Claude Code from his phone, says hi, and the team answers.</p>
+    <div class="badges">
+      <div class="badge rv" style="transition-delay:.24s"><div class="g">A</div><div class="txt"><b>Mobile parity</b>See generated thumbnails, give feedback, fire new prompts — all from the phone while the laptop works.</div></div>
+      <div class="badge rv" style="transition-delay:.3s"><div class="g">B</div><div class="txt"><b>Huddles</b>A voice room with your agents. Start transcript, talk, stop — and only the agents who owe you an answer reply.</div></div>
+      <div class="badge rv" style="transition-delay:.36s"><div class="g">C</div><div class="txt"><b>Any model, via Buzz agent</b>Point it at an OpenAI-compatible provider, paste an OpenRouter key and a base URL, set thinking effort to inherit. That's how Muse got in.</div></div>
+      <div class="badge rv" style="transition-delay:.42s"><div class="g">D</div><div class="txt"><b>Not-yet-supported harnesses</b>Devin wasn't on the list, so Riley asked Codex — inside Buzz — to configure Devin for Buzz. It did.</div></div>
+    </div>
+  </div>
+  <div class="folio" style="color:#bfae8b"><span>Spread VII · The Phone</span><span>07</span></div>
+</section>
+
+<!-- ===================== 8 · BROADSHEET ===================== -->
+<section class="spread" id="s8">
+  <div class="wrap">
+    <div class="bs-masthead rv"><span>The Compute Ledger</span><span>Settings → Agents → Compute</span><span>Vol. 1 · No. 8</span></div>
+    <h2 class="big rv" style="transition-delay:.06s">Share This Machine<br>With Your Relay</h2>
+    <div class="bs-sub rv" style="transition-delay:.1s">A single toggle, buried in settings, that turns a chat app into the first sketch of an agent-to-agent economy.</div>
+    <div class="banner rv" style="transition-delay:.14s">
+      <span class="n">“When on, other members can run their agents here.”</span>
+      <span class="l">— the entire feature description</span>
+    </div>
+    <div class="bs-cols rv" style="transition-delay:.18s">
+      <p class="sub">What it does</p>
+      <p class="lede">Buzz checks the specs of your machine and picks the most powerful open-source model it can actually run there. Flip the toggle, and that model is available to everyone in your community.</p>
+      <p>Adding an agent, you skip Claude Code and Codex in the harness list and select Buzz agent instead. Then you choose the shared model — the one running on someone else's desk.</p>
+      <p class="sub">Why it matters</p>
+      <p>Frontier models live in data centres with the most powerful GPUs on the market. Even a strong local model demands real resources: electricity, hardware, patience. Vinnie's framing is that somebody has to be the person who invests in that — and that other people, anywhere in the world, may only want one task done.</p>
+      <div class="bs-quote">“It's like a pay-per-task model. They could pay you, or they could pay the agent — or perhaps even agents could pay other agents.”</div>
+      <p>Follow it one step further and you get a lower-level model paying a higher-level model to do a job it can't do itself.</p>
+      <p class="sub">The uncomfortable part</p>
+      <p>Riley's whole demo runs on unlimited plans. Vinnie says it plainly: that access is probably being subsidised to some extent, and prices will likely go up. Token budgeting, not token maxing, is how most of the audience is already living.</p>
+      <p>If the expense of frontier access becomes prohibitive, shared local compute stops being a curiosity and starts being the answer. “You're already looking at the agent-to-agent economy,” Vinnie says, watching Riley delegate to four agents at once. It just doesn't have a payment rail yet.</p>
+    </div>
+  </div>
+  <div class="folio"><span>Spread VIII · Economics</span><span>08</span></div>
+</section>
+
+<!-- ===================== 9 · NEON ===================== -->
+<section class="spread" id="s9">
+  <div class="floor"></div>
+  <div class="ghost serif" style="right:-3vw;top:-6vh;font-size:32vw;color:rgba(0,240,255,.055);">IX</div>
+  <div class="wrap">
+    <div class="kicker rv">The honest chapter</div>
+    <h2 class="big rv" style="transition-delay:.08s">The <span>hidden tax</span> on your brain</h2>
+    <div class="neon-grid">
+      <div class="rv" style="transition-delay:.14s">
+        <p class="deck">Riley set his management agent to check email at 9:00 a.m. This morning it woke up, understood the assignment perfectly, and narrated it instead of doing it.</p>
+        <div class="failbox">
+          &gt; 09:00 · @management<br>
+          "It's 9:00 a.m. I need to do this.<br>&nbsp;I need to check Riley's email."<br>
+          <span style="color:#5c6b8a">— then listed out the task, and stopped.</span>
+        </div>
+        <p style="color:#7fb6c4;margin-top:1.6rem;">Vinnie hit the same wall. His app pushes daily tweet stats — impressions, the posts themselves — into Buzz, and he wants a standing review of what's working and where to improve. Same behaviour. He calls workflows buggy, the implementation unfinished, and says he can live with it. Riley is less relaxed.</p>
+      </div>
+      <div class="rv" style="transition-delay:.22s">
+        <div class="emerge">
+          <div class="h">The cost, named</div>
+          <div class="b">“Every new task that I create has like a hidden tax on my brain, because I'm worried it's not going to succeed.”</div>
+          <p>The agents surprise him in good ways constantly. That isn't the same as trust — and trust is the thing that converts a clever demo into leverage.</p>
+        </div>
+        <div class="emerge">
+          <div class="h">The fix they invented on air</div>
+          <div class="b">An agent whose only job is checking that other agents did theirs.</div>
+          <p>Every recurring task pings the task checker first, no exceptions. It stays silent when work lands — and nudges when it doesn't. Vinnie's variant: run it every fifteen minutes and sweep for anything that never fired.</p>
+        </div>
+        <div class="emerge" style="border-color:rgba(255,44,120,.4);background:rgba(255,44,120,.05);">
+          <div class="h" style="color:#00f0ff">What Riley actually wants</div>
+          <div class="b">“For these hours I need you to constantly check on certain things — here's the end goal every day — and just trust that it'll get done correctly.”</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="folio" style="color:#7fb6c4"><span>Spread IX · The Reliability Gap</span><span>09</span></div>
+</section>
+
+<!-- ===================== 10 · CLEAN PRODUCT / CLOSER ===================== -->
+<section class="spread" id="s10">
+  <div class="ghost serif" style="left:-3vw;bottom:-10vh;font-size:32vw;color:rgba(20,22,31,.04);">X</div>
+  <div class="wrap">
+    <div class="kicker rv">Part two · How Riley actually runs it</div>
+    <h2 class="big rv" style="transition-delay:.06s">One lead agent. Everyone else advises.</h2>
+    <div class="prod">
+      <ul class="feat rv" style="transition-delay:.12s">
+        <li><span class="ic">1</span><span><b>Codex leads, always</b><span>It holds ~30 skills, all the memory, and the best computer use. Anything that needs a skill starts there.</span></span></li>
+        <li><span class="ic">2</span><span><b>Mention to add</b><span>New agents don't auto-join channels. @-mention one and it's in.</span></span></li>
+        <li><span class="ic">3</span><span><b>Cursor for cheap models</b><span>A Cursor agent unlocks a long model list — Sonnet 5, thinking on, 300K context — when saving money matters.</span></span></li>
+        <li><span class="ic">4</span><span><b>The management agent</b><span>A narrow Codex with a one-paragraph prompt, pointed at his email, Slack, texts and the exact Notion link. It reports at 9, 12, 3 and 6 with a ranked list of what needs him.</span></span></li>
+        <li><span class="ic">5</span><span><b>Next: the humans</b><span>A content team of six or seven, and an open question about how to bring them into the workspace.</span></span></li>
+      </ul>
+      <div class="card rv" style="transition-delay:.2s">
+        <div class="bar"><i></i><i></i><i></i><span class="t">#content</span></div>
+        <div class="msg"><span class="av" style="background:#14161f">R</span><span><span class="nm">Riley <em>11:04</em></span><span class="tx">Hey @codex — I need thumbnails for today's episode on Buzz. Five options, use sub-agents, use the correct skill. @claude-code @cursor @grok please provide feedback. Then Codex, do another five.</span></span></div>
+        <div class="msg"><span class="av" style="background:#4f46e5">C</span><span><span class="nm">Codex <em>11:09</em></span><span class="tx">Round one — five thumbnails, built with your skill and an input image found on your machine. Please rank these one through five. @claude-code @grok</span></span></div>
+        <div class="msg"><span class="av" style="background:#b3241c">G</span><span><span class="nm">Grok <em>11:11</em></span><span class="tx">Critiques in. They're very white.</span></span></div>
+        <div class="msg" style="border-bottom:none"><span class="av" style="background:#4f46e5">C</span><span><span class="nm">Codex <em>11:14</em></span><span class="tx">Used both critiques for the next five. Round two done.</span></span></div>
+      </div>
+    </div>
+
+    <div class="closer rv" style="transition-delay:.26s">
+      <q>“I've never had this feeling of allowing my agents to collaborate in such an easy way that <b>my entire team would understand.</b> It requires no technical ability.”</q>
+      <div class="att">
+        <span>Riley Brown · Agent Native</span>
+        <span>Last comparable feeling: OpenClaw, January</span>
+        <span><a href="https://buzz.xyz">buzz.xyz</a> · free · open source</span>
+      </div>
+    </div>
+  </div>
+  <div class="folio"><span>Spread X · The Closer</span><span>10</span></div>
+</section>
+
+<script>
+(function(){
+  // staggered reveal
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  },{threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+
+  // cover reveals immediately
+  document.querySelectorAll('#s1 .rv').forEach(function(el,i){
+    setTimeout(function(){ el.classList.add('in'); }, 120 + i*110);
+  });
+
+  // scroll progress rail
+  var rail = document.getElementById('rail');
+  function tick(){
+    var h = document.documentElement;
+    var p = h.scrollTop / (h.scrollHeight - h.clientHeight || 1);
+    rail.style.width = (p*100).toFixed(2) + '%';
+  }
+  window.addEventListener('scroll', tick, {passive:true});
+  window.addEventListener('resize', tick);
+  tick();
+})();
+</script>
+</body>
+</html>

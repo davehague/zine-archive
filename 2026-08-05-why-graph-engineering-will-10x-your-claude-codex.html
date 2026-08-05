@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graph Engineering, Clearly Explained</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --fr:'Fraunces',Georgia,serif;
+    --in:'Inter',system-ui,sans-serif;
+    --mo:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--in);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  section{min-height:100vh;padding:5rem 4rem;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+  .wrap{max-width:1400px;margin:0 auto;width:100%;position:relative;z-index:2}
+  .kicker{font-family:var(--in);text-transform:uppercase;letter-spacing:.32em;font-weight:700;font-size:.8rem}
+  .deck{font-size:1.35rem;line-height:1.55;max-width:60ch;font-weight:400}
+  h1,h2,h3{font-family:var(--fr);line-height:.95;font-weight:600}
+  p{font-size:1.15rem}
+  .bignum{font-family:var(--fr);position:absolute;font-weight:800;line-height:1;opacity:.06;z-index:1;pointer-events:none}
+  .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .d1{transition-delay:.08s}.d2{transition-delay:.18s}.d3{transition-delay:.28s}.d4{transition-delay:.38s}.d5{transition-delay:.48s}
+  @media(max-width:900px){
+    section{padding:3.5rem 1.5rem}
+    .deck{font-size:1.15rem}
+    .two,.grid3,.split{grid-template-columns:1fr!important}
+  }
+
+  /* 1 — COVER */
+  #cover{background:linear-gradient(160deg,#f6efe2 0%,#efe4d2 100%);color:#22201c;text-align:center;align-items:center}
+  #cover .rule{width:1px;height:70px;background:#8a7d68;margin:0 auto}
+  #cover h1{font-size:clamp(3.4rem,13vw,11rem);letter-spacing:-.02em;font-weight:600;margin:1.5rem 0}
+  #cover .sub{font-family:var(--fr);font-style:italic;font-size:clamp(1.4rem,4vw,2.6rem);color:#6b5f4c;font-weight:400}
+  #cover .attr{margin-top:2.5rem;font-size:.85rem;letter-spacing:.28em;text-transform:uppercase;color:#8a7d68;font-weight:600}
+  #cover .grain{position:absolute;inset:0;background-image:radial-gradient(#00000010 1px,transparent 1px);background-size:22px 22px;opacity:.5}
+
+  /* 2 — MIDNIGHT */
+  #stack{background:#0d1117;color:#e9edf3}
+  #stack::before{content:"";position:absolute;top:-20%;right:-10%;width:60vw;height:60vw;background:radial-gradient(circle,#2b6cff33,transparent 62%);filter:blur(20px)}
+  #stack h2{font-size:clamp(2.4rem,6vw,4.6rem);color:#fff}
+  #stack .row{display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:baseline;padding:1.8rem 0;border-bottom:1px solid #ffffff14}
+  #stack .row .lbl{font-family:var(--fr);font-size:clamp(1.4rem,3vw,2.3rem);color:#7fa8ff;white-space:nowrap;font-weight:500}
+  #stack .row .txt{font-size:1.2rem;color:#c3ccd8;max-width:52ch}
+  #stack .row.hi .lbl{color:#fff}
+  #stack .row.hi .txt{color:#fff}
+
+  /* 3 — WARM EDITORIAL */
+  #blob{background:#efe6d6;color:#26231d}
+  #blob .grid3{display:grid;grid-template-columns:1.3fr .9fr;gap:3.5rem;align-items:center}
+  #blob h2{font-size:clamp(2.4rem,5.5vw,4.4rem)}
+  #blob .panel{background:#221f19;color:#efe6d6;padding:2.4rem;border-radius:4px}
+  #blob .panel .q{font-family:var(--fr);font-style:italic;font-size:1.7rem;line-height:1.3}
+  #blob .lines{position:absolute;inset:0;background-image:linear-gradient(#00000008 1px,transparent 1px);background-size:100% 2.4rem;opacity:.6}
+  #blob .pq{font-family:var(--fr);font-size:clamp(1.6rem,3.4vw,2.6rem);font-style:italic;line-height:1.25;color:#5c4d36;border-left:3px solid #b08a3e;padding-left:1.5rem;margin-top:2rem}
+
+  /* 4 — ROSE STAMP */
+  #skeptic{background:#160c10;color:#f7e9ee}
+  #skeptic::after{content:"";position:absolute;bottom:-15%;left:-8%;width:50vw;height:50vw;background:radial-gradient(circle,#e0114533,transparent 60%)}
+  #skeptic h2{font-size:clamp(2.2rem,5vw,4rem);color:#fff}
+  #skeptic .split{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.5rem}
+  #skeptic .col{border:1px solid #ffffff1f;padding:1.8rem;border-radius:4px}
+  #skeptic .col.bad{background:#ffffff08}
+  #skeptic .col.good{background:#e0114512;border-color:#e0114555}
+  #skeptic .col h3{font-family:var(--in);text-transform:uppercase;letter-spacing:.2em;font-size:.85rem;color:#f2718f;margin-bottom:1rem}
+  #skeptic .stamp{position:absolute;top:6%;right:5%;width:190px;height:190px;border:2px solid #e0114588;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;transform:rotate(-11deg);color:#f2718f;font-family:var(--fr);font-weight:700;font-size:1.05rem;letter-spacing:.05em;padding:1.5rem;line-height:1.15}
+  #skeptic .pq{font-family:var(--fr);font-style:italic;font-size:clamp(1.5rem,3.2vw,2.4rem);line-height:1.3;max-width:28ch}
+
+  /* 5 — TERMINAL */
+  #files{background:#05100a;color:#c9ffd8;font-family:var(--mo)}
+  #files .win{max-width:900px;margin:0 auto;background:#0a1a12;border:1px solid #1d4c30;border-radius:10px;overflow:hidden;box-shadow:0 30px 80px #000a}
+  #files .bar{background:#0e2419;padding:.9rem 1.2rem;display:flex;gap:.5rem;align-items:center;border-bottom:1px solid #1d4c30}
+  #files .dot{width:12px;height:12px;border-radius:50%}
+  #files .bar span{margin-left:1rem;color:#5fae7d;font-size:.85rem}
+  #files .body{padding:2rem 2.2rem;font-size:1rem;line-height:2}
+  #files .body .cmd{color:#63e08c}
+  #files .body .p{color:#4f8f68}
+  #files .body b{color:#eafff0;font-weight:700}
+  #files h2{font-family:var(--fr);color:#eafff0;font-size:clamp(2rem,5vw,3.6rem);margin-bottom:2rem;text-align:center}
+  #files .cursor{display:inline-block;width:10px;height:1.15rem;background:#63e08c;vertical-align:-2px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* 6 — ACADEMIC */
+  #kinds{background:#0f1836;color:#dfe6fb}
+  #kinds h2{font-size:clamp(2.2rem,5vw,4rem);color:#fff;margin-bottom:.6rem}
+  #kinds .two{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:2.5rem}
+  #kinds .drop::first-letter{font-family:var(--fr);float:left;font-size:5.5rem;line-height:.72;padding:.4rem .5rem 0 0;color:#9bb2ff;font-weight:700}
+  #kinds .box{background:#ffffff0d;border-left:3px solid #6f8bff;padding:1.3rem 1.5rem;margin-top:1.4rem;border-radius:0 4px 4px 0}
+  #kinds .box .t{font-family:var(--fr);font-size:1.25rem;color:#fff;margin-bottom:.3rem}
+  #kinds p{color:#c2cdf0;font-size:1.1rem}
+
+  /* 7 — GOLD BIG STAT */
+  #levels{background:#14110a;color:#f6eccf}
+  #levels::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 30%,#d9a53822,transparent 55%)}
+  #levels .kicker{color:#d9a538}
+  #levels h2{font-size:clamp(2.2rem,5vw,3.8rem);color:#fff}
+  #levels .hero{font-family:var(--fr);font-size:clamp(5rem,20vw,17rem);font-weight:800;color:#e7b84a;line-height:.85;letter-spacing:-.03em}
+  #levels .grades{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2.5rem}
+  #levels .g{border:1px solid #d9a53840;border-radius:6px;padding:1.6rem;background:#ffffff05}
+  #levels .g .badge{font-family:var(--fr);font-weight:800;font-size:1.6rem;color:#0d0b06;background:#e7b84a;width:2.6rem;height:2.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:1rem}
+  #levels .g h3{font-family:var(--fr);color:#fff;font-size:1.4rem;margin-bottom:.4rem}
+  #levels .g p{color:#c9bd9c;font-size:1.02rem}
+
+  /* 8 — BROADSHEET */
+  #apps{background:#f0ece1;color:#1c1a15}
+  #apps .head{border-top:4px double #1c1a15;border-bottom:4px double #1c1a15;padding:1rem 0;text-align:center;margin-bottom:2.5rem}
+  #apps h2{font-size:clamp(2.6rem,7vw,5rem);letter-spacing:-.01em}
+  #apps .cols{columns:3;column-gap:2.5rem;column-rule:1px solid #1c1a1530}
+  #apps .art{break-inside:avoid;margin-bottom:2rem}
+  #apps .banner{background:#b3241f;color:#fff;font-family:var(--in);font-weight:800;text-transform:uppercase;letter-spacing:.12em;font-size:.72rem;padding:.35rem .7rem;display:inline-block;margin-bottom:.7rem}
+  #apps .art h3{font-family:var(--fr);font-size:1.7rem;margin-bottom:.5rem;line-height:1.05}
+  #apps .art p{font-size:1.02rem;line-height:1.5}
+  #apps .art ol{margin:.6rem 0 0 1.1rem;font-size:.98rem;color:#3a352b}
+  #apps .art ol li{margin-bottom:.25rem}
+  @media(max-width:900px){#apps .cols{columns:1}}
+
+  /* 9 — CYBERPUNK */
+  #warn{background:#04070a;color:#c9fff2;perspective:600px}
+  #warn::before{content:"";position:absolute;bottom:0;left:0;right:0;height:45%;background-image:linear-gradient(#00e5b510 1px,transparent 1px),linear-gradient(90deg,#00e5b510 1px,transparent 1px);background-size:44px 44px;transform:rotateX(72deg);transform-origin:bottom;opacity:.6}
+  #warn::after{content:"";position:absolute;top:-10%;left:40%;width:40vw;height:40vw;background:radial-gradient(circle,#00e5b52e,transparent 60%)}
+  #warn h2{font-size:clamp(2.3rem,6vw,4.6rem);color:#fff;text-shadow:0 0 30px #00e5b566}
+  #warn .em{border:1px solid #00e5b555;background:#00e5b50a;border-radius:6px;padding:1.4rem 1.6rem;margin-top:1.1rem;backdrop-filter:blur(2px)}
+  #warn .em b{color:#5affd8;font-family:var(--fr);font-weight:600}
+  #warn .grid3{display:grid;grid-template-columns:1.1fr 1fr;gap:3rem;align-items:center;margin-top:1.5rem}
+  #warn .pq{font-family:var(--fr);font-style:italic;font-size:clamp(1.5rem,3.4vw,2.5rem);line-height:1.3;color:#eafffa}
+
+  /* 10 — CLEAN PRODUCT / CLOSER */
+  #start{background:#fff;color:#141414}
+  #start .kicker{color:#4f46e5}
+  #start h2{font-size:clamp(2.4rem,6vw,4.4rem);letter-spacing:-.02em}
+  #start .card{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:2.5rem;align-items:start}
+  #start .feat{list-style:none}
+  #start .feat li{display:grid;grid-template-columns:auto 1fr;gap:1.1rem;padding:1rem 0;border-bottom:1px solid #eee;align-items:start}
+  #start .feat .n{font-family:var(--fr);font-weight:800;color:#4f46e5;font-size:1.5rem;line-height:1}
+  #start .feat .t{font-weight:600;font-size:1.1rem}
+  #start .feat .s{color:#666;font-size:1rem;display:block;margin-top:.15rem}
+  #start .close{background:#141414;color:#fff;border-radius:12px;padding:2.6rem;position:sticky;top:2rem}
+  #start .close .q{font-family:var(--fr);font-style:italic;font-size:clamp(1.8rem,3.6vw,2.7rem);line-height:1.22}
+  #start .close .by{margin-top:2rem;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;color:#9a9a9a}
+  #start .end{text-align:center;margin-top:3.5rem;font-family:var(--fr);font-style:italic;color:#4f46e5;font-size:1.3rem}
+</style>
+</head>
+<body>
+
+<!-- 1 COVER -->
+<section id="cover">
+  <div class="grain"></div>
+  <div class="wrap">
+    <div class="kicker reveal" style="color:#8a7d68">The Startup Ideas Podcast · Field Guide</div>
+    <div class="rule reveal d1" style="margin-top:1.5rem"></div>
+    <h1 class="reveal d2">Graph<br>Engineering</h1>
+    <div class="sub reveal d3">The next logical step after prompting — clearly explained</div>
+    <div class="rule reveal d4" style="margin-top:2rem"></div>
+    <div class="attr reveal d5">With Greg Eisenberg</div>
+  </div>
+</section>
+
+<!-- 2 THE STACK -->
+<section id="stack">
+  <div class="bignum" style="bottom:-4rem;left:-1rem;font-size:26rem;color:#fff">01</div>
+  <div class="wrap">
+    <div class="kicker reveal" style="color:#7fa8ff">Three ways to work with AI</div>
+    <h2 class="reveal d1" style="margin:1.2rem 0 2.5rem">Prompt, context,<br>and now — the graph.</h2>
+    <div class="row reveal d2">
+      <div class="lbl">Prompt engineering</div>
+      <div class="txt">How you ask the AI for a better question.</div>
+    </div>
+    <div class="row reveal d3">
+      <div class="lbl">Context engineering</div>
+      <div class="txt">How you give the AI better information.</div>
+    </div>
+    <div class="row hi reveal d4">
+      <div class="lbl">Graph engineering</div>
+      <div class="txt">How you design the work <em>around</em> the AI — so the whole thing stops living inside one messy, giant AI chat.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 THE BLOB -->
+<section id="blob">
+  <div class="lines"></div>
+  <div class="bignum" style="top:-2rem;right:1rem;font-size:22rem;color:#000">II</div>
+  <div class="wrap">
+    <div class="grid3">
+      <div>
+        <div class="kicker reveal" style="color:#9a824e">The problem with one big answer</div>
+        <h2 class="reveal d1" style="margin:1rem 0 1.4rem">A lot of trust to put<br>in one blob of text.</h2>
+        <p class="reveal d2">You open a chat and ask, <em>"Should I build this idea?"</em> The model gives you a confident answer — market size, a few competitors, a go-to-market plan. You feel like you did the research. But slow down, and something uncomfortable happened.</p>
+        <div class="pq reveal d3">"In some cases you might spend years of your life based on this one question you asked — and you might be working on the wrong thing."</div>
+      </div>
+      <div class="panel reveal d2">
+        <div class="kicker" style="color:#b08a3e;font-size:.72rem">One model, one pass, did all of this</div>
+        <div class="q" style="margin-top:1rem">Decided what mattered · researched the market · interpreted the evidence · wrote the recommendation · and graded it in its own confidence.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 THE SKEPTIC -->
+<section id="skeptic">
+  <div class="stamp reveal">Checking is<br>its own job</div>
+  <div class="wrap">
+    <div class="kicker reveal" style="color:#f2718f">Why the graph version wins</div>
+    <h2 class="reveal d1" style="margin:1rem 0 1.4rem">Separate the worker<br>from the checker.</h2>
+    <div class="pq reveal d2">"A lot of AI research fails because the same model that writes the answer also grades the answer."</div>
+    <div class="split">
+      <div class="col bad reveal d3">
+        <h3>The messy chat</h3>
+        <p style="color:#e7d3da">One big question, one big answer. The writer is also the judge — like asking someone to write their own performance review, then being shocked when they call themselves a visionary.</p>
+      </div>
+      <div class="col good reveal d4">
+        <h3>The graph</h3>
+        <p style="color:#fbe8ee">A planner splits the question. Researchers work in parallel. A <b>skeptic</b> tries to kill the weak findings. A merger turns survivors into a one-page recommendation. Then <b>you</b> approve before acting.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 FILES / TERMINAL -->
+<section id="files">
+  <div class="wrap">
+    <h2 class="reveal">Level two: every step writes a file.</h2>
+    <div class="win reveal d1">
+      <div class="bar">
+        <span class="dot" style="background:#ff5f56"></span>
+        <span class="dot" style="background:#ffbd2e"></span>
+        <span class="dot" style="background:#27c93f"></span>
+        <span>idea-validation-graph — Claude Code</span>
+      </div>
+      <div class="body">
+        <div><span class="p">planner    →</span> <span class="cmd">write</span> <b>plan.md</b></div>
+        <div><span class="p">customer   →</span> <span class="cmd">write</span> <b>customer.md</b></div>
+        <div><span class="p">competitor →</span> <span class="cmd">write</span> <b>competitors.md</b></div>
+        <div><span class="p">distro     →</span> <span class="cmd">write</span> <b>distribution.md</b></div>
+        <div><span class="p">skeptic    →</span> <span class="cmd">write</span> <b>review.md</b></div>
+        <div><span class="p">merge      →</span> <span class="cmd">write</span> <b>recommendation.md</b></div>
+        <div style="margin-top:1rem;color:#5fae7d">// leaves a paper trail — compare versions, reuse the structure next week<span class="cursor"></span></div>
+      </div>
+    </div>
+    <p class="reveal d2" style="text-align:center;color:#5fae7d;margin-top:2rem;max-width:56ch;margin-left:auto;margin-right:auto">"The first rep is to draw the graph before you automate the graph." Run it manually behind the scenes first — if the manual version isn't better, automating it just produces mediocre work faster.</p>
+  </div>
+</section>
+
+<!-- 6 TWO KINDS OF GRAPH -->
+<section id="kinds">
+  <div class="bignum" style="bottom:-5rem;right:-1rem;font-size:24rem;color:#fff">2</div>
+  <div class="wrap">
+    <div class="kicker reveal" style="color:#9bb2ff">Where the confusion comes from</div>
+    <h2 class="reveal d1">Two things people mean by "graph."</h2>
+    <div class="two">
+      <div class="reveal d2">
+        <p class="drop">A <b style="color:#fff">knowledge graph</b> helps AI reason over relationships between things: this customer works at this company, this company uses this product, this issue relates to this feature. It shines where normal RAG struggles — when the answer requires connecting people across companies, topics, claims, and events.</p>
+        <div class="box"><div class="t">Understand</div><p>How information connects.</p></div>
+      </div>
+      <div class="reveal d3">
+        <p class="drop">An <b style="color:#fff">agent graph</b> is about how work moves. A planner hands work to researchers, they run in parallel, a skeptic checks the findings, a synthesizer merges the parts, a human approves the final answer. This is the version you can start using today.</p>
+        <div class="box"><div class="t">Move</div><p>How work should flow. The best systems eventually use both.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 LEVELS / GOLD -->
+<section id="levels">
+  <div class="wrap">
+    <div class="kicker reveal">The Shopify-bookkeeping test</div>
+    <h2 class="reveal d1" style="margin:1rem 0 1.5rem">Start way simpler<br>than Twitter tells you.</h2>
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:3rem;align-items:center">
+      <div class="hero reveal d2">1</div>
+      <p class="reveal d3" style="color:#d8cba7;font-size:1.25rem;max-width:40ch">The whole first rep is one manual run. Give each job its own lane, let the checker attack the evidence, let the merge lane turn survivors into a recommendation. <em>That is already graph engineering.</em></p>
+    </div>
+    <div class="grades">
+      <div class="g reveal d3"><div class="badge">1</div><h3>Manual lanes</h3><p>Separate lanes, run by hand. Slower, but far easier to understand.</p></div>
+      <div class="g reveal d4"><div class="badge">2</div><h3>Files in a repo</h3><p>Claude Code where each step writes a markdown file. A paper trail you can reuse.</p></div>
+      <div class="g reveal d5"><div class="badge">3</div><h3>Orchestrated</h3><p>LangGraph, AutoGen Graph Flow, n8n, make.com — only once the manual version proves out.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 APPLICATIONS -->
+<section id="apps">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="kicker">Where graph thinking earns its keep</div>
+      <h2>The Real Workflow</h2>
+    </div>
+    <div class="cols">
+      <div class="art reveal d1">
+        <div class="banner">Support</div>
+        <h3>Not "answer the ticket."</h3>
+        <p>The real workflow is understanding, researching, drafting, checking, and approving.</p>
+        <ol>
+          <li>Classify the issue</li>
+          <li>Check account context</li>
+          <li>Search docs &amp; policy</li>
+          <li>Draft the reply</li>
+          <li>Checker reviews tone &amp; risk</li>
+          <li>Human approves refunds &amp; angry customers</li>
+        </ol>
+      </div>
+      <div class="art reveal d2">
+        <div class="banner" style="background:#1c5c3a">Content</div>
+        <h3>Not "write a script."</h3>
+        <p>Closer to how a real content lead actually works.</p>
+        <ol>
+          <li>Research → thesis → examples</li>
+          <li>Hook, then draft script</li>
+          <li>Checker: are examples specific? does the hook earn attention?</li>
+          <li>Branch into titles, thumbnails, captions, B-roll</li>
+          <li>"Does this sound like a human — or someone trapped in a SaaS onboarding flow?"</li>
+        </ol>
+      </div>
+      <div class="art reveal d3">
+        <div class="banner" style="background:#2a3d8f">Coding</div>
+        <h3>Not "write the code."</h3>
+        <p>The model writing code is only one part. The leverage is everywhere else.</p>
+        <ol>
+          <li>Plan the change</li>
+          <li>One agent edits</li>
+          <li>Another reviews the diff</li>
+          <li>Another runs tests</li>
+          <li>Another checks the UI in a browser</li>
+          <li>Human approves the pull request</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 WARNING -->
+<section id="warn">
+  <div class="wrap">
+    <div class="grid3">
+      <div>
+        <div class="kicker reveal" style="color:#5affd8">One mistake to avoid</div>
+        <h2 class="reveal d1" style="margin:1rem 0 1.4rem">More agents don't<br>mean better output.</h2>
+        <div class="pq reveal d2">"Sometimes more agents mean five AI workers confidently repeating the same wrong idea."</div>
+        <p class="reveal d3" style="color:#8fd8c8;margin-top:1.5rem">The goal isn't the biggest graph. It's the <b style="color:#5affd8">smallest graph</b> that improves the quality of work.</p>
+      </div>
+      <div>
+        <div class="em reveal d2"><b>Remove</b> the fake waiting — run independent jobs in parallel.</div>
+        <div class="em reveal d3"><b>Separate</b> workers from checkers.</div>
+        <div class="em reveal d4"><b>Gate</b> with a human where mistakes are expensive.</div>
+        <div class="em reveal d5"><b>Stop</b> when the answer is good enough — and leave behind the state.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 START / CLOSER -->
+<section id="start">
+  <div class="wrap">
+    <div class="kicker reveal">Your first graph — this week</div>
+    <h2 class="reveal d1" style="margin:1rem 0 .4rem">Draw it before<br>you automate it.</h2>
+    <div class="card">
+      <ol class="feat">
+        <li class="reveal d2"><span class="n">1</span><span><span class="t">Pick one weekly workflow</span><span class="s">Researching ideas, reviewing landing pages, analyzing customer feedback.</span></span></li>
+        <li class="reveal d2"><span class="n">2</span><span><span class="t">Write the final output in one sentence</span><span class="s">"A one-page recommendation on whether this idea is worth testing."</span></span></li>
+        <li class="reveal d3"><span class="n">3</span><span><span class="t">List the jobs a great human would do</span><span class="s">Clarify, research customers, research competitors, find distribution, find risks, check, recommend.</span></span></li>
+        <li class="reveal d3"><span class="n">4</span><span><span class="t">Draw arrows only where work truly depends</span><span class="s">Customer &amp; competitor research run at once; the skeptic needs them first.</span></span></li>
+        <li class="reveal d4"><span class="n">5</span><span><span class="t">Add one human gate before the expensive decision</span><span class="s">Light for a private memo; strict for customer emails, deploys, or production data.</span></span></li>
+        <li class="reveal d4"><span class="n">6</span><span><span class="t">Run it manually — once</span><span class="s">Just the jobs and the arrows. No giant automation project required.</span></span></li>
+      </ol>
+      <div class="close reveal d3">
+        <div class="q">"Once you have one graph that works, you're not just prompting AI anymore — you're managing AI work."</div>
+        <p style="color:#bdbdbd;margin-top:1.4rem;font-size:1.05rem">The compounding payoff: the graph produces the work, but it also produces the memory that makes the next graph smarter. Context becomes the moat.</p>
+        <div class="by">Greg Eisenberg · The Startup Ideas Podcast</div>
+      </div>
+    </div>
+    <div class="end reveal d4">Have a creative day. I'm rooting for you.</div>
+  </div>
+</section>
+
+<script>
+  const io=new IntersectionObserver((es)=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
+  },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

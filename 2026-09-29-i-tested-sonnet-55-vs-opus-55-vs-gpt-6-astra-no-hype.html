@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Which Model Should You Use? — Sonnet 5.5 vs Opus 5.5 vs GPT-6 Astra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,800;0,9..144,900;1,9..144,300;1,9..144,400;1,9..144,600&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --serif:'Fraunces', Georgia, serif;
+  --sans:'Inter', system-ui, sans-serif;
+  --mono:'JetBrains Mono', ui-monospace, monospace;
+  --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);font-size:1.15rem;line-height:1.65;color:#1b1712;background:#111;-webkit-font-smoothing:antialiased}
+em{font-style:italic}
+.spread{position:relative;min-height:100vh;overflow:hidden;display:flex;align-items:center;isolation:isolate}
+.spread::after{content:"";position:absolute;inset:0;background-image:var(--noise);opacity:.09;pointer-events:none;z-index:0;mix-blend-mode:multiply}
+.wrap{position:relative;z-index:2;width:100%;max-width:1400px;margin:0 auto;padding:7rem 5rem}
+.kicker{font-family:var(--sans);font-weight:700;font-size:1rem;letter-spacing:.28em;text-transform:uppercase}
+.ghost{position:absolute;font-family:var(--serif);font-weight:900;line-height:.8;pointer-events:none;z-index:1;user-select:none}
+.deck{font-family:var(--serif);font-weight:300;font-size:clamp(1.35rem,2vw,1.8rem);line-height:1.4}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(42px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1);transition-delay:calc(var(--d,0) * 120ms)}
+.rv.in{opacity:1;transform:none}
+
+/* ============ 1. COVER ============ */
+.s1{background:#f3ead7;color:#231a10;
+  background-image:radial-gradient(ellipse at 50% 35%,#fbf5e8 0%,transparent 60%),radial-gradient(ellipse at 10% 100%,#e7d6b5 0%,transparent 50%);}
+.s1 .wrap{text-align:center;padding-top:4rem;padding-bottom:4rem}
+.s1 .topbar{display:flex;justify-content:space-between;border-top:2px solid #231a10;border-bottom:1px solid #231a10;padding:.9rem 0;margin-bottom:4.5rem}
+.s1 .topbar span{font-size:1rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase}
+.s1 .kicker{color:#a14a1c;margin-bottom:2rem}
+.s1 h1{font-family:var(--serif);font-weight:300;font-size:clamp(3.4rem,10vw,9rem);line-height:.9;letter-spacing:-.045em;font-variation-settings:"opsz" 144}
+.s1 h1 em{font-weight:600;color:#a14a1c}
+.s1 h1 .blk{display:block}
+.orn{display:flex;align-items:center;justify-content:center;gap:1.4rem;margin:3rem auto;max-width:720px}
+.orn::before,.orn::after{content:"";flex:1;height:1px;background:#231a10}
+.orn b{font-family:var(--serif);font-size:1.6rem;color:#a14a1c;font-weight:400}
+.s1 .trio{display:flex;justify-content:center;align-items:baseline;gap:2.2rem;flex-wrap:wrap;font-family:var(--serif);font-size:clamp(1.7rem,3vw,2.8rem);font-style:italic;font-weight:400;letter-spacing:-.01em}
+.s1 .trio i{font-style:normal;font-size:1.2rem;color:#a14a1c}
+.s1 .deck{max-width:780px;margin:2.4rem auto 0;color:#4a3b2a}
+.s1 .attrib{margin-top:3.5rem;font-size:1.1rem;color:#5a4a36}
+.s1 .attrib strong{font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:1rem;color:#231a10;display:block;margin-bottom:.4rem}
+.s1 .contents{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:4.5rem;border-top:1px solid #231a10;text-align:left}
+.s1 .contents div{padding:1.2rem 1.2rem 0 0;font-size:1.05rem;color:#4a3b2a}
+.s1 .contents b{font-family:var(--serif);font-weight:800;font-size:2rem;color:#a14a1c;display:block;line-height:1}
+
+/* ============ 2. MIDNIGHT ============ */
+.s2{background:#0d1117;color:#e6edf3;
+  background-image:radial-gradient(circle at 85% 20%,rgba(56,139,253,.28),transparent 42%),radial-gradient(circle at 5% 90%,rgba(121,192,255,.14),transparent 40%);}
+.s2::after{mix-blend-mode:screen;opacity:.05}
+.s2 .ghost{right:-2rem;top:50%;transform:translateY(-50%);font-size:52vw;color:rgba(88,166,255,.05)}
+.s2 .kicker{color:#79c0ff}
+.s2 h2{font-family:var(--serif);font-weight:800;font-size:clamp(3.2rem,8.5vw,8.5rem);line-height:.88;letter-spacing:-.04em;margin:1.8rem 0 2.2rem;max-width:12ch}
+.s2 h2 span{font-weight:200;font-style:italic;color:#79c0ff}
+.s2 .deck{max-width:760px;color:#aeb9c6}
+.s2 .stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:4.5rem;border-top:1px solid rgba(121,192,255,.3)}
+.s2 .stat{padding:2.2rem 2rem 0 0;border-right:1px solid rgba(121,192,255,.15)}
+.s2 .stat:last-child{border:none;padding-left:2rem}
+.s2 .stat:nth-child(2){padding-left:2rem}
+.s2 .stat .n{font-family:var(--serif);font-weight:300;font-size:clamp(3.5rem,6vw,5.8rem);line-height:1;color:#fff;text-shadow:0 0 40px rgba(88,166,255,.55)}
+.s2 .stat .n small{font-size:.45em;color:#79c0ff;font-weight:400}
+.s2 .stat p{margin-top:1rem;color:#aeb9c6;font-size:1.12rem}
+.s2 .stat p b{color:#e6edf3;font-weight:600}
+.s2 blockquote{margin-top:4.5rem;padding-left:2rem;border-left:3px solid #388bfd;font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(1.5rem,2.4vw,2.2rem);line-height:1.35;max-width:980px;color:#dbe7f3}
+.s2 cite{display:block;margin-top:1rem;font-family:var(--sans);font-style:normal;font-size:1rem;letter-spacing:.2em;text-transform:uppercase;color:#79c0ff}
+
+/* ============ 3. WARM EDITORIAL ============ */
+.s3{background:#efe4cf;color:#2a2017;
+  background-image:linear-gradient(rgba(42,32,23,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(42,32,23,.06) 1px,transparent 1px);background-size:64px 64px}
+.s3 .ghost{left:-3rem;bottom:-6rem;font-size:40vw;color:rgba(160,74,28,.07)}
+.s3 .grid{display:grid;grid-template-columns:1.55fr 1fr;gap:5rem;align-items:start}
+.s3 .kicker{color:#a14a1c}
+.s3 h2{font-family:var(--serif);font-weight:400;font-size:clamp(3rem,7.5vw,7.4rem);line-height:.92;letter-spacing:-.035em;margin:1.6rem 0 2rem}
+.s3 h2 em{font-weight:800;font-style:normal;color:#a14a1c}
+.s3 .deck{color:#4d3d2c;max-width:640px}
+.bars{margin-top:3.5rem;display:flex;flex-direction:column;gap:1.6rem}
+.bar{display:grid;grid-template-columns:180px 1fr;align-items:center;gap:1.4rem}
+.bar .lbl{font-family:var(--serif);font-weight:600;font-size:1.45rem;line-height:1.1}
+.bar .lbl small{display:block;font-family:var(--sans);font-weight:500;font-size:1rem;color:#7a6650;letter-spacing:.04em}
+.bar .track{position:relative;height:64px;background:rgba(42,32,23,.07)}
+.bar .fill{position:absolute;inset:0 auto 0 0;background:#2a2017;display:flex;align-items:center;justify-content:flex-end;padding-right:1rem;color:#efe4cf;font-family:var(--serif);font-weight:800;font-size:1.8rem;width:0;transition:width 1.6s cubic-bezier(.2,.7,.2,1) .3s}
+.bar.accent .fill{background:#a14a1c}
+.rv.in .bar .fill{width:var(--w)}
+.s3 .side{background:#1f1812;color:#efe4cf;padding:3rem 2.6rem;position:relative;box-shadow:18px 18px 0 #a14a1c}
+.s3 .side .kicker{color:#e9a36e;font-size:1rem}
+.s3 .side .price{font-family:var(--serif);font-weight:200;font-size:clamp(4rem,7vw,6.5rem);line-height:.9;letter-spacing:-.04em;margin:1.4rem 0 .4rem}
+.s3 .side .price span{color:#e9a36e;font-weight:600}
+.s3 .side p{font-size:1.1rem;color:#cbbba5;margin-top:1rem}
+.s3 .side hr{border:none;border-top:1px dashed rgba(239,228,207,.3);margin:1.8rem 0}
+.s3 .pq{margin-top:3rem;font-family:var(--serif);font-style:italic;font-size:clamp(1.5rem,2.3vw,2.1rem);line-height:1.3;font-weight:400;border-top:3px double #2a2017;border-bottom:3px double #2a2017;padding:1.6rem 0}
+
+/* ============ 4. ROSE STAMP ============ */
+.s4{background:#170b0f;color:#f6e7ea;
+  background-image:radial-gradient(circle at 20% 15%,rgba(225,29,72,.25),transparent 40%),repeating-linear-gradient(135deg,rgba(255,255,255,.015) 0 2px,transparent 2px 14px)}
+.s4::after{mix-blend-mode:screen;opacity:.05}
+.s4 .ghost{right:2rem;top:-2rem;font-size:30vw;color:rgba(244,63,94,.06);font-style:italic}
+.s4 .kicker{color:#fb7185}
+.s4 .head{display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:center}
+.s4 h2{font-family:var(--serif);font-weight:900;font-size:clamp(3rem,8vw,8rem);line-height:.86;letter-spacing:-.045em;margin:1.4rem 0 1.8rem;text-transform:uppercase}
+.s4 h2 em{font-weight:300;text-transform:none;color:#fb7185;letter-spacing:-.03em}
+.s4 .deck{max-width:760px;color:#d9bfc5}
+.stamp{width:260px;height:260px;position:relative;transform:rotate(-12deg);color:#fb7185;flex-shrink:0}
+.stamp svg{width:100%;height:100%;animation:spin 40s linear infinite}
+.stamp .core{position:absolute;inset:56px;border:3px solid currentColor;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.stamp .core b{font-family:var(--serif);font-weight:900;font-size:2.6rem;line-height:.9}
+.stamp .core span{font-size:1rem;font-weight:700;letter-spacing:.2em}
+@keyframes spin{to{transform:rotate(360deg)}}
+.s4 .versus{display:grid;grid-template-columns:1fr 1fr;margin-top:4rem;border:1px solid rgba(251,113,133,.35)}
+.s4 .col{padding:2.8rem 2.6rem}
+.s4 .col+.col{border-left:1px solid rgba(251,113,133,.35);background:rgba(255,255,255,.02)}
+.s4 .col h3{font-family:var(--sans);font-size:1rem;letter-spacing:.24em;text-transform:uppercase;color:#fb7185;font-weight:700}
+.s4 .col .q{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(1.7rem,2.8vw,2.6rem);line-height:1.15;margin:1.2rem 0 1.4rem;color:#fff}
+.s4 .col p{color:#d9bfc5;font-size:1.12rem}
+.s4 .col .tok{margin-top:1.8rem;display:flex;align-items:baseline;gap:.8rem;border-top:1px solid rgba(251,113,133,.25);padding-top:1.2rem}
+.s4 .col .tok b{font-family:var(--serif);font-size:3.2rem;font-weight:300;line-height:1;color:#fff}
+.s4 .col .tok span{font-size:1rem;letter-spacing:.14em;text-transform:uppercase;color:#fb7185}
+
+/* ============ 5. ACADEMIC NAVY ============ */
+.s5{background:#0f1a33;color:#e8ecf5;
+  background-image:radial-gradient(ellipse at 100% 0%,rgba(212,175,110,.14),transparent 50%),linear-gradient(180deg,#0f1a33,#0b1428)}
+.s5::after{mix-blend-mode:screen;opacity:.05}
+.s5 .ghost{left:50%;top:-4rem;transform:translateX(-50%);font-size:34vw;color:rgba(232,236,245,.035);font-style:italic;font-weight:300}
+.s5 .kicker{color:#d4af6e}
+.s5 h2{font-family:var(--serif);font-weight:300;font-size:clamp(3rem,7.6vw,7.6rem);line-height:.9;letter-spacing:-.03em;margin:1.4rem 0 1.4rem;max-width:14ch}
+.s5 h2 b{font-weight:800;font-style:italic;color:#d4af6e}
+.s5 .deck{color:#b7c0d6;max-width:820px;margin-bottom:3.5rem}
+.s5 .body{columns:2;column-gap:4rem;column-rule:1px solid rgba(212,175,110,.25);font-size:1.15rem;line-height:1.75;color:#cfd6e6}
+.s5 .body p{margin-bottom:1.2rem;break-inside:avoid-column}
+.s5 .body p:first-child::first-letter{float:left;font-family:var(--serif);font-weight:900;font-size:7.4rem;line-height:.78;padding:.5rem .8rem 0 0;color:#d4af6e}
+.s5 .body strong{color:#fff;font-weight:600}
+.s5 .callouts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.6rem;margin-top:3rem}
+.callout{border:1px solid rgba(212,175,110,.4);padding:1.8rem;background:rgba(212,175,110,.05)}
+.callout .kicker{font-size:1rem;color:#d4af6e}
+.callout p{margin-top:.8rem;font-size:1.1rem;color:#dfe4ef}
+.callout .big{font-family:var(--serif);font-size:2.8rem;font-weight:300;line-height:1;margin-top:.6rem;color:#fff}
+.callout.q{background:#d4af6e;color:#0f1a33;border:none}
+.callout.q p{font-family:var(--serif);font-style:italic;font-size:1.45rem;line-height:1.3;color:#0f1a33;font-weight:400}
+.callout.q .kicker{color:#0f1a33}
+
+/* ============ 6. NEON ============ */
+.s6{background:#05060a;color:#d9fff4;
+  background-image:radial-gradient(ellipse at 50% 110%,rgba(0,255,200,.22),transparent 55%),radial-gradient(circle at 90% 10%,rgba(0,200,255,.12),transparent 35%)}
+.s6::after{mix-blend-mode:screen;opacity:.05}
+.floor{position:absolute;left:-50%;right:-50%;bottom:-10%;height:62%;z-index:0;
+  background-image:linear-gradient(rgba(0,255,200,.45) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,200,.45) 1px,transparent 1px);background-size:70px 70px;
+  transform:perspective(520px) rotateX(64deg);transform-origin:50% 0;animation:floor 3.5s linear infinite;
+  -webkit-mask-image:linear-gradient(transparent,#000 35%);mask-image:linear-gradient(transparent,#000 35%)}
+@keyframes floor{to{background-position:0 70px}}
+.s6 .ghost{right:3rem;top:3rem;font-size:22vw;color:transparent;-webkit-text-stroke:1px rgba(0,255,200,.18)}
+.s6 .kicker{color:#00ffc8;text-shadow:0 0 12px rgba(0,255,200,.6)}
+.s6 h2{font-family:var(--serif);font-weight:800;font-size:clamp(3.2rem,9vw,9rem);line-height:.85;letter-spacing:-.05em;margin:1.4rem 0 1.6rem;color:#fff;text-shadow:0 0 30px rgba(0,255,200,.35)}
+.s6 h2 i{font-weight:200;color:#00ffc8}
+.s6 .deck{max-width:780px;color:#a7d9cc}
+.s6 .pods{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;margin-top:3.5rem}
+.pod{border:1px solid rgba(0,255,200,.35);background:rgba(5,10,14,.78);backdrop-filter:blur(6px);padding:2rem;position:relative;box-shadow:0 0 0 1px rgba(0,255,200,.05),0 0 40px rgba(0,255,200,.08) inset}
+.pod::before{content:"";position:absolute;top:-1px;left:-1px;width:22px;height:22px;border-top:3px solid #00ffc8;border-left:3px solid #00ffc8}
+.pod::after{content:"";position:absolute;bottom:-1px;right:-1px;width:22px;height:22px;border-bottom:3px solid #00ffc8;border-right:3px solid #00ffc8}
+.pod h3{font-family:var(--serif);font-weight:600;font-size:2rem;color:#fff}
+.pod .tag{font-family:var(--mono);font-size:1rem;color:#00ffc8;margin:.3rem 0 1rem;display:block}
+.pod p{font-size:1.1rem;color:#bfe9de}
+.pod p q{font-family:var(--serif);font-style:italic;color:#fff}
+.s6 .ranks{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:1.6rem;margin-top:1.6rem}
+.rank{border:1px solid rgba(0,200,255,.4);background:rgba(0,40,60,.55);padding:1.6rem 2rem}
+.rank .kicker{color:#5cd8ff;font-size:1rem}
+.rank ol{list-style:none;margin-top:.8rem}
+.rank li{font-family:var(--serif);font-size:1.5rem;display:flex;gap:1rem;align-items:baseline;color:#fff}
+.rank li b{font-family:var(--mono);color:#00ffc8;font-size:1.1rem}
+.rank.quote p{font-family:var(--serif);font-style:italic;font-size:1.4rem;line-height:1.3;color:#fff;margin-top:.6rem}
+
+/* ============ 7. BROADSHEET ============ */
+.s7{background:#f4efe3;color:#141210;
+  background-image:radial-gradient(ellipse at 50% 0%,#fbf8f0,transparent 60%)}
+.s7 .wrap{padding-top:5rem}
+.s7 .mast{border-top:6px double #141210;border-bottom:6px double #141210;padding:1.2rem 0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:2rem}
+.s7 .mast .t{font-family:var(--serif);font-weight:900;font-size:clamp(2rem,4.5vw,4rem);letter-spacing:-.02em;text-align:center;line-height:1}
+.s7 .mast span{font-size:1rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.s7 .mast span:last-child{text-align:right}
+.s7 .kicker{color:#b3121f;margin-top:2.6rem;text-align:center}
+.s7 h2{font-family:var(--serif);font-weight:800;font-size:clamp(3rem,7.8vw,7.8rem);line-height:.9;letter-spacing:-.04em;text-align:center;margin:1.2rem auto 1.4rem;max-width:16ch}
+.s7 h2 em{font-weight:300}
+.s7 .deck{text-align:center;max-width:900px;margin:0 auto;font-style:italic;color:#3a342c}
+.banner{background:#b3121f;color:#fff;margin:3rem 0;display:grid;grid-template-columns:auto 1fr;gap:2.4rem;align-items:center;padding:1.6rem 2.4rem}
+.banner b{font-family:var(--serif);font-weight:900;font-size:clamp(3rem,6vw,5.6rem);line-height:1;letter-spacing:-.03em}
+.banner p{font-size:1.2rem;font-weight:500;line-height:1.4}
+.banner p strong{display:block;font-weight:800;letter-spacing:.18em;text-transform:uppercase;font-size:1rem;margin-bottom:.3rem;opacity:.85}
+.s7 .cols{display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid #141210}
+.s7 .cols article{padding:1.6rem 2rem 0}
+.s7 .cols article:first-child{padding-left:0}
+.s7 .cols article:last-child{padding-right:0}
+.s7 .cols article+article{border-left:1px solid #141210}
+.s7 .cols h3{font-family:var(--serif);font-weight:800;font-size:2rem;line-height:1.05;margin-bottom:.3rem}
+.s7 .cols .by{font-size:1rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#b3121f;margin-bottom:1rem;display:block}
+.s7 .cols p{font-family:var(--serif);font-size:1.18rem;line-height:1.6;margin-bottom:1rem;text-align:justify;hyphens:auto}
+.s7 .verdict{margin-top:2.4rem;border-top:6px double #141210;padding-top:1.6rem;display:flex;justify-content:space-between;gap:2rem;align-items:baseline;flex-wrap:wrap}
+.s7 .verdict q{font-family:var(--serif);font-size:clamp(1.6rem,2.6vw,2.4rem);font-style:italic;font-weight:400}
+.s7 .verdict span{font-size:1rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+
+/* ============ 8. TERMINAL ============ */
+.s8{background:#040804;color:#7dff8e;
+  background-image:repeating-linear-gradient(0deg,rgba(125,255,142,.035) 0 1px,transparent 1px 4px),radial-gradient(ellipse at 50% 40%,rgba(40,180,60,.14),transparent 60%)}
+.s8::after{mix-blend-mode:screen;opacity:.04}
+.s8 .ghost{left:-2rem;bottom:-4rem;font-family:var(--mono);font-weight:700;font-size:30vw;color:rgba(125,255,142,.04)}
+.s8 .grid{display:grid;grid-template-columns:.8fr 1.5fr;gap:4rem;align-items:center}
+.s8 .kicker{color:#7dff8e;font-family:var(--mono);letter-spacing:.14em}
+.s8 h2{font-family:var(--serif);font-weight:300;font-size:clamp(3rem,7vw,7rem);line-height:.9;letter-spacing:-.04em;color:#eafff0;margin:1.4rem 0 1.6rem}
+.s8 h2 b{font-weight:900;color:#7dff8e;display:block}
+.s8 .deck{color:#a8d6b0}
+.term{background:#0a120b;border:1px solid rgba(125,255,142,.3);border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 60px rgba(125,255,142,.08);overflow:hidden}
+.term .chrome{display:flex;align-items:center;gap:.55rem;padding:.9rem 1.2rem;background:#111c12;border-bottom:1px solid rgba(125,255,142,.2)}
+.term .chrome i{width:14px;height:14px;border-radius:50%;display:block}
+.term .chrome i:nth-child(1){background:#ff5f57}.term .chrome i:nth-child(2){background:#febc2e}.term .chrome i:nth-child(3){background:#28c840}
+.term .chrome span{margin-left:auto;margin-right:auto;font-family:var(--mono);font-size:1rem;color:#6fa877}
+.term pre{font-family:var(--mono);font-size:1.1rem;line-height:1.75;padding:1.8rem 2rem 2.2rem;white-space:pre;overflow-x:auto;color:#7dff8e}
+.term .dim{color:#4f8a59}
+.term .hi{color:#eafff0;font-weight:700}
+.term .am{color:#ffd166}
+.cursor{display:inline-block;width:.62em;height:1.2em;background:#7dff8e;vertical-align:text-bottom;animation:blink 1s steps(1) infinite;box-shadow:0 0 10px #7dff8e}
+@keyframes blink{50%{opacity:0}}
+.s8 .note{margin-top:2rem;border-left:3px solid #7dff8e;padding-left:1.4rem;font-family:var(--serif);font-style:italic;font-size:1.4rem;line-height:1.35;color:#eafff0}
+
+/* ============ 9. GOLD ============ */
+.s9{background:#15100a;color:#f5e9d3;
+  background-image:radial-gradient(circle at 25% 50%,rgba(234,179,8,.2),transparent 45%),radial-gradient(circle at 90% 90%,rgba(180,120,20,.18),transparent 40%)}
+.s9::after{mix-blend-mode:screen;opacity:.05}
+.s9 .grid{display:grid;grid-template-columns:1.1fr 1fr;gap:5rem;align-items:center}
+.s9 .kicker{color:#f5b942}
+.s9 .hero{font-family:var(--serif);font-weight:900;font-size:clamp(9rem,24vw,22rem);line-height:.78;letter-spacing:-.06em;background:linear-gradient(180deg,#ffe29a 0%,#f5b942 45%,#9a6310 100%);-webkit-background-clip:text;background-clip:text;color:transparent;margin:1.6rem 0 .6rem;filter:drop-shadow(0 10px 50px rgba(245,185,66,.25))}
+.s9 .hero small{font-size:.35em;font-weight:300;letter-spacing:-.02em}
+.s9 .herocap{font-family:var(--serif);font-size:clamp(1.6rem,2.6vw,2.4rem);font-weight:300;line-height:1.2}
+.s9 .herocap b{font-weight:800;color:#f5b942}
+.s9 blockquote{margin-top:2.6rem;font-family:var(--serif);font-style:italic;font-size:1.45rem;line-height:1.4;color:#e4d3b3;border-top:1px solid rgba(245,185,66,.35);padding-top:1.6rem}
+.card{display:grid;grid-template-columns:auto 1fr auto;gap:1.4rem;align-items:center;padding:1.5rem 0;border-bottom:1px solid rgba(245,185,66,.2)}
+.card:first-child{border-top:1px solid rgba(245,185,66,.2)}
+.card .no{font-family:var(--serif);font-weight:200;font-size:2.6rem;color:rgba(245,185,66,.55);width:3.2rem}
+.card h4{font-family:var(--serif);font-weight:600;font-size:1.5rem;line-height:1.15}
+.card p{font-size:1.05rem;color:#bfae8f;margin-top:.2rem}
+.badge{width:96px;height:96px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:2px solid #f5b942;color:#f5b942;font-weight:800;font-size:1rem;letter-spacing:.08em;line-height:1.15;text-transform:uppercase;box-shadow:0 0 0 6px rgba(245,185,66,.08)}
+.badge.fill{background:#f5b942;color:#15100a}
+.badge.split{background:linear-gradient(135deg,#f5b942 50%,transparent 50%);color:#15100a}
+.badge.split span:last-child{color:#f5b942}
+
+/* ============ 10. CLEAN PRODUCT ============ */
+.s10{background:#ffffff;color:#14142b;
+  background-image:radial-gradient(circle at 100% 0%,rgba(79,70,229,.09),transparent 45%),radial-gradient(#e7e7f3 1px,transparent 1px);background-size:auto,28px 28px}
+.s10::after{display:none}
+.s10 .ghost{right:-1rem;bottom:-5rem;font-size:30vw;color:rgba(79,70,229,.05)}
+.s10 .top{display:grid;grid-template-columns:1.3fr 1fr;gap:4rem;align-items:end}
+.s10 .kicker{color:#4f46e5}
+.s10 h2{font-family:var(--serif);font-weight:800;font-size:clamp(3.4rem,9vw,9rem);line-height:.86;letter-spacing:-.05em;margin-top:1.4rem}
+.s10 h2 em{font-weight:300;color:#4f46e5}
+.s10 .deck{color:#4a4a68}
+.s10 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8rem;margin-top:4rem}
+.pcard{border:1px solid #e3e3f0;border-radius:22px;padding:2.2rem;background:#fff;box-shadow:0 1px 2px rgba(20,20,43,.04),0 20px 50px -20px rgba(79,70,229,.18);display:flex;flex-direction:column;transition:transform .4s,box-shadow .4s}
+.pcard:hover{transform:translateY(-6px);box-shadow:0 30px 60px -20px rgba(79,70,229,.3)}
+.pcard.feat{background:#14142b;color:#fff;border-color:#14142b}
+.pcard .pill{align-self:flex-start;background:#eef0ff;color:#4f46e5;font-weight:700;font-size:1rem;padding:.35rem .9rem;border-radius:999px;letter-spacing:.04em}
+.pcard.feat .pill{background:#4f46e5;color:#fff}
+.pcard h3{font-family:var(--serif);font-weight:600;font-size:2.3rem;letter-spacing:-.02em;margin:1.2rem 0 .3rem}
+.pcard .sub{color:#6b6b88;font-size:1.1rem}
+.pcard.feat .sub{color:#b4b4d4}
+.pcard ul{list-style:none;margin-top:1.6rem;display:flex;flex-direction:column;gap:.9rem}
+.pcard li{display:grid;grid-template-columns:28px 1fr;gap:.8rem;font-size:1.1rem;line-height:1.45}
+.pcard li svg{width:24px;height:24px;margin-top:.12rem;color:#4f46e5}
+.pcard.feat li svg{color:#a5b4fc}
+.s10 .final{margin-top:4.5rem;display:grid;grid-template-columns:auto 1fr;gap:2.4rem;align-items:start;border-top:1px solid #e3e3f0;padding-top:3rem}
+.s10 .final .mark{font-family:var(--serif);font-size:9rem;line-height:.6;color:#4f46e5;font-weight:800}
+.s10 .final q{font-family:var(--serif);font-size:clamp(1.8rem,3.4vw,3.2rem);line-height:1.15;font-weight:400;letter-spacing:-.02em;quotes:none}
+.s10 .final cite{display:block;margin-top:1.2rem;font-style:normal;font-size:1rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#4f46e5}
+.colophon{margin-top:4rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:1rem;color:#6b6b88;border-top:1px solid #e3e3f0;padding-top:1.4rem}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:900px){
+  .wrap{padding:5rem 1.6rem}
+  .s1 .contents,.s2 .stats,.s3 .grid,.s4 .versus,.s5 .callouts,.s6 .pods,.s6 .ranks,.s7 .cols,.s8 .grid,.s9 .grid,.s10 .top,.s10 .cards{grid-template-columns:1fr}
+  .s4 .head{grid-template-columns:1fr}
+  .stamp{width:200px;height:200px}.stamp .core{inset:42px}.stamp .core b{font-size:2rem}
+  .s2 .stat,.s2 .stat:nth-child(2),.s2 .stat:last-child{padding:2rem 0;border-right:none;border-bottom:1px solid rgba(121,192,255,.15)}
+  .s4 .col+.col{border-left:none;border-top:1px solid rgba(251,113,133,.35)}
+  .s5 .body{columns:1}
+  .s7 .mast{grid-template-columns:1fr}.s7 .mast span,.s7 .mast span:last-child{text-align:center}
+  .s7 .cols article,.s7 .cols article:first-child,.s7 .cols article:last-child{padding:1.6rem 0}
+  .s7 .cols article+article{border-left:none;border-top:1px solid #141210}
+  .banner{grid-template-columns:1fr}
+  .bar{grid-template-columns:1fr}
+  .s10 .final{grid-template-columns:1fr}
+  .s3 .side{box-shadow:10px 10px 0 #a14a1c}
+  .term pre{font-size:1rem}
+}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.floor,.stamp svg,.cursor{animation:none}}
+</style>
+</head>
+<body>
+
+<!-- ================= 01 COVER ================= -->
+<section class="spread s1">
+  <div class="wrap">
+    <div class="topbar rv"><span>The Head-to-Head Issue</span><span>September 2026</span><span>No Hype Edition</span></div>
+    <p class="kicker rv" style="--d:1">Four Tests · Three Frontier Models · One Verdict</p>
+    <h1 class="rv" style="--d:2"><span class="blk">Which Model</span><span class="blk"><em>Should</em> You</span><span class="blk">Be Using?</span></h1>
+    <div class="orn rv" style="--d:3"><b>✦</b></div>
+    <div class="trio rv" style="--d:3">Sonnet 5.5 <i>◆</i> Opus 5.5 <i>◆</i> GPT-6 Astra</div>
+    <p class="deck rv" style="--d:4">An explainer video in pure JavaScript. A boutique-hotel landing page. A sci-fi travel dashboard. A tank game built from scratch. Same prompts, three models, and an answer that isn't always obvious.</p>
+    <p class="attrib rv" style="--d:5"><strong>Source</strong>Adapted from the video “I Tested Sonnet 5.5 vs Opus 5.5 vs GPT 6 Astra (No Hype)” · Chase AI</p>
+    <div class="contents rv" style="--d:6">
+      <div><b>I</b>The benchmarks &amp; the bill</div>
+      <div><b>III</b>The explainer-video test</div>
+      <div><b>IV–VI</b>Hotels, globes &amp; tanks</div>
+      <div><b>VIII</b>The verdict</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 02 MIDNIGHT ================= -->
+<section class="spread s2">
+  <div class="ghost">I</div>
+  <div class="wrap">
+    <p class="kicker rv">I · The Scoreboard Before the Game</p>
+    <h2 class="rv" style="--d:1">So Much for the AI <span>Slowdown.</span></h2>
+    <p class="deck rv" style="--d:2">In a matter of weeks, GPT-6 Astra, Claude Opus 5.5 and now Sonnet 5.5 all shipped. On paper the pecking order looks settled. It isn't: the smallest model in the lineup is the one with the upset.</p>
+    <div class="stats">
+      <div class="stat rv" style="--d:3"><div class="n">4<small>/5</small></div><p><b>Benchmarks won by Opus 5.5</b> among the five where data exists for all three models.</p></div>
+      <div class="stat rv" style="--d:4"><div class="n">#1</div><p><b>Sonnet 5.5 on Terminal Bench 4.</b> The smallest of the three beats them all there.</p></div>
+      <div class="stat rv" style="--d:5"><div class="n">3</div><p><b>Frontier releases in a few weeks.</b> Astra, Opus 5.5, Sonnet 5.5.</p></div>
+    </div>
+    <blockquote class="rv" style="--d:6">“You might think that these flagship models are going to crush the smaller competition, but that isn't always the case. Sonnet 5.5 actually posts better benchmarks at agentic coding than its bigger brother, Opus.”<cite>From the opening</cite></blockquote>
+  </div>
+</section>
+
+<!-- ================= 03 WARM EDITORIAL ================= -->
+<section class="spread s3">
+  <div class="ghost">II</div>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <p class="kicker rv">II · The Price Tag</p>
+        <h2 class="rv" style="--d:1">Half the Price. <em>Five Times</em> the Bill.</h2>
+        <p class="deck rv" style="--d:2">Before a single test runs, the rate cards tell their own story. Sonnet is the bargain of the lineup, and Astra, the flagship of the GPT family, is unsurprisingly the most expensive.</p>
+        <div class="bars rv" style="--d:3">
+          <div class="bar"><div class="lbl">Sonnet 5.5<small>The baseline</small></div><div class="track"><div class="fill accent" style="--w:20%">1×</div></div></div>
+          <div class="bar"><div class="lbl">Opus 5.5<small>Twice Sonnet</small></div><div class="track"><div class="fill" style="--w:40%">2×</div></div></div>
+          <div class="bar accent"><div class="lbl">GPT-6 Astra<small>The flagship</small></div><div class="track"><div class="fill" style="--w:100%">5×</div></div></div>
+        </div>
+        <p class="pq rv" style="--d:4">“When we're taking a look at the results we see today, keep in mind these price points.”</p>
+      </div>
+      <aside class="side rv" style="--d:3">
+        <p class="kicker">Rate Card · Sonnet 5.5</p>
+        <div class="price"><span>$2</span> / $10</div>
+        <p>Input / output pricing quoted in the video. That's half the cost of Opus.</p>
+        <hr>
+        <p class="kicker">The Multiplier</p>
+        <div class="price" style="font-size:clamp(3.5rem,6vw,5.5rem)"><span>5×</span></div>
+        <p>Astra's cost relative to Sonnet. Keep that number in your head. It matters once the token counts come in.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 04 ROSE STAMP ================= -->
+<section class="spread s4">
+  <div class="ghost">III</div>
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <p class="kicker rv">III · Test 01 · JavaScript Animation</p>
+        <h2 class="rv" style="--d:1">Pure Code, <em>No Camera</em></h2>
+        <p class="deck rv" style="--d:2">One prompt for all three: build, in JavaScript, a 15-second hand-drawn-style explainer video on how sub-agents in Claude work. No video generation. No image generation. Just code.</p>
+      </div>
+      <div class="stamp rv" style="--d:3" aria-label="Edge: Opus 5.5">
+        <svg viewBox="0 0 260 260"><defs><path id="circ" d="M130,130 m-104,0 a104,104 0 1,1 208,0 a104,104 0 1,1 -208,0"/></defs>
+          <circle cx="130" cy="130" r="126" fill="none" stroke="currentColor" stroke-width="3"/>
+          <circle cx="130" cy="130" r="84" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 5"/>
+          <text font-family="Inter" font-weight="800" font-size="17" letter-spacing="5" fill="currentColor"><textPath href="#circ">TEST 01 · THE EDGE GOES TO · TEST 01 · THE EDGE GOES TO ·</textPath></text>
+        </svg>
+        <div class="core"><b>OPUS</b><span>5.5</span></div>
+      </div>
+    </div>
+    <div class="versus">
+      <div class="col rv" style="--d:4">
+        <h3>Opus 5.5 &amp; Sonnet 5.5</h3>
+        <p class="q">“Very quickly paced, almost to a fault.”</p>
+        <p>Every beat of the audio had something happening on screen. Sometimes it moved so fast it was hard to see what was going on. The two Anthropic takes looked alike, but Opus edged ahead on first pass.</p>
+        <div class="tok"><b>~300K</b><span>tokens each</span></div>
+      </div>
+      <div class="col rv" style="--d:5">
+        <h3>GPT-6 Astra</h3>
+        <p class="q">“Really slow and pretty boring, actually, compared to the first two.”</p>
+        <p>Not nearly as dynamic, and the audio wasn't as impressive either. The one thing in Astra's favor was efficiency. It finished the job on a fraction of the budget.</p>
+        <div class="tok"><b>~70K</b><span>tokens</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 05 ACADEMIC NAVY ================= -->
+<section class="spread s5">
+  <div class="ghost">IV</div>
+  <div class="wrap">
+    <p class="kicker rv">IV · Test 02 · Front-End Design</p>
+    <h2 class="rv" style="--d:1">Checking In at <b>Dune House</b></h2>
+    <p class="deck rv" style="--d:2">The brief: a landing page for a boutique hotel. There was little direction, so taste had to do the work.</p>
+    <div class="body rv" style="--d:3">
+      <p>Anthropic's models started with a handicap. Unlike GPT-6 Astra, they can't create their own images, so Sonnet 5.5 and Opus 5.5 were told in their prompt that they had access to the Higgsfield API. All three reached for the same move: a giant hero image. “Anthropic lately loves these really big hero images,” he observes, and it isn't meant as a complaint.</p>
+      <p><strong>Sonnet 5.5</strong> built something that read like a real hotel site, with images front and center and a footer that echoed the hero. The font choice didn't land, and the check-availability pill was, bluntly, “really ugly.” Still, he called it pretty solid for a prompt that didn't give it much direction.</p>
+      <p><strong>Opus 5.5</strong> took creative liberties. The “Dune House” wordmark sits transparent and cut off. There's a small logo that reacts to the mouse, a glassmorphism availability panel and an orange-to-black palette. Numbers tick upward on scroll, a banner pauses on hover, the photos come cropped, and each room has its own date availability. His verdict on the booking widget next to Sonnet's: “This looks ugly as hell. This is much better.”</p>
+      <p><strong>GPT-6 Astra</strong> had his favorite hero section of the three, and the cleanest page overall. He liked it more than Sonnet's, but it didn't destroy Sonnet. It was on par with Opus, and which one you prefer comes down to taste.</p>
+    </div>
+    <div class="callouts">
+      <div class="callout rv" style="--d:4"><p class="kicker">Winner</p><div class="big">Opus 5.5</div><p>More unique design decisions, with Sonnet and Astra “not far behind.”</p></div>
+      <div class="callout rv" style="--d:5"><p class="kicker">Token Usage</p><div class="big">~200K <span style="font-size:.5em;color:#d4af6e">vs</span> ~125K</div><p>Sonnet &amp; Opus vs. Astra.</p></div>
+      <div class="callout q rv" style="--d:6"><p class="kicker">The Line</p><p>“If this is what AI slop looks like these days, hey, we're not in a bad spot.”</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 06 NEON ================= -->
+<section class="spread s6">
+  <div class="floor"></div>
+  <div class="ghost">V</div>
+  <div class="wrap">
+    <p class="kicker rv">V · Test 03 · Let It Go Wild</p>
+    <h2 class="rv" style="--d:1">Form <i>over</i><br>Function</h2>
+    <p class="deck rv" style="--d:2">The prompt was a 3D travel dashboard that looks like something out of a sci-fi film, with plenty of leeway (and Higgsfield access for the Anthropic pair). Two models went for spectacle. One built something you could actually ship.</p>
+    <div class="pods">
+      <div class="pod rv" style="--d:3"><h3>Sonnet 5.5</h3><span class="tag">&gt; status: off_the_rails</span><p><q>It went pretty crazy. I actually have no idea what I'm looking at.</q> A zoomable globe of flights, generated city imagery, Paris rundowns, Tokyo-to-Bali fares, even a music bed.</p></div>
+      <div class="pod rv" style="--d:4"><h3>Opus 5.5</h3><span class="tag">&gt; press [H] to flatten_globe</span><p>Fares from JFK, flight times, switchable hubs (LAX, LHR) and a key that “redraws the world around my departure city,” laying the globe flat. <q>I don't even know what that means, but okay, that's kind of sick.</q></p></div>
+      <div class="pod rv" style="--d:5"><h3>GPT-6 Astra</h3><span class="tag">&gt; mode: practical</span><p>Much more subdued. You pick departure, dates, number of travelers and cabin, then hit Explore for imagery and details. <q>You could definitely turn this into something you would actually use.</q></p></div>
+    </div>
+    <div class="ranks">
+      <div class="rank rv" style="--d:6"><p class="kicker">Overall · Function</p><ol><li><b>01</b>GPT-6 Astra</li></ol></div>
+      <div class="rank rv" style="--d:7"><p class="kicker">Visuals Only</p><ol><li><b>01</b>Opus 5.5</li><li><b>02</b>GPT-6 Astra</li><li><b>03</b>Sonnet 5.5</li></ol></div>
+      <div class="rank quote rv" style="--d:8"><p class="kicker">Tokens · ~300K vs half that</p><p>“It's not necessarily Opus or Sonnet's fault.” Given that prompt, the spectacle was a fair reading of the brief.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 07 BROADSHEET ================= -->
+<section class="spread s7">
+  <div class="wrap">
+    <div class="mast rv"><span>Test 04 · Game Design</span><div class="t">The Benchmark Gazette</div><span>Three.js Edition</span></div>
+    <p class="kicker rv" style="--d:1">VI · World of Tanks, Built From Scratch</p>
+    <h2 class="rv" style="--d:2">Stalemate on the <em>Browser</em> Battlefield</h2>
+    <p class="deck rv" style="--d:3">Each model was asked to build its own version of World of Tanks in Three.js, running in a web browser. There were no asset packs. Everything was built from scratch. And the tester lost nearly every match.</p>
+    <div class="banner rv" style="--d:4"><b>750,000</b><p><strong>Tokens · Sonnet 5.5</strong>The priciest single run of the shootout. Sonnet used the most tokens and took the longest to finish. Opus used 500K; Astra used about 300K.</p></div>
+    <div class="cols">
+      <article class="rv" style="--d:5"><h3>Sonnet Fields a Tank Destroyer</h3><span class="by">Sonnet 5.5 · 750K tokens</span><p>A loading screen, a roster of tanks with stats for each and a TD7 tank destroyer to pick. Bots spawn, ammo types switch on hotkeys, the scope zooms, reload timers tick and repairs are required.</p><p>“I got destroyed,” he admits, “but this actually looked like it was working pretty well.”</p></article>
+      <article class="rv" style="--d:6"><h3>Opus Delivers a Near-Twin</h3><span class="by">Opus 5.5 · 500K tokens</span><p>He picked the heavy tank this time. There were the same stat panels, with one minor UI overlap in the bottom-right corner. It had three round types, zoom, and a very similar map.</p><p>“Second time was not a charm, but it worked pretty much identically to Sonnet.”</p></article>
+      <article class="rv" style="--d:7"><h3>Astra Calculates the Ricochet</h3><span class="by">GPT-6 Astra · ~300K tokens</span><p>There were four classes: light, medium, heavy and tank destroyer. It showed fewer stats and a simpler interface, but a better map and a UI he preferred. It also reads the angle of every hit and tells you when a shot ricochets.</p><p>A teammate stole the kill. “I'll take it.”</p></article>
+    </div>
+    <div class="verdict rv" style="--d:8"><q>“So honestly, I would call it a tie.”</q><span>Slight edge to Astra on tokens</span></div>
+  </div>
+</section>
+
+<!-- ================= 08 TERMINAL ================= -->
+<section class="spread s8">
+  <div class="ghost">VII</div>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <p class="kicker rv">VII · $ cat receipts.log</p>
+        <h2 class="rv" style="--d:1">The Token Ledger <b>Astra Talks Less.</b></h2>
+        <p class="deck rv" style="--d:2">Across all four tests, the Anthropic pair spent roughly the same amount every time. Astra spent a half or less, and sometimes far less.</p>
+        <p class="note rv" style="--d:3">“Opus and Sonnet, again, they seem to hover around the same token cost every time.”</p>
+      </div>
+      <div class="term rv" style="--d:2">
+        <div class="chrome"><i></i><i></i><i></i><span>~/shootout — tokens --compare</span></div>
+<pre><span class="dim">$</span> tokens --compare --all-tests
+<span class="dim">──────────────────────────────────────────────────</span>
+<span class="hi">TEST                SONNET 5.5  OPUS 5.5  ASTRA</span>
+<span class="dim">──────────────────────────────────────────────────</span>
+01 js-explainer       ~300K      ~300K    <span class="am">~70K</span>
+02 dune-house         ~200K      ~200K    <span class="am">~125K</span>
+03 scifi-dashboard    ~300K      ~300K    <span class="am">~150K</span>
+04 tanks-threejs       <span class="hi">750K</span>       500K    <span class="am">~300K</span>
+<span class="dim">──────────────────────────────────────────────────</span>
+<span class="hi">APPROX TOTAL         ~1.55M     ~1.30M   <span class="am">~645K</span></span>
+
+<span class="dim"># figures as reported on camera; "~" = approximate</span>
+<span class="dim"># note: astra costs 5× sonnet per token</span>
+<span class="dim">$</span> <span class="cursor"></span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 09 GOLD ================= -->
+<section class="spread s9">
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <p class="kicker rv">VIII · The Verdict</p>
+        <div class="hero rv" style="--d:1">2<small>/4</small></div>
+        <p class="herocap rv" style="--d:2">Tests won outright by <b>Opus 5.5</b>. Add a tie in the tank game and top marks for visuals on the dashboard, and it's the overall winner.</p>
+        <blockquote class="rv" style="--d:3">“Overall, when we take all these benchmarks into account, I think the winner here is Opus 5.5. But the other two models, Astra and Sonnet, are not far behind.”</blockquote>
+      </div>
+      <div class="rv" style="--d:3">
+        <div class="card"><div class="no">01</div><div><h4>JS Explainer Video</h4><p>Opus, closely followed by Sonnet</p></div><div class="badge fill"><span>Opus</span></div></div>
+        <div class="card"><div class="no">02</div><div><h4>Dune House Landing Page</h4><p>Opus. No huge drop-off to the others</p></div><div class="badge fill"><span>Opus</span></div></div>
+        <div class="card"><div class="no">03</div><div><h4>Sci-Fi Travel Dashboard</h4><p>Astra for function; Opus for visuals</p></div><div class="badge split"><span>Astra</span><span>Opus</span></div></div>
+        <div class="card"><div class="no">04</div><div><h4>World of Tanks in Three.js</h4><p>Basically the same product, three times over</p></div><div class="badge"><span>Tie</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 10 CLEAN PRODUCT ================= -->
+<section class="spread s10">
+  <div class="ghost">IX</div>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <p class="kicker rv">IX · The Buyer's Guide</p>
+        <h2 class="rv" style="--d:1">You Have <em>Options.</em></h2>
+      </div>
+      <p class="deck rv" style="--d:2">This is good news if you're an Anthropic user, and it's good news for everyone else too. As he puts it: “I don't think we'd be getting this quality of outputs if OpenAI wasn't forcing Anthropic to be better.”</p>
+    </div>
+    <div class="cards">
+      <div class="pcard feat rv" style="--d:3">
+        <span class="pill">The Winner</span>
+        <h3>Opus 5.5</h3>
+        <p class="sub">For when taste is the whole job.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg>Won 4 of 5 shared benchmarks</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg>Took the explainer and Dune House tests</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg>“More unique design decisions”</li>
+        </ul>
+      </div>
+      <div class="pcard rv" style="--d:4">
+        <span class="pill">The Bargain</span>
+        <h3>Sonnet 5.5</h3>
+        <p class="sub">Half the price of Opus. Not far behind.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 2v20M17 6H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>$2 input · $10 output</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 17l6-6 4 4 6-8"/></svg>Top of Terminal Bench 4</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 19V5M5 12l7-7 7 7"/></svg>“A massive upgrade”: Sonnet 5 “was basically unusable”</li>
+        </ul>
+      </div>
+      <div class="pcard rv" style="--d:5">
+        <span class="pill">The Efficient One</span>
+        <h3>GPT-6 Astra</h3>
+        <p class="sub">Fewest tokens in every single test.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>~645K tokens total vs ~1.3M+</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>Most practical dashboard, cleanest hero</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 000-7.8z"/></svg>“I love Astra. I use it literally every day.”</li>
+        </ul>
+      </div>
+    </div>
+    <div class="final rv" style="--d:6">
+      <div class="mark">“</div>
+      <div><q>At the end of the day, you need to try these things out for yourself and see what works for you.</q><cite>The last word</cite></div>
+    </div>
+    <div class="colophon"><span>Source: “I Tested Sonnet 5.5 vs Opus 5.5 vs GPT 6 Astra (No Hype)” · Chase AI</span><span>All figures as reported in the video · Token counts approximate</span></div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var els=document.querySelectorAll('.rv');
+  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
+  },{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+  els.forEach(function(e){io.observe(e)});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sounds Too Simple, But One Client Pays $15K/Month — A Magazine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@300..800&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:18px;scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;font-size:1.15rem;line-height:1.6;background:#000;color:#111;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,svg{display:block;max-width:100%}
+.serif{font-family:'Fraunces',Georgia,serif}
+
+/* ---------- shared ---------- */
+.spread{min-height:100vh;position:relative;overflow:hidden;display:flex;align-items:center;padding:7rem 4rem}
+.wrap{max-width:1400px;width:100%;margin:0 auto;position:relative;z-index:3}
+.noise::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.22;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.noise.lite::before{mix-blend-mode:screen;opacity:.07}
+.kicker{font-family:'Inter';font-weight:700;font-size:1.1rem;letter-spacing:.3em;text-transform:uppercase;display:block;margin-bottom:1.6rem}
+.deck{font-size:1.4rem;line-height:1.5;font-weight:400;max-width:44rem}
+.big-num{position:absolute;font-family:'Fraunces',serif;font-weight:900;line-height:.75;pointer-events:none;z-index:1;user-select:none;font-size:clamp(16rem,38vw,42rem)}
+h1,h2,h3{font-family:'Fraunces',Georgia,serif;font-weight:700}
+
+/* motion */
+.fade{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+.fade.in{opacity:1;transform:none}
+.progress{position:fixed;top:0;left:0;height:4px;width:0;background:linear-gradient(90deg,#e11d48,#f5b83d,#22d3ee);z-index:99}
+
+/* ---------- 1 COVER ---------- */
+.s1{background:radial-gradient(ellipse at 50% 0%,#fbf5e4 0%,#f1e6c8 55%,#e4d4ac 100%);color:#2a1d10;text-align:center}
+.s1::after{content:"";position:absolute;inset:2rem;border:1px solid rgba(42,29,16,.35);outline:1px solid rgba(42,29,16,.35);outline-offset:6px;z-index:2;pointer-events:none}
+.s1 .mast{display:flex;justify-content:center;gap:2rem;align-items:center;font-weight:600;letter-spacing:.3em;text-transform:uppercase;font-size:1.1rem;color:#8a3b1c}
+.s1 .mast i{display:block;width:5rem;height:1px;background:#8a3b1c}
+.s1 h1{font-size:clamp(3rem,9.2vw,9rem);line-height:.9;letter-spacing:-.035em;font-weight:900;margin:2.4rem 0 2rem;font-variation-settings:"opsz" 144}
+.s1 h1 em{font-style:italic;font-weight:300;color:#8a3b1c;letter-spacing:-.02em}
+.s1 .price{display:inline-block;color:#fbf5e4;background:#2a1d10;padding:0 .25em;transform:rotate(-1.5deg)}
+.s1 .deck{margin:0 auto;font-family:'Fraunces';font-style:italic;font-weight:300;font-size:clamp(1.4rem,2.4vw,2rem);line-height:1.35;max-width:48rem}
+.orn{display:flex;align-items:center;justify-content:center;gap:1.2rem;margin:2.4rem auto;max-width:30rem;color:#8a3b1c}
+.orn b{flex:1;height:1px;background:currentColor}
+.orn span{font-size:1.6rem}
+.s1 .src{font-size:1.1rem;letter-spacing:.14em;text-transform:uppercase;font-weight:500;line-height:1.9;color:#5a4630}
+.s1 .src strong{font-weight:800;color:#2a1d10}
+.s1 .big-num{left:50%;top:50%;transform:translate(-50%,-50%);color:#8a3b1c;opacity:.06;font-size:clamp(20rem,50vw,56rem)}
+
+/* ---------- 2 MIDNIGHT ---------- */
+.s2{background:radial-gradient(circle at 85% 15%,rgba(56,120,255,.28),transparent 45%),radial-gradient(circle at 5% 95%,rgba(110,70,255,.2),transparent 45%),#0d1117;color:#e6edf3}
+.s2 .big-num{right:-2rem;top:-3rem;color:#58a6ff;opacity:.07}
+.s2 .kicker{color:#58a6ff}
+.s2 h2{font-size:clamp(3rem,8.4vw,8.6rem);line-height:.9;letter-spacing:-.04em;font-weight:800;margin-bottom:2.2rem;max-width:15ch}
+.s2 h2 em{font-weight:200;font-style:italic;color:#79b8ff}
+.s2 .deck{color:#aab7c6;margin-bottom:3.5rem}
+.s2 .deck b{color:#fff;font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(88,166,255,.35)}
+.stat{padding:2rem 1.8rem 0 0;border-right:1px solid rgba(88,166,255,.15)}
+.stat+.stat{padding-left:1.8rem}
+.stat:last-child{border-right:0}
+.stat .n{font-family:'Fraunces';font-weight:900;font-size:clamp(3rem,5.4vw,5.6rem);line-height:1;letter-spacing:-.03em;color:#fff;text-shadow:0 0 40px rgba(88,166,255,.55)}
+.stat .l{display:block;margin-top:.8rem;font-size:1.1rem;color:#8fa3ba;letter-spacing:.06em;text-transform:uppercase;font-weight:500}
+.s2 .grid2{display:grid;grid-template-columns:1.2fr 1fr;gap:4rem;margin-bottom:4rem;align-items:end}
+.s2 .nos{font-family:'Fraunces';font-weight:300;font-style:italic;font-size:clamp(1.6rem,2.4vw,2.2rem);line-height:1.3;color:#cfe3ff;border-left:3px solid #58a6ff;padding-left:1.6rem}
+
+/* ---------- 3 WARM EDITORIAL ---------- */
+.s3{background:#f6efdc;color:#2b2218;
+  background-image:linear-gradient(rgba(43,34,24,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(43,34,24,.07) 1px,transparent 1px);background-size:56px 56px}
+.s3 .big-num{left:-3rem;bottom:-6rem;color:#b4532a;opacity:.08}
+.s3 .layout{display:grid;grid-template-columns:1.7fr 1fr;gap:4rem;align-items:start}
+.s3 .kicker{color:#b4532a}
+.s3 h2{font-size:clamp(3rem,7.6vw,7.6rem);line-height:.92;letter-spacing:-.03em;font-weight:900;margin-bottom:2rem}
+.s3 h2 em{font-weight:300;font-style:italic;color:#b4532a}
+.s3 p{margin-bottom:1.3rem;max-width:42rem}
+.s3 .lede{font-size:1.4rem;line-height:1.5}
+.s3 blockquote{font-family:'Fraunces';font-style:italic;font-weight:400;font-size:clamp(1.7rem,2.8vw,2.6rem);line-height:1.2;margin:2.4rem 0;padding:1.6rem 0 1.6rem 2rem;border-left:6px solid #b4532a;max-width:42rem}
+.s3 aside{background:#1b140d;color:#f2e8d0;padding:2.6rem;position:relative;box-shadow:14px 14px 0 #b4532a}
+.s3 aside h3{font-size:2rem;font-weight:600;margin-bottom:1.4rem;color:#f5b17c}
+.s3 aside .who{padding:1.2rem 0;border-top:1px solid rgba(242,232,208,.2)}
+.s3 aside .who b{font-family:'Fraunces';font-size:1.6rem;font-weight:700;display:block}
+.s3 aside .who span{color:#cdbf9f}
+.s3 aside .who i{display:block;font-style:normal;font-size:1.1rem;letter-spacing:.12em;text-transform:uppercase;color:#f5b17c;margin-bottom:.2rem;font-weight:600}
+
+/* ---------- 4 ROSE ---------- */
+.s4{background:radial-gradient(circle at 15% 20%,rgba(225,29,72,.22),transparent 45%),radial-gradient(circle at 90% 90%,rgba(160,20,60,.25),transparent 40%),#150709;color:#fbe4e8}
+.s4 .big-num{right:1rem;bottom:-5rem;color:#e11d48;opacity:.09}
+.s4 .kicker{color:#fb7185}
+.s4 .top{display:grid;grid-template-columns:1.5fr 1fr;gap:3rem;align-items:center;margin-bottom:3.5rem}
+.s4 h2{font-size:clamp(3rem,8vw,8.2rem);line-height:.9;letter-spacing:-.04em;font-weight:900}
+.s4 h2 em{font-style:italic;font-weight:200;color:#fb7185}
+.stamp{width:min(100%,360px);justify-self:center;transform:rotate(-12deg);color:#fb7185;filter:drop-shadow(0 0 18px rgba(225,29,72,.5))}
+.stamp text{font-family:'Inter';font-weight:800;font-size:25px;letter-spacing:.22em;fill:currentColor}
+.stamp .mid{font-family:'Fraunces';font-weight:900;font-size:40px;letter-spacing:0}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:0;border:2px solid rgba(251,113,133,.5)}
+.cmp>div{padding:2.6rem}
+.cmp .bad{background:rgba(255,255,255,.03);border-right:2px solid rgba(251,113,133,.5)}
+.cmp .good{background:rgba(225,29,72,.18)}
+.cmp small{display:block;font-weight:700;letter-spacing:.24em;text-transform:uppercase;font-size:1.1rem;color:#fb7185;margin-bottom:1rem}
+.cmp .q{font-family:'Fraunces';font-weight:300;font-style:italic;font-size:clamp(1.6rem,2.6vw,2.4rem);line-height:1.1;margin-bottom:.6rem}
+.cmp .a{font-family:'Fraunces';font-weight:900;font-size:clamp(2.4rem,4.4vw,4.4rem);line-height:.95;letter-spacing:-.03em}
+.cmp .bad .a{color:#9a6a73;text-decoration:line-through;text-decoration-thickness:4px}
+.cmp .good .a{color:#fff}
+.s4 .notes{display:grid;grid-template-columns:repeat(3,1fr);gap:2.4rem;margin-top:3rem}
+.s4 .notes p{border-top:2px solid #e11d48;padding-top:1rem;color:#f2c7ce}
+.s4 .notes b{color:#fff}
+
+/* ---------- 5 TERMINAL ---------- */
+.s5{background:#020803;color:#39ff6a;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace}
+.s5::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(57,255,106,.045) 0 2px,transparent 2px 4px)}
+.s5::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at 50% 40%,rgba(57,255,106,.12),transparent 60%)}
+.s5 .big-num{left:50%;top:50%;transform:translate(-50%,-50%);color:#39ff6a;opacity:.045;font-family:'JetBrains Mono';font-weight:800}
+.s5 .kicker{font-family:'JetBrains Mono';color:#7dffa1}
+.s5 h2{font-family:'Fraunces';font-size:clamp(3rem,7.4vw,7.4rem);line-height:.92;letter-spacing:-.035em;font-weight:800;color:#d8ffe2;margin-bottom:2.4rem}
+.s5 h2 em{font-weight:200;font-style:italic;color:#39ff6a}
+.win{border:1px solid rgba(57,255,106,.55);background:rgba(0,12,3,.88);box-shadow:0 0 60px rgba(57,255,106,.15)}
+.win .bar{display:flex;align-items:center;gap:.6rem;padding:.9rem 1.2rem;border-bottom:1px solid rgba(57,255,106,.35);background:rgba(57,255,106,.07)}
+.win .bar i{width:14px;height:14px;border-radius:50%;display:block}
+.win .bar i:nth-child(1){background:#ff5f56}.win .bar i:nth-child(2){background:#ffbd2e}.win .bar i:nth-child(3){background:#27c93f}
+.win .bar span{margin-left:1rem;font-size:1.1rem;color:#7dffa1}
+.win .body{padding:2rem 2.2rem;font-size:1.15rem;line-height:1.75}
+.cmd{color:#d8ffe2;margin-bottom:.4rem}
+.cmd::before{content:"$ ";color:#39ff6a}
+.row{display:grid;grid-template-columns:5.5rem 14rem 1fr;gap:1.2rem;padding:.9rem 0;border-bottom:1px dashed rgba(57,255,106,.25)}
+.row .t{color:#ffbd2e;font-weight:600}
+.row .c{color:#d8ffe2;font-weight:600}
+.row .d{color:#8fe9a8}
+.row .d b{color:#fff;font-weight:600}
+.cursor{display:inline-block;width:.7em;height:1.2em;background:#39ff6a;vertical-align:text-bottom;animation:blink 1.05s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.s5 .tail{margin-top:1.6rem;color:#8fe9a8}
+.s5 .tail b{color:#fff}
+
+/* ---------- 6 ACADEMIC ---------- */
+.s6{background:radial-gradient(ellipse at 20% 0%,#16285a 0%,transparent 55%),#0a1230;color:#e8ecf7}
+.s6 .big-num{right:-1rem;top:50%;transform:translateY(-50%);color:#9fb4ff;opacity:.06}
+.s6 .kicker{color:#a9bbff}
+.s6 h2{font-size:clamp(3rem,7.6vw,7.8rem);line-height:.92;letter-spacing:-.03em;font-weight:300;margin-bottom:1rem}
+.s6 h2 b{font-weight:900;color:#fff}
+.s6 .deck{color:#b7c3e4;margin-bottom:3rem;font-style:italic;font-family:'Fraunces'}
+.cols{columns:2;column-gap:4rem;column-rule:1px solid rgba(169,187,255,.3)}
+.cols p{margin-bottom:1.2rem;text-align:justify;hyphens:auto;color:#d3dcf5}
+.cols p:first-child::first-letter{font-family:'Fraunces';font-weight:900;float:left;font-size:9.4rem;line-height:.74;padding:.5rem 1.2rem 0 0;color:#ffd479}
+.cols .call{break-inside:avoid;margin:1.6rem 0;padding:1.6rem 1.8rem;border:1px solid #ffd479;background:rgba(255,212,121,.07)}
+.cols .call h4{font-family:'Fraunces';font-size:1.5rem;font-weight:700;color:#ffd479;margin-bottom:.6rem}
+.cols .call p{margin:0;text-align:left;color:#f1f3fb}
+.steps{display:flex;gap:0;margin-top:3rem;border:1px solid rgba(169,187,255,.35)}
+.steps div{flex:1;padding:1.3rem 1.4rem;border-right:1px solid rgba(169,187,255,.35);font-size:1.1rem;color:#c3cdea}
+.steps div:last-child{border-right:0}
+.steps b{display:block;font-family:'Fraunces';font-size:1.6rem;color:#fff;margin-bottom:.2rem}
+
+/* ---------- 7 GOLD STAT ---------- */
+.s7{background:radial-gradient(circle at 50% 38%,rgba(245,184,61,.26),transparent 50%),#120d05;color:#f6e8c8;text-align:center}
+.s7 .big-num{left:50%;bottom:-8rem;transform:translateX(-50%);color:#f5b83d;opacity:.06}
+.s7 .kicker{color:#f5b83d}
+.hero-stat{font-family:'Fraunces';font-weight:900;font-size:clamp(7rem,26vw,25rem);line-height:.8;letter-spacing:-.06em;
+  background:linear-gradient(180deg,#ffe9a8 0%,#f5b83d 45%,#9a6410 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 50px rgba(245,184,61,.35))}
+.hero-stat sub{font-size:.22em;font-weight:300;font-style:italic;letter-spacing:0;vertical-align:baseline;-webkit-text-fill-color:#f6e8c8}
+.s7 h2{font-size:clamp(2rem,4.2vw,4rem);font-weight:300;font-style:italic;margin:1.6rem auto 3rem;max-width:30ch;line-height:1.1}
+.s7 h2 b{font-weight:800;font-style:normal;color:#f5b83d}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;max-width:1000px;margin:0 auto 3rem}
+.tier{padding:1.8rem 1.2rem;border:1px solid rgba(245,184,61,.4);position:relative}
+.tier small{display:block;font-size:1.1rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:#c9a95f}
+.tier .p{font-family:'Fraunces';font-weight:800;font-size:3.4rem;line-height:1.1}
+.tier.hit{background:linear-gradient(180deg,#f5b83d,#c88414);color:#1a1004;border-color:#f5b83d;transform:translateY(-14px);box-shadow:0 20px 60px rgba(245,184,61,.35)}
+.tier.hit small{color:#3a2506}
+.tier.ghost{opacity:.8;border-style:dashed}
+.tier em{position:absolute;top:-1.1rem;left:50%;transform:translateX(-50%);background:#120d05;color:#f5b83d;border:1px solid #f5b83d;padding:.1rem 1rem;font-style:normal;font-size:1.1rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap}
+.s7 .say{max-width:52rem;margin:0 auto;font-size:1.3rem;color:#ddcba3}
+.s7 .say b{color:#fff2cc}
+
+/* ---------- 8 BROADSHEET ---------- */
+.s8{background:#ece3cc;color:#1b1710}
+.s8 .big-num{right:3rem;top:6rem;color:#1b1710;opacity:.05}
+.paper{border-top:6px double #1b1710;border-bottom:6px double #1b1710;padding:1.4rem 0 2.4rem;position:relative}
+.mh{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;border-bottom:1px solid #1b1710;padding-bottom:1rem;margin-bottom:1.6rem;font-size:1.1rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase}
+.mh .kicker{margin:0;color:#b3111f}
+.s8 h2{font-size:clamp(3rem,9vw,9.4rem);line-height:.86;letter-spacing:-.045em;font-weight:900;text-align:center;margin-bottom:1.6rem;font-variation-settings:"opsz" 144}
+.s8 h2 em{font-weight:400;font-style:italic;color:#b3111f}
+.banner{background:#b3111f;color:#fff3dc;display:flex;justify-content:space-around;align-items:center;gap:1rem;flex-wrap:wrap;padding:1.2rem 1.6rem;margin-bottom:2rem;text-align:center}
+.banner div{font-family:'Fraunces';font-weight:900;font-size:clamp(2rem,4vw,3.8rem);line-height:1}
+.banner span{display:block;font-family:'Inter';font-size:1.1rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-top:.3rem}
+.banner .arr{font-size:clamp(2rem,4vw,3.8rem);font-weight:300}
+.paper .cols{columns:3;column-rule:1px solid #1b1710;column-gap:2.6rem}
+.paper .cols p{color:#1b1710;text-align:justify;font-size:1.12rem}
+.paper .cols p:first-child::first-letter{all:unset}
+.paper .cols h3{font-size:1.9rem;line-height:1.05;margin:0 0 .8rem;break-after:avoid}
+.paper .cols blockquote{break-inside:avoid;font-family:'Fraunces';font-style:italic;font-weight:600;font-size:1.7rem;line-height:1.15;border-top:3px solid #1b1710;border-bottom:3px solid #1b1710;padding:1rem 0;margin:1.2rem 0}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:0;border:2px solid #1b1710;margin:1.2rem 0;break-inside:avoid}
+.compare div{padding:1rem;text-align:center}
+.compare div+div{border-left:2px solid #1b1710;background:#1b1710;color:#ece3cc}
+.compare b{display:block;font-family:'Fraunces';font-size:2.2rem;line-height:1}
+.compare span{font-size:1.1rem;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+
+/* ---------- 9 CLEAN PRODUCT ---------- */
+.s9{background:#fff;color:#0f1226;background-image:radial-gradient(circle at 95% 0%,rgba(99,102,241,.14),transparent 40%),radial-gradient(rgba(99,102,241,.1) 1.5px,transparent 1.5px);background-size:auto,28px 28px}
+.s9 .big-num{left:-2rem;top:-4rem;color:#6366f1;opacity:.07}
+.s9 .layout{display:grid;grid-template-columns:1.1fr 1fr;gap:4.5rem;align-items:center}
+.s9 .kicker{color:#4f46e5}
+.s9 h2{font-size:clamp(3rem,7vw,7rem);line-height:.94;letter-spacing:-.035em;font-weight:800;margin-bottom:1.4rem}
+.s9 h2 em{font-weight:300;font-style:italic;color:#4f46e5}
+.s9 .deck{color:#4b5170;margin-bottom:2.4rem}
+.feat{list-style:none}
+.feat li{display:grid;grid-template-columns:3.4rem 1fr;gap:1.2rem;padding:1.1rem 0;border-top:1px solid #e3e5f5}
+.feat .ic{width:3.4rem;height:3.4rem;border-radius:14px;background:#eef0ff;color:#4f46e5;display:grid;place-items:center;font-family:'Fraunces';font-weight:800;font-size:1.5rem}
+.feat b{font-size:1.25rem;display:block;color:#0f1226}
+.feat span{color:#4b5170}
+.card{background:#fff;border-radius:28px;padding:2.4rem;box-shadow:0 30px 80px rgba(79,70,229,.22),0 0 0 1px #e3e5f5;position:relative}
+.card .tag{display:inline-block;background:#eef0ff;color:#4f46e5;font-weight:700;font-size:1.1rem;letter-spacing:.14em;text-transform:uppercase;padding:.35rem .9rem;border-radius:99px;margin-bottom:1.4rem}
+.card h3{font-size:2.4rem;line-height:1;margin-bottom:.5rem}
+.card .sub{color:#4b5170;margin-bottom:1.6rem}
+.mail{display:flex;align-items:center;gap:1rem;padding:.8rem 1.1rem;border:1px solid #e3e5f5;border-radius:12px;margin-bottom:.7rem;font-weight:500}
+.mail::before{content:"✉";color:#4f46e5;font-size:1.3rem}
+.mail em{margin-left:auto;font-style:normal;color:#10b981;font-weight:700;font-size:1.1rem}
+.merge{margin:1.2rem 0 0;padding:1.3rem 1.5rem;border-radius:16px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;font-weight:600}
+.merge b{font-family:'Fraunces';font-size:1.8rem;display:block;line-height:1.1}
+.s9 .prompt{margin-top:2.4rem;padding:1.6rem 1.8rem;border-radius:18px;background:#0f1226;color:#e8eaff;font-family:'Fraunces';font-style:italic;font-size:1.35rem;line-height:1.35}
+.s9 .prompt small{display:block;font-family:'Inter';font-style:normal;font-weight:700;letter-spacing:.2em;font-size:1.1rem;text-transform:uppercase;color:#a5b4fc;margin-bottom:.5rem}
+
+/* ---------- 10 NEON CLOSER ---------- */
+.s10{background:radial-gradient(ellipse at 50% 100%,rgba(0,255,200,.22),transparent 55%),radial-gradient(circle at 80% 10%,rgba(255,0,200,.16),transparent 40%),#04060c;color:#d9fff6;perspective:1000px}
+.s10 .floor{position:absolute;left:-30%;right:-30%;bottom:-10%;height:55%;z-index:1;pointer-events:none;transform:perspective(520px) rotateX(68deg);transform-origin:50% 100%;
+  background-image:linear-gradient(rgba(0,255,200,.55) 2px,transparent 2px),linear-gradient(90deg,rgba(0,255,200,.55) 2px,transparent 2px);background-size:70px 70px;
+  -webkit-mask-image:linear-gradient(0deg,#000 0%,transparent 90%);mask-image:linear-gradient(0deg,#000 0%,transparent 90%);animation:drift 3s linear infinite}
+@keyframes drift{to{background-position:0 70px}}
+.s10 .big-num{left:1rem;top:-3rem;color:#00ffc8;opacity:.07}
+.s10 .kicker{color:#00ffc8;text-shadow:0 0 14px #00ffc8}
+.s10 h2{font-size:clamp(3rem,8.4vw,8.8rem);line-height:.9;letter-spacing:-.04em;font-weight:900;margin-bottom:2.4rem;max-width:16ch;text-shadow:0 0 40px rgba(0,255,200,.4)}
+.s10 h2 em{font-style:italic;font-weight:200;color:#00ffc8;text-shadow:0 0 30px #00ffc8}
+.s10 .grid3{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:1.6rem;margin-bottom:3rem}
+.neon{border:1px solid #00ffc8;padding:2rem;background:rgba(0,20,18,.65);box-shadow:0 0 28px rgba(0,255,200,.25),inset 0 0 28px rgba(0,255,200,.07)}
+.neon.pink{border-color:#ff2bd6;box-shadow:0 0 28px rgba(255,43,214,.28),inset 0 0 28px rgba(255,43,214,.07);background:rgba(25,0,22,.6)}
+.neon .n{font-family:'Fraunces';font-weight:900;font-size:clamp(3.4rem,6vw,6.4rem);line-height:.95;letter-spacing:-.03em;color:#fff;text-shadow:0 0 24px #00ffc8}
+.neon.pink .n{text-shadow:0 0 24px #ff2bd6}
+.neon p{margin-top:.8rem;color:#b8f5e8}
+.neon.pink p{color:#ffc4f3}
+.finale{display:flex;justify-content:space-between;align-items:flex-end;gap:3rem;flex-wrap:wrap;position:relative;z-index:3}
+.finale q{font-family:'Fraunces';font-style:italic;font-weight:300;font-size:clamp(1.8rem,3.2vw,3rem);line-height:1.15;max-width:30ch;quotes:none}
+.finale q b{font-weight:800;color:#00ffc8}
+.finale .find{font-size:1.2rem;line-height:1.7;color:#b8f5e8;border-left:3px solid #ff2bd6;padding-left:1.4rem}
+.finale .find b{color:#fff}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .spread{padding:5rem 1.6rem}
+  .s1::after{inset:.8rem}
+  .stats,.s2 .grid2,.s3 .layout,.s4 .top,.cmp,.s4 .notes,.s9 .layout,.s10 .grid3,.tiers{grid-template-columns:1fr}
+  .stat{border-right:0;border-bottom:1px solid rgba(88,166,255,.15);padding:1.4rem 0}
+  .stat+.stat{padding-left:0}
+  .cmp .bad{border-right:0;border-bottom:2px solid rgba(251,113,133,.5)}
+  .cols,.paper .cols{columns:1}
+  .steps{flex-direction:column}
+  .steps div{border-right:0;border-bottom:1px solid rgba(169,187,255,.35)}
+  .row{grid-template-columns:1fr;gap:.2rem}
+  .tier.hit{transform:none}
+  .s3 aside{box-shadow:8px 8px 0 #b4532a}
+  .stamp{width:240px}
+  .s3 .layout,.s9 .layout{gap:2.5rem}
+}
+@media (prefers-reduced-motion:reduce){.fade{transition:none;opacity:1;transform:none}.cursor,.s10 .floor{animation:none}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<!-- ============ 1 · COVER ============ -->
+<section class="spread s1 noise" id="cover">
+  <div class="big-num">$</div>
+  <div class="wrap">
+    <div class="mast fade"><i></i><span>The Interview Issue</span><i></i></div>
+    <h1 class="fade" style="--d:.1s">Sounds Too Simple, <em>But</em> One Client Pays <span class="price">$15K</span>/Month</h1>
+    <p class="deck fade" style="--d:.25s">Three college students, a treadmill epiphany, and one text message to every contact in their phones.</p>
+    <div class="orn fade" style="--d:.35s"><b></b><span>❦</span><b></b></div>
+    <p class="src fade" style="--d:.45s">Source &mdash; <strong>“Sounds Too Simple, But One Client Pays $15K/Month”</strong><br>Interview with James, Brendan &amp; Carter of Certified AI Partners<br>Ten stories &middot; Scroll to read</p>
+  </div>
+</section>
+
+<!-- ============ 2 · MIDNIGHT ============ -->
+<section class="spread s2 noise lite" id="setup">
+  <div class="big-num">I</div>
+  <div class="wrap">
+    <span class="kicker fade">01 &mdash; The Setup</span>
+    <h2 class="fade" style="--d:.1s">A treadmill. A phone call. <em>Every contact.</em></h2>
+    <div class="grid2">
+      <p class="deck fade" style="--d:.2s">Four months ago, James was on a treadmill listening to a podcast episode &mdash; and <b>an idea hit him</b>. He called Brendan, and they texted every single contact in their phones asking for advice. One of those texts turned into a <b>$30 million construction company</b> paying them $15,000 a month.</p>
+      <p class="nos fade" style="--d:.3s">No office, no employees, no rich uncle, no connections &mdash; just college students.</p>
+    </div>
+    <div class="stats">
+      <div class="stat fade" style="--d:.1s"><div class="n">21–23</div><span class="l">Ages of the founders</span></div>
+      <div class="stat fade" style="--d:.2s"><div class="n">$30M</div><span class="l">Client’s annual revenue</span></div>
+      <div class="stat fade" style="--d:.3s"><div class="n">$15K</div><span class="l">Paid every month</span></div>
+      <div class="stat fade" style="--d:.4s"><div class="n">~2½</div><span class="l">Months in when it closed</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3 · WARM EDITORIAL ============ -->
+<section class="spread s3 noise" id="department">
+  <div class="big-num">II</div>
+  <div class="wrap">
+    <div class="layout">
+      <div>
+        <span class="kicker fade">02 &mdash; The Business</span>
+        <h2 class="fade" style="--d:.1s">We become a company’s <em>AI department.</em></h2>
+        <p class="lede fade" style="--d:.2s">Think of an IT department that handles everything IT &mdash; except Certified AI Partners does everything AI.</p>
+        <blockquote class="fade" style="--d:.25s">“Rather than locking things down, we unlock things and unlock their capacity to grow with AI.”</blockquote>
+        <p class="fade" style="--d:.3s">The spark was a podcast guest, Corey Ganon, describing an AI assessment for companies. “Like a light bulb just struck,” James says &mdash; he was working out in the gym at the time. A week later he called Brendan.</p>
+        <p class="fade" style="--d:.35s">They began by walking into local Provo businesses &mdash; orthopedics, dental offices, insurance companies &mdash; offering a free 15-minute AI assessment. The problems were real. The budgets weren’t. Then came the pivot: <em>“Why are we going for small fish? Why don’t we do this for bigger fish?”</em></p>
+      </div>
+      <aside class="fade" style="--d:.3s">
+        <h3>Three founders, three prior hustles</h3>
+        <div class="who"><i>James</i><b>Voice agents</b><span>Sold to HVAC companies.</span></div>
+        <div class="who"><i>Brendan</i><b>AEO</b><span>Doing it for companies.</span></div>
+        <div class="who"><i>Carter</i><b>Open Claw</b><span>Selling it to small businesses.</span></div>
+        <div class="who"><i>The pivot</i><b>Mid-market</b><span>From one-off automations to being their entire AI team.</span></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4 · ROSE ============ -->
+<section class="spread s4 noise lite" id="advice">
+  <div class="big-num">III</div>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <span class="kicker fade">03 &mdash; The Text</span>
+        <h2 class="fade" style="--d:.1s">Ask for advice. <em>Get money.</em> Twice.</h2>
+      </div>
+      <svg class="stamp fade" style="--d:.3s" viewBox="0 0 400 400" aria-hidden="true">
+        <defs><path id="circ" d="M200,200 m-150,0 a150,150 0 1,1 300,0 a150,150 0 1,1 -300,0"/></defs>
+        <circle cx="200" cy="200" r="188" fill="none" stroke="currentColor" stroke-width="8"/>
+        <circle cx="200" cy="200" r="108" fill="none" stroke="currentColor" stroke-width="3"/>
+        <text><textPath href="#circ" startOffset="0">ASK FOR ADVICE ★ ASK FOR ADVICE ★ ASK FOR ADVICE ★</textPath></text>
+        <text class="mid" x="200" y="198" text-anchor="middle">NOT</text>
+        <text class="mid" x="200" y="242" text-anchor="middle">MONEY</text>
+      </svg>
+    </div>
+
+    <div class="cmp fade" style="--d:.15s">
+      <div class="bad"><small>Ask for money</small><div class="q">and you get&hellip;</div><div class="a">advice.</div></div>
+      <div class="good"><small>Ask for advice</small><div class="q">and you get&hellip;</div><div class="a">money twice.</div></div>
+    </div>
+
+    <div class="notes">
+      <p class="fade" style="--d:.1s"><b>The text:</b> “Hey, we just started this company. We’re looking to help business owners between 10 million and 50 million a year in revenue&hellip; implementing AI in their company.” Some added: “We just want to get your advice on the business model.”</p>
+      <p class="fade" style="--d:.2s"><b>The mechanism:</b> by asking for advice “you build rapport, you build trust, and they’re more willing to give you referrals or even themselves become a client of yours.”</p>
+      <p class="fade" style="--d:.3s"><b>The awkward part:</b> “A business is simply solving problems for other people. So if you love your friends&hellip; try to solve their problems.”</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5 · TERMINAL ============ -->
+<section class="spread s5" id="funnel">
+  <div class="big-num">IV</div>
+  <div class="wrap">
+    <span class="kicker fade">04 &mdash; The Funnel</span>
+    <h2 class="fade" style="--d:.1s">Warm first. <em>Then</em> LinkedIn.</h2>
+    <div class="win fade" style="--d:.2s">
+      <div class="bar"><i></i><i></i><i></i><span>funnel.sh &mdash; certified-ai-partners</span></div>
+      <div class="body">
+        <div class="cmd">cat outreach_schedule.log</div>
+        <div class="row"><span class="t">STEP 01</span><span class="c">iMessage</span><span class="d">Text <b>hundreds of contacts</b>: “Who do you know that owns a business of this size that needs help with AI?” <b>#1 source of clients and leads.</b></span></div>
+        <div class="row"><span class="t">STEP 02</span><span class="c">LinkedIn</span><span class="d">Out of contacts? <b>20 fresh connections a day.</b> Search “CEO construction Utah.” Connect, then DM once they accept.</span></div>
+        <div class="row"><span class="t">STEP 03</span><span class="c">Call #1</span><span class="d">Not a pitch. Rapport, plus questions: where does <b>work slow down</b>? Record it, upload to Claude.</span></div>
+        <div class="row"><span class="t">STEP 04</span><span class="c">Book the next</span><span class="d">Before ending, always set the next call. <b>“Book a call from a call every time.”</b></span></div>
+        <div class="row"><span class="t">STEP 05</span><span class="c">Assessment</span><span class="d">Interview leadership, then employees. Present ranked findings.</span></div>
+        <div class="row" style="border-bottom:0"><span class="t">STEP 06</span><span class="c">Retainer</span><span class="d">Only now: <b>assessment → interview → retainer.</b></span></div>
+        <div class="tail"><span class="cmd" style="display:inline">math --network</span><br>500 people trust us &times; 500 people trust each of them. <b>Trust travels through people, not just location.</b> <span class="cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6 · ACADEMIC ============ -->
+<section class="spread s6 noise lite" id="assessment">
+  <div class="big-num">V</div>
+  <div class="wrap">
+    <span class="kicker fade">05 &mdash; The Assessment</span>
+    <h2 class="fade" style="--d:.1s">The <b>$1,000</b> foot in the door.</h2>
+    <p class="deck fade" style="--d:.2s">The first client was a CEO who answered an advice request with: “I actually think my company needs this.”</p>
+    <div class="cols fade" style="--d:.25s">
+      <p>The first big break came when they reached out to the CEO of a construction company covering Utah, Arizona and California. Again, they literally just asked for advice. He wrote back that he thought his company needed exactly this, and the first engagement began as a full paid assessment &mdash; priced at $1,000.</p>
+      <p>They asked where he saw bottlenecks, then asked for every person they should interview. A survey went out first, built around those bottlenecks and the software each person touched. At the end of the survey, each employee had to book a 30-minute call. With an AI note-taker running, the founders arrived at each call already knowing the answers to expound on.</p>
+      <div class="call"><h4>Garbage in, garbage out</h4><p>“There’s no special prompt. It’s more just making sure you get as much ammo before you go to Claude and spin up your presentation.”</p></div>
+      <p>All of it fed a clean, simple presentation for the C-suite: AI opportunities ranked, with the ROI of each based on what employees and executives had said about hours spent and what the team is paid. And they built mini working demos from redacted workpapers and invoices the staff sent over.</p>
+      <div class="call"><h4>The sleepless-night question</h4><p>“When was the last time you had a sleepless night because of something that happened in your business?” beats “What are you struggling with?” &mdash; which only earns lame answers.</p></div>
+    </div>
+    <div class="steps fade" style="--d:.3s">
+      <div><b>Survey</b>Bottlenecks and software</div>
+      <div><b>30-min call</b>With an AI note-taker</div>
+      <div><b>Ranked deck</b>Opportunities with ROI</div>
+      <div><b>Live demo</b>The problem, already solved</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7 · GOLD ============ -->
+<section class="spread s7 noise lite" id="anchor">
+  <div class="big-num">VI</div>
+  <div class="wrap">
+    <span class="kicker fade">06 &mdash; The Price</span>
+    <div class="hero-stat fade" style="--d:.1s">$15K<sub>/mo</sub></div>
+    <h2 class="fade" style="--d:.2s">Anchor <b>high.</b> Let the CEO talk himself into it.</h2>
+    <div class="tiers">
+      <div class="tier ghost fade" style="--d:.2s"><small>Smallest</small><div class="p">$10K</div></div>
+      <div class="tier hit fade" style="--d:.3s"><em>Closed</em><small>Medium</small><div class="p">$15K</div></div>
+      <div class="tier ghost fade" style="--d:.4s"><small>Highest</small><div class="p">$25K</div></div>
+    </div>
+    <p class="say fade" style="--d:.2s">“Completely transparent with you, we would have been so happy at 10 grand a month.” So they threw up the $15K and $25K plans to leave room to negotiate. Days later the CEO said, <b>“We were looking at the 25 grand plan.”</b> The host’s deadpan: <i>“I’m sorry, sir, that’s actually not available. That’s just a price anchor.”</i> They closed at $15K &mdash; higher than they wanted.</p>
+  </div>
+</section>
+
+<!-- ============ 8 · BROADSHEET ============ -->
+<section class="spread s8 noise" id="demo">
+  <div class="big-num">VII</div>
+  <div class="wrap">
+    <div class="paper fade">
+      <div class="mh"><span class="kicker">07 &mdash; The Demo</span><span>Storm wells &middot; Proposals &middot; Utah</span><span>Special Edition</span></div>
+      <h2>An hour of work. <em>Five minutes</em> of AI.</h2>
+      <div class="banner">
+        <div>~1 hour<span>Per proposal, by hand</span></div>
+        <div class="arr">→</div>
+        <div>~5 min<span>With the working demo</span></div>
+        <div class="arr">|</div>
+        <div>$30M<span>Company revenue / year</span></div>
+      </div>
+      <div class="cols">
+        <h3>The job: clearing the storm wells</h3>
+        <p>The construction company maintains big storm wells, clearing debris and water when they clog. They receive an inspection report with an estimate of how long a clean will take, then build a priced proposal and send it to the HOA or property &mdash; who approve or deny it.</p>
+        <p>Based on everyone the founders interviewed, that took employees about an hour per proposal. The pair mapped how it works now, then mapped the steps AI could take off their plates, and what that would save.</p>
+        <blockquote>“They gave us their problem, and then in front of them they’re seeing it being solved.”</blockquote>
+        <p>The demo, built from the examples the client sent, counts the structures to be cleaned, estimates how much debris is in them, and prices the job accordingly. “Oh, you should have seen their faces,” says one founder. “They were like, ‘Oh my gosh, this is working.’”</p>
+        <div class="compare"><div><b>$3,575</b><span>Real employee</span></div><div><b>$3,375</b><span>AI, first try</span></div></div>
+        <p>Pricing is adjustable inside the tool. The company is doing about $30 million a year; the owner is in his 40s. Seeing it live, the founders say, was “shock factor.”</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9 · PRODUCT ============ -->
+<section class="spread s9" id="toolkit">
+  <div class="big-num">VIII</div>
+  <div class="wrap">
+    <div class="layout">
+      <div>
+        <span class="kicker fade">08 &mdash; The Toolkit</span>
+        <h2 class="fade" style="--d:.1s">The 80/20 of <em>AI consulting.</em></h2>
+        <p class="deck fade" style="--d:.2s">“If you know those two things, you have a lot of weight you can throw around.”</p>
+        <ul class="feat">
+          <li class="fade" style="--d:.2s"><div class="ic">C</div><div><b>Claude Code or Codex</b><span>“You need to be on Claude for sure.”</span></div></li>
+          <li class="fade" style="--d:.28s"><div class="ic">M</div><div><b>MCPs and APIs</b><span>Knowing how to connect them “unlocks a whole different world.”</span></div></li>
+          <li class="fade" style="--d:.36s"><div class="ic">R</div><div><b>Railway</b><span>Hosts websites, custom apps and agents, plus a database. Spin up an agent that works like an employee.</span></div></li>
+          <li class="fade" style="--d:.44s"><div class="ic">Σ</div><div><b>Composio</b><span>Connect any number of MCPs; give Claude just one.</span></div></li>
+        </ul>
+      </div>
+      <div>
+        <div class="card fade" style="--d:.2s">
+          <span class="tag">Composio</span>
+          <h3>One MCP. Every inbox.</h3>
+          <p class="sub">“I have five Gmails connected to my one Composio.”</p>
+          <div class="mail">Gmail account 1 <em>connected</em></div>
+          <div class="mail">Gmail account 2 <em>connected</em></div>
+          <div class="mail">Gmail account 3 <em>connected</em></div>
+          <div class="merge"><b>One single MCP</b>to your Claude</div>
+        </div>
+        <div class="prompt fade" style="--d:.35s"><small>The prompting trick</small>“Act like Alex Hormozi. How would you draft this proposal to a company?” Without it, you get the average of the internet &mdash; “and average is just that. It’s average.”</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10 · NEON CLOSER ============ -->
+<section class="spread s10" id="closer">
+  <div class="floor"></div>
+  <div class="big-num">IX</div>
+  <div class="wrap">
+    <span class="kicker fade">09 &mdash; The Opening</span>
+    <h2 class="fade" style="--d:.1s">Don’t assume they’re <em>better at AI</em> than you.</h2>
+    <div class="grid3">
+      <div class="neon pink fade" style="--d:.15s"><div class="n">3 hands</div><p>At a $60M Alabama company’s board meeting of about 20 people, asked who uses ChatGPT. “In like 2026.” The brother-in-law who showed them prompts became “like their god now.”</p></div>
+      <div class="neon fade" style="--d:.25s"><div class="n">1.2M</div><p>Management consultants in the US alone. “10 years from now, how many AI consultants will there be?” &mdash; “Probably more.”</p></div>
+      <div class="neon fade" style="--d:.35s"><div class="n">$12B</div><p>Revenue of the company that invited them to present &mdash; after two more clients of the same size are on track to sign.</p></div>
+    </div>
+    <div class="finale">
+      <q class="fade" style="--d:.2s">“Just <b>start.</b> If we can do it, we’re all in our early 20s&hellip; anyone can do it.”</q>
+      <p class="find fade" style="--d:.3s"><b>Find Certified AI Partners</b><br>certifiedpartners.com<br>LinkedIn: Certified AI Partners</p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var els=document.querySelectorAll('.fade');
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+  els.forEach(function(el){io.observe(el)});
+  var bar=document.getElementById('progress');
+  function p(){var h=document.documentElement;var s=h.scrollTop/(h.scrollHeight-h.clientHeight);bar.style.width=(s*100)+'%'}
+  window.addEventListener('scroll',p,{passive:true});p();
+})();
+</script>
+</body>
+</html>

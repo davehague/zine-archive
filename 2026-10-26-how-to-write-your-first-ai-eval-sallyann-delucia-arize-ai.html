@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Write Your First AI Eval — SallyAnn DeLucia, Arize AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@300..900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --serif:'Fraunces', Georgia, serif;
+  --sans:'Inter', system-ui, sans-serif;
+  --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  --noise:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);font-size:1.15rem;line-height:1.6;background:#111;color:#222;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.spread{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;isolation:isolate}
+.spread::after{content:"";position:absolute;inset:0;background-image:var(--noise);opacity:.07;mix-blend-mode:multiply;pointer-events:none;z-index:-1}
+.wrap{width:100%;max-width:1400px;margin:0 auto;padding:7rem clamp(1.5rem,5vw,5rem)}
+.kicker{font-family:var(--sans);font-size:1.1rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;margin-bottom:1.5rem;display:block}
+h1,h2,h3{font-family:var(--serif);font-weight:800;line-height:.92}
+.display{font-size:clamp(3rem,9vw,9rem);letter-spacing:-.035em}
+.deck{font-size:clamp(1.2rem,1.8vw,1.55rem);line-height:1.5;max-width:46rem}
+.bignum{position:absolute;font-family:var(--serif);font-weight:900;line-height:.8;pointer-events:none;z-index:-1;user-select:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,6rem)}
+p+p{margin-top:1.1rem}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+.reveal.in{opacity:1;transform:none}
+
+/* ============ 1 COVER ============ */
+.s1{background:radial-gradient(ellipse at 20% 10%,#fbf5e4 0,transparent 55%),radial-gradient(ellipse at 90% 100%,#e8d9b5 0,transparent 55%),#f3ead3;color:#2a1f14;text-align:center}
+.s1 .wrap{display:flex;flex-direction:column;align-items:center;padding-top:6rem;padding-bottom:6rem}
+.s1 .top{display:flex;justify-content:space-between;width:100%;font-weight:600;letter-spacing:.22em;text-transform:uppercase;font-size:1.1rem;border-top:3px double #2a1f14;border-bottom:3px double #2a1f14;padding:.9rem 0;margin-bottom:5rem;gap:1rem;flex-wrap:wrap;justify-content:center}
+.s1 .top span{flex:1;min-width:12rem}
+.s1 .top span:first-child{text-align:left}.s1 .top span:last-child{text-align:right}
+.s1 h1{font-size:clamp(3.4rem,11vw,10.5rem);letter-spacing:-.045em;font-weight:900;line-height:.86}
+.s1 h1 em{font-style:italic;font-weight:300;color:#a8431f;letter-spacing:-.03em}
+.orn{display:flex;align-items:center;gap:1.4rem;margin:3rem 0;width:min(36rem,90%)}
+.orn::before,.orn::after{content:"";flex:1;height:1px;background:#2a1f14}
+.orn i{font-style:normal;font-family:var(--serif);font-size:1.6rem;color:#a8431f}
+.s1 .deck{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(1.4rem,2.6vw,2.2rem);line-height:1.3;max-width:48rem}
+.s1 .by{margin-top:3rem;font-size:1.15rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.s1 .by b{display:block;font-family:var(--serif);font-size:2rem;letter-spacing:0;text-transform:none;font-weight:700;margin-bottom:.3rem}
+.s1 .three{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:4.5rem;width:100%;text-align:left;border-top:1px solid #2a1f14;padding-top:2rem}
+.s1 .three div b{font-family:var(--serif);font-size:3.4rem;font-weight:300;color:#a8431f;display:block;line-height:1}
+.s1 .three div span{display:block;margin-top:.6rem;font-weight:500}
+.s1 .src{margin-top:3rem;font-size:1.1rem;opacity:.7;font-style:italic}
+
+/* ============ 2 MIDNIGHT ============ */
+.s2{background:radial-gradient(circle at 85% 15%,rgba(56,120,255,.28),transparent 45%),radial-gradient(circle at 5% 95%,rgba(90,60,255,.18),transparent 45%),#0d1117;color:#c9d4e6}
+.s2::after{mix-blend-mode:screen;opacity:.05}
+.s2 .kicker{color:#5a9bff}
+.s2 h2{color:#fff}
+.s2 .bignum{right:-2%;top:2%;font-size:clamp(18rem,40vw,42rem);color:rgba(90,155,255,.06)}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:4rem 0;border-top:1px solid rgba(120,160,255,.3)}
+.timeline div{padding:1.6rem 1.4rem 0 0;position:relative}
+.timeline div::before{content:"";position:absolute;top:-7px;left:0;width:13px;height:13px;border-radius:50%;background:#0d1117;border:2px solid #5a9bff;box-shadow:0 0 14px #5a9bff}
+.timeline div:last-child::before{background:#ff5a6a;border-color:#ff5a6a;box-shadow:0 0 18px #ff5a6a}
+.timeline h3{font-size:1.9rem;font-weight:600;color:#fff;margin-bottom:.6rem;line-height:1.1;padding-top:.5rem}
+.timeline p{font-size:1.15rem}
+.statrow{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:3rem}
+.stat{border:1px solid rgba(120,160,255,.25);background:linear-gradient(160deg,rgba(60,110,255,.12),rgba(255,255,255,.01));padding:1.8rem 1.5rem;border-radius:4px;position:relative}
+.stat b{display:block;font-family:var(--serif);font-weight:200;font-size:4.4rem;line-height:1;color:#5a9bff;text-shadow:0 0 30px rgba(90,155,255,.6)}
+.stat span{display:block;margin-top:.8rem;font-weight:600;color:#fff;font-size:1.2rem;line-height:1.3}
+.s2 .lead{font-family:var(--serif);font-size:clamp(1.4rem,2.4vw,2.1rem);font-weight:300;line-height:1.3;max-width:52rem;margin-top:2rem;color:#dbe5f7}
+.s2 .lead em{color:#ff8a96;font-style:italic}
+.cant{font-weight:700;letter-spacing:.2em;text-transform:uppercase;margin-top:4rem;color:#8da2c4;font-size:1.1rem}
+
+/* ============ 3 ROSE ============ */
+.s3{background:radial-gradient(ellipse at 15% 20%,rgba(220,38,80,.28),transparent 50%),repeating-linear-gradient(135deg,rgba(255,255,255,.02) 0 2px,transparent 2px 14px),#16060c;color:#f3d6dd}
+.s3 .kicker{color:#ff4d73}
+.s3 h2{color:#fff1f4}
+.s3 h2 em{color:#ff4d73;font-weight:300;font-style:italic}
+.s3 .bignum{left:-3%;bottom:-8%;font-size:clamp(18rem,38vw,40rem);color:rgba(255,77,115,.07)}
+.s3 .head{display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:center}
+.stamp{width:clamp(210px,24vw,330px);aspect-ratio:1;position:relative;color:#ff4d73;transform:rotate(-12deg);flex-shrink:0}
+.stamp svg{width:100%;height:100%;overflow:visible}
+.stamp .spin{transform-origin:center;animation:spin 40s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.stamp .mid{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:var(--serif);font-weight:900;text-align:center;line-height:.95;font-size:clamp(1.5rem,2.4vw,2.3rem);text-transform:uppercase;letter-spacing:.02em}
+.stamp .mid small{font-family:var(--sans);font-size:1.1rem;font-weight:700;letter-spacing:.2em;margin-top:.5rem}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:4rem;border:1px solid rgba(255,77,115,.4)}
+.vs>div{padding:2.4rem clamp(1.4rem,3vw,3rem)}
+.vs>div:first-child{border-right:1px solid rgba(255,77,115,.4);background:rgba(255,255,255,.02)}
+.vs>div:last-child{background:rgba(255,77,115,.1)}
+.vs h3{font-size:2.4rem;font-weight:700;margin-bottom:1.4rem;color:#fff}
+.vs h3 small{display:block;font-family:var(--sans);font-size:1.1rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#ff4d73;margin-bottom:.6rem}
+.vs ul{list-style:none}
+.vs li{padding:.9rem 0;border-top:1px solid rgba(255,255,255,.1);display:flex;gap:1rem}
+.vs li::before{content:"—";color:#ff4d73;font-weight:700}
+.s3 blockquote{margin-top:4rem;font-family:var(--serif);font-weight:300;font-style:italic;font-size:clamp(1.6rem,3.2vw,3rem);line-height:1.2;max-width:60rem;color:#fff1f4;border-left:6px solid #ff4d73;padding-left:2rem}
+.s3 blockquote cite{display:block;font-family:var(--sans);font-size:1.1rem;font-style:normal;letter-spacing:.2em;text-transform:uppercase;margin-top:1rem;color:#ff4d73;font-weight:600}
+
+/* ============ 4 TERMINAL ============ */
+.s4{background:radial-gradient(ellipse at 50% 0,rgba(34,255,120,.12),transparent 60%),#020a05;color:#6dff9f;font-family:var(--mono)}
+.s4::after{mix-blend-mode:screen;opacity:.04}
+.s4:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 1px,transparent 1px 4px);z-index:-1;pointer-events:none}
+.s4 .kicker{color:#3dff8a;font-family:var(--sans)}
+.s4 h2{color:#d7ffe5;font-family:var(--serif);text-shadow:0 0 40px rgba(61,255,138,.35)}
+.s4 .bignum{right:2%;bottom:-6%;font-size:clamp(16rem,34vw,36rem);color:rgba(61,255,138,.05);font-family:var(--serif)}
+.s4 .layout{display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(2rem,4vw,4rem);margin-top:3.5rem;align-items:start}
+.win{border:1px solid #1d6b3c;border-radius:10px;background:rgba(0,12,5,.85);box-shadow:0 0 60px rgba(61,255,138,.12),inset 0 0 40px rgba(61,255,138,.04);overflow:hidden}
+.win .bar{display:flex;align-items:center;gap:.6rem;padding:.9rem 1.2rem;background:#07180e;border-bottom:1px solid #1d6b3c}
+.win .bar i{width:14px;height:14px;border-radius:50%;display:block}
+.win .bar i:nth-child(1){background:#ff5f56}.win .bar i:nth-child(2){background:#ffbd2e}.win .bar i:nth-child(3){background:#27c93f}
+.win .bar span{margin-left:1rem;font-size:1.1rem;color:#4fbf7d}
+.win pre{padding:1.6rem 1.6rem 2rem;font-family:var(--mono);font-size:1.1rem;line-height:1.75;white-space:pre-wrap;overflow-x:auto}
+.win .dim{color:#3b8f5a}.win .hl{color:#f6ff7a}.win .cy{color:#7ae7ff}.win .pk{color:#ff9ad0}
+.cursor{display:inline-block;width:.7em;height:1.15em;background:#6dff9f;vertical-align:text-bottom;animation:blink 1.05s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.notes{display:grid;gap:1.6rem}
+.note{border-left:3px solid #3dff8a;padding:.2rem 0 .2rem 1.4rem;font-family:var(--sans);color:#bff5d3}
+.note b{display:block;font-family:var(--serif);font-size:1.7rem;color:#fff;font-weight:600;margin-bottom:.3rem;line-height:1.1}
+.note.q{border-color:#f6ff7a}
+
+/* ============ 5 ACADEMIC ============ */
+.s5{background:radial-gradient(ellipse at 80% 0,rgba(120,150,255,.18),transparent 55%),linear-gradient(180deg,#0b1530,#0e1c3d);color:#d5dcf0}
+.s5 .kicker{color:#e3c27a}
+.s5 h2{color:#fdf6e3;font-weight:300}
+.s5 h2 b{font-weight:900;font-style:italic;color:#e3c27a}
+.s5 .bignum{left:50%;transform:translateX(-50%);top:-4%;font-size:clamp(18rem,38vw,42rem);color:rgba(227,194,122,.06);font-weight:400}
+.s5 .cols{column-count:2;column-gap:4rem;column-rule:1px solid rgba(227,194,122,.3);margin-top:3.5rem;font-family:var(--serif);font-weight:300;font-size:1.3rem;line-height:1.6}
+.s5 .cols p{margin:0 0 1.2rem;break-inside:avoid-column}
+.s5 .cols strong{font-weight:700;color:#fdf6e3}
+.s5 .cols p:first-child::first-letter{font-family:var(--serif);font-weight:900;font-size:9.5rem;line-height:.72;float:left;padding:.45rem 1.2rem 0 0;color:#e3c27a}
+.callouts{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.callout{border:1px solid rgba(227,194,122,.5);padding:1.6rem 1.6rem 1.8rem;background:rgba(227,194,122,.06);position:relative}
+.callout::before{content:"";position:absolute;left:-1px;top:-1px;width:44px;height:44px;border-top:4px solid #e3c27a;border-left:4px solid #e3c27a}
+.callout h3{font-size:1.8rem;font-weight:700;color:#fdf6e3;margin-bottom:.6rem;line-height:1.05}
+.callout p{font-size:1.15rem;font-family:var(--sans)}
+.callout .tag{display:block;font-family:var(--sans);font-size:1.1rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#e3c27a;margin-bottom:.7rem}
+
+/* ============ 6 GOLD ============ */
+.s6{background:radial-gradient(circle at 30% 45%,rgba(255,176,32,.2),transparent 50%),radial-gradient(circle at 100% 100%,rgba(180,90,10,.22),transparent 50%),#110c04;color:#f2dfb4}
+.s6 .kicker{color:#ffb020}
+.s6 .layout{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(2rem,5vw,6rem);align-items:center}
+.hero-stat{font-family:var(--serif);font-weight:900;font-size:clamp(12rem,30vw,28rem);line-height:.72;letter-spacing:-.07em;background:linear-gradient(180deg,#ffe49a 0,#ffb020 45%,#a85a00 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 50px rgba(255,176,32,.35))}
+.s6 h2{font-size:clamp(2.4rem,5vw,4.6rem);font-weight:400;color:#fff3d3;margin-top:1.5rem;line-height:1}
+.s6 h2 i{color:#ffb020}
+.s6 .deck{margin-top:1.4rem;color:#e6cf9b}
+.badges{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:2rem 0}
+.badge{border:2px solid;padding:1.2rem 1.3rem;border-radius:6px;display:flex;align-items:center;gap:1rem}
+.badge b{font-family:var(--serif);font-size:2.6rem;font-weight:900;line-height:1;width:3rem;text-align:center}
+.badge span{font-weight:700;font-size:1.2rem;line-height:1.2}
+.badge.a{border-color:#ffb020;color:#ffb020;background:rgba(255,176,32,.08)}
+.badge.b{border-color:#e0583a;color:#ff8c6e;background:rgba(224,88,58,.08)}
+.badge.c{border-color:#d9c36a;color:#e9d98d;background:rgba(217,195,106,.07)}
+.badge.d{border-color:#8a7a52;color:#b9aa80;background:rgba(138,122,82,.07)}
+.s6 .path{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;font-weight:600;margin-top:1.5rem}
+.s6 .path span{border:1px solid rgba(255,176,32,.5);padding:.5rem 1rem;border-radius:100px;background:rgba(255,176,32,.08)}
+.s6 .path em{font-style:normal;color:#ffb020}
+.s6 blockquote{margin-top:2rem;border-top:1px solid rgba(255,176,32,.4);padding-top:1.5rem;font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(1.5rem,2.4vw,2.2rem);line-height:1.2;color:#fff3d3}
+
+/* ============ 7 BROADSHEET ============ */
+.s7{background:repeating-linear-gradient(0deg,rgba(0,0,0,.025) 0 1px,transparent 1px 3px),#ece3cb;color:#1b1610}
+.s7 .wrap{border-left:0}
+.mast{text-align:center;border-top:6px double #1b1610;border-bottom:6px double #1b1610;padding:1.2rem 0;margin-bottom:1rem}
+.mast h3{font-family:var(--serif);font-weight:900;font-size:clamp(2.6rem,6vw,5.6rem);letter-spacing:-.02em;line-height:1;font-variant:small-caps}
+.mast p{display:flex;justify-content:space-between;font-size:1.1rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-top:.6rem;flex-wrap:wrap;gap:.5rem}
+.banner{background:#c1121f;color:#fff;font-family:var(--serif);font-weight:900;font-size:clamp(1.5rem,3.2vw,2.8rem);text-transform:uppercase;letter-spacing:.04em;padding:.9rem 1.6rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin:1.5rem 0 2.5rem}
+.banner span{font-family:var(--sans);font-size:1.1rem;letter-spacing:.2em;font-weight:700}
+.s7 h2{font-size:clamp(3rem,8vw,8rem);letter-spacing:-.04em;font-weight:900;line-height:.88}
+.s7 h2 em{font-weight:300;color:#c1121f}
+.s7 .kicker{color:#c1121f}
+.s7 .bignum{right:1%;top:3%;font-size:clamp(14rem,28vw,30rem);color:rgba(27,22,16,.05)}
+.paper{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin-top:3rem;border-top:3px solid #1b1610}
+.paper>div{padding:1.6rem 2rem;border-right:1px solid #1b1610;font-family:var(--serif)}
+.paper>div:first-child{padding-left:0}.paper>div:last-child{border-right:0;padding-right:0}
+.paper h3{font-size:1.9rem;font-weight:800;line-height:1.05;margin-bottom:.8rem;border-bottom:1px solid #1b1610;padding-bottom:.6rem}
+.paper p{font-size:1.15rem;line-height:1.55;font-family:var(--sans)}
+.paper .strike{text-decoration:line-through;text-decoration-color:#c1121f;text-decoration-thickness:3px;opacity:.75}
+.paper ol{padding-left:1.4rem;font-family:var(--sans);font-size:1.15rem}
+.paper ol li{padding:.25rem 0}
+.paper .good{color:#0b6b34;font-weight:700}.paper .bad{color:#c1121f;font-weight:700}
+.s7 .pull{margin-top:2rem;border-top:3px double #1b1610;border-bottom:3px double #1b1610;padding:1.6rem 0;text-align:center;font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(1.6rem,3vw,2.7rem);line-height:1.15}
+
+/* ============ 8 NEON ============ */
+.s8{background:radial-gradient(ellipse at 50% 100%,rgba(0,255,200,.22),transparent 55%),radial-gradient(ellipse at 80% 0,rgba(255,0,180,.14),transparent 45%),#04050c;color:#cfeff0;perspective:900px}
+.s8::after{mix-blend-mode:screen;opacity:.05}
+.floor{position:absolute;left:-50%;right:-50%;bottom:0;height:46%;background:linear-gradient(rgba(0,255,200,.55) 1px,transparent 1px) 0 0/100% 56px,linear-gradient(90deg,rgba(0,255,200,.55) 1px,transparent 1px) 0 0/72px 100%;transform:rotateX(68deg);transform-origin:bottom;-webkit-mask-image:linear-gradient(transparent,#000 70%);mask-image:linear-gradient(transparent,#000 70%);z-index:-1;animation:floor 4s linear infinite;opacity:.55}
+@keyframes floor{to{background-position:0 56px,0 0}}
+.s8 .kicker{color:#00ffc8}
+.s8 h2{color:#fff;text-shadow:0 0 18px rgba(0,255,200,.7),0 0 60px rgba(0,255,200,.4)}
+.s8 h2 em{color:#ff2fb9;font-style:italic;font-weight:300;text-shadow:0 0 20px rgba(255,47,185,.8)}
+.s8 .bignum{right:-1%;top:6%;font-size:clamp(16rem,34vw,36rem);color:transparent;-webkit-text-stroke:2px rgba(0,255,200,.18)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:3.5rem}
+.step{border:1px solid rgba(0,255,200,.5);background:rgba(2,16,18,.72);padding:1.6rem 1.4rem;box-shadow:0 0 22px rgba(0,255,200,.14),inset 0 0 22px rgba(0,255,200,.04);position:relative;backdrop-filter:blur(3px)}
+.step b{font-family:var(--serif);font-size:3.4rem;font-weight:200;color:#00ffc8;line-height:1;text-shadow:0 0 16px #00ffc8;display:block;margin-bottom:.5rem}
+.step h3{font-size:1.5rem;font-weight:700;color:#fff;line-height:1.1;margin-bottom:.6rem}
+.step p{font-size:1.1rem;line-height:1.45}
+.step code{font-family:var(--mono);color:#ffe95a;font-size:1.1rem}
+.emerge{margin-top:2rem;display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.emerge div{border:1px solid #ff2fb9;background:rgba(40,0,30,.6);padding:1.4rem 1.6rem;box-shadow:0 0 28px rgba(255,47,185,.22)}
+.emerge b{display:block;font-weight:800;letter-spacing:.2em;text-transform:uppercase;font-size:1.1rem;color:#ff2fb9;margin-bottom:.5rem}
+.emerge div:last-child{border-color:#00ffc8;box-shadow:0 0 28px rgba(0,255,200,.22);background:rgba(0,30,26,.6)}
+.emerge div:last-child b{color:#00ffc8}
+
+/* ============ 9 PRODUCT ============ */
+.s9{background:radial-gradient(ellipse at 90% 10%,rgba(99,102,241,.1),transparent 50%),#ffffff;color:#1a1c3a}
+.s9::after{opacity:.03}
+.s9 .kicker{color:#4f46e5}
+.s9 h2{color:#12143a;font-weight:700;letter-spacing:-.04em}
+.s9 h2 em{font-style:italic;font-weight:300;color:#4f46e5}
+.s9 .bignum{left:-2%;bottom:-6%;font-size:clamp(16rem,34vw,36rem);color:rgba(79,70,229,.05)}
+.s9 .layout{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(2rem,5vw,5rem);margin-top:3.5rem;align-items:start}
+.feat{display:grid;gap:0}
+.feat div{display:grid;grid-template-columns:64px 1fr;gap:1.3rem;padding:1.5rem 0;border-bottom:1px solid #e5e7f5}
+.feat div:first-child{border-top:1px solid #e5e7f5}
+.ico{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#6366f1,#4338ca);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 10px 24px rgba(79,70,229,.3)}
+.ico svg{width:30px;height:30px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.feat h3{font-size:1.8rem;font-weight:700;color:#12143a;margin-bottom:.3rem;line-height:1.1}
+.feat p{font-size:1.15rem;color:#4a4d73}
+.card{background:#f6f6ff;border:1px solid #dcdcf8;border-radius:22px;padding:2rem;box-shadow:0 30px 70px rgba(79,70,229,.18);position:sticky;top:2rem}
+.card .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.4rem;flex-wrap:wrap;gap:.6rem}
+.card .hd b{font-family:var(--serif);font-size:1.8rem;font-weight:700;color:#12143a}
+.pill{background:#e0e1ff;color:#4338ca;font-weight:700;font-size:1.1rem;padding:.3rem .9rem;border-radius:100px;display:inline-flex;align-items:center;gap:.5rem}
+.pill::before{content:"";width:9px;height:9px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.2)}
+.row{display:flex;justify-content:space-between;gap:1rem;background:#fff;border:1px solid #e3e3fa;border-radius:12px;padding:1rem 1.2rem;margin-bottom:.8rem;align-items:center;font-weight:600}
+.row span:last-child{font-size:1.1rem;font-weight:700;padding:.2rem .8rem;border-radius:8px}
+.row .ok{background:#dcfce7;color:#166534}.row .no{background:#fee2e2;color:#991b1b}.row .ho{background:#e0e7ff;color:#3730a3}
+.card .cap{font-size:1.1rem;color:#6b6e96;margin-top:1rem;font-style:italic}
+
+/* ============ 10 CLOSER ============ */
+.s10{background:radial-gradient(ellipse at 10% 90%,rgba(190,90,40,.22),transparent 55%),repeating-linear-gradient(90deg,rgba(60,40,20,.045) 0 1px,transparent 1px 90px),repeating-linear-gradient(0deg,rgba(60,40,20,.045) 0 1px,transparent 1px 90px),#eddcbc;color:#2b1c0f}
+.s10 .kicker{color:#b4461e}
+.s10 .bignum{left:-2%;top:-4%;font-size:clamp(18rem,40vw,44rem);color:rgba(180,70,30,.08)}
+.s10 .layout{display:grid;grid-template-columns:1.5fr 1fr;gap:clamp(2rem,4vw,5rem);align-items:stretch}
+.s10 h2{font-size:clamp(3rem,8.5vw,8.6rem);letter-spacing:-.045em;font-weight:900;line-height:.88}
+.s10 h2 em{font-weight:300;color:#b4461e}
+.who{display:flex;flex-wrap:wrap;gap:.7rem;margin:2.2rem 0}
+.who span{border:2px solid #2b1c0f;padding:.45rem 1.1rem;border-radius:100px;font-weight:700;font-size:1.15rem}
+.s10 .bigquote{font-family:var(--serif);font-weight:300;font-style:italic;font-size:clamp(1.7rem,3vw,2.8rem);line-height:1.15;border-left:6px solid #b4461e;padding-left:1.6rem;margin-top:2rem;max-width:44rem}
+.s10 .bigquote cite{display:block;font-family:var(--sans);font-style:normal;font-size:1.1rem;letter-spacing:.2em;font-weight:700;text-transform:uppercase;margin-top:1rem;color:#b4461e}
+.side{background:#1d1209;color:#f2e3c6;padding:2.6rem clamp(1.5rem,2.5vw,2.6rem);display:flex;flex-direction:column;box-shadow:14px 14px 0 #b4461e}
+.side .kicker{color:#f0a070}
+.side h3{font-size:clamp(2.2rem,3.4vw,3.2rem);font-weight:800;line-height:.98;margin-bottom:1.6rem;color:#fff}
+.side ul{list-style:none;counter-reset:c}
+.side li{counter-increment:c;display:grid;grid-template-columns:3.4rem 1fr;align-items:baseline;padding:.85rem 0;border-top:1px solid rgba(240,163,112,.3);font-weight:500}
+.side li::before{content:counter(c);font-family:var(--serif);font-weight:300;font-size:2.4rem;color:#f0a070;line-height:1}
+.side li b{color:#fff}
+.side .try{margin-top:1.8rem;padding-top:1.4rem;border-top:3px double #f0a070;font-size:1.15rem}
+.side .try b{display:block;font-family:var(--serif);font-size:1.5rem;color:#f0a070;margin-bottom:.3rem}
+.colophon{margin-top:4rem;padding-top:1.4rem;border-top:1px solid rgba(43,28,15,.4);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:1.1rem}
+.colophon b{font-family:var(--serif)}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:900px){
+  .wrap{padding:5rem 1.5rem}
+  .grid2,.s3 .head,.vs,.s4 .layout,.s6 .layout,.s9 .layout,.s10 .layout,.emerge,.callouts,.paper,.s1 .three{grid-template-columns:1fr}
+  .timeline,.statrow,.steps{grid-template-columns:1fr 1fr}
+  .timeline div{padding-bottom:1.5rem}
+  .s5 .cols{column-count:1}
+  .vs>div:first-child{border-right:0;border-bottom:1px solid rgba(255,77,115,.4)}
+  .paper>div{border-right:0;border-bottom:1px solid #1b1610;padding:1.4rem 0!important}
+  .stamp{margin:0 auto}
+  .s1 .top span:first-child,.s1 .top span:last-child{text-align:center}
+  .card{position:static}
+}
+@media (max-width:560px){
+  .timeline,.statrow,.steps,.badges{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){.reveal{transition:none;opacity:1;transform:none}.stamp .spin,.floor,.cursor{animation:none}}
+</style>
+</head>
+<body>
+
+<!-- ======================= 1 · COVER ======================= -->
+<section class="spread s1" id="cover">
+  <div class="wrap">
+    <div class="top reveal"><span>Workshop Edition</span><span>Arize AI</span><span>Evals · Traces · Judges</span></div>
+    <span class="kicker reveal" style="--d:.1s;color:#a8431f">A recipe for the first one</span>
+    <h1 class="reveal" style="--d:.2s">How to Write Your <em>First</em> AI Eval</h1>
+    <div class="orn reveal" style="--d:.35s"><i>❦</i></div>
+    <p class="deck reveal" style="--d:.45s">Evals are “our primary signal for our agents.” Here is how to stop shipping on vibes: define what good means, write it down, and build a working judge.</p>
+    <p class="by reveal" style="--d:.55s"><b>SallyAnn DeLucia</b>Head of Product, Arize AI</p>
+    <div class="three reveal" style="--d:.65s">
+      <div><b>1</b><span>A clear definition of what an eval is, and what it isn’t</span></div>
+      <div><b>2</b><span>A recipe for writing your own criteria for any real agent</span></div>
+      <div><b>3</b><span>A working judge, and how to improve it over time</span></div>
+    </div>
+    <p class="src reveal" style="--d:.75s">Source: “How to Write Your First AI Eval,” workshop talk by SallyAnn DeLucia, Arize AI</p>
+  </div>
+</section>
+
+<!-- ======================= 2 · MIDNIGHT ======================= -->
+<section class="spread s2" id="vibes">
+  <div class="bignum">I</div>
+  <div class="wrap">
+    <span class="kicker reveal">01 · The Vibes Problem</span>
+    <h2 class="display reveal" style="--d:.1s">Vibes<br>don’t scale.</h2>
+    <p class="lead reveal" style="--d:.2s">“There’s <em>no way for anybody to prove</em> whether something was fixed or that it’s actually failing.” You have vibes to go off of.</p>
+
+    <div class="timeline">
+      <div class="reveal" style="--d:.1s"><h3>Monday</h3><p>You change something in your prompt and ship it. It overall feels better.</p></div>
+      <div class="reveal" style="--d:.2s"><h3>Tuesday</h3><p>Ship it again. You don’t really have a way to know, but things look good.</p></div>
+      <div class="reveal" style="--d:.3s"><h3>A week later</h3><p>The use case you shipped a fix for is broken.</p></div>
+      <div class="reveal" style="--d:.4s"><h3>Next week</h3><p>The problem keeps getting worse, and nobody can prove it either way.</p></div>
+    </div>
+
+    <p class="cant reveal">Without evals, you can’t&hellip;</p>
+    <div class="statrow">
+      <div class="stat reveal" style="--d:.05s"><b>01</b><span>Detect regressions when you change a prompt</span></div>
+      <div class="stat reveal" style="--d:.15s"><b>02</b><span>Objectively compare prompts or model versions</span></div>
+      <div class="stat reveal" style="--d:.25s"><b>03</b><span>Know if a new model is better for your use case</span></div>
+      <div class="stat reveal" style="--d:.35s"><b>04</b><span>Put official quality gates into CI as you ship</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 3 · ROSE / STAMP ======================= -->
+<section class="spread s3" id="unit-test">
+  <div class="bignum">II</div>
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <span class="kicker reveal">02 · Is an Eval Just a Unit Test?</span>
+        <h2 class="display reveal" style="--d:.1s">Not quite. <em>Not even close.</em></h2>
+      </div>
+      <div class="stamp reveal" style="--d:.3s" aria-hidden="true">
+        <svg viewBox="0 0 300 300">
+          <defs><path id="circ" d="M150,150 m-118,0 a118,118 0 1,1 236,0 a118,118 0 1,1 -236,0"/></defs>
+          <circle cx="150" cy="150" r="146" fill="none" stroke="currentColor" stroke-width="5"/>
+          <circle cx="150" cy="150" r="88" fill="none" stroke="currentColor" stroke-width="2"/>
+          <g class="spin"><text font-family="Inter" font-weight="800" font-size="22" letter-spacing="5.2" fill="currentColor"><textPath href="#circ">TRACES ARE THE LOGS FOR AI ★ EVALS ARE ACTUAL TESTS ★</textPath></text></g>
+        </svg>
+        <div class="mid"><span>Logs<br>≠<br>Tests</span></div>
+      </div>
+    </div>
+
+    <div class="vs">
+      <div class="reveal">
+        <h3><small>Traditional software</small>The unit test</h3>
+        <ul>
+          <li>One input, one correct output</li>
+          <li>You can read all of the logic in the code</li>
+          <li>Pass or fail, cleanly</li>
+        </ul>
+      </div>
+      <div class="reveal" style="--d:.15s">
+        <h3><small>AI agent</small>The eval</h3>
+        <ul>
+          <li>Many valid outputs, so no single expected answer</li>
+          <li>You cannot read the logic. It “comes out after in the form of traces”</li>
+          <li>Judge multiple criteria: the day-by-day itinerary, the budget breakdown</li>
+        </ul>
+      </div>
+    </div>
+
+    <blockquote class="reveal">The hard pill is you kind of need traces, you need observability to actually do your evals.<cite>— SallyAnn DeLucia</cite></blockquote>
+  </div>
+</section>
+
+<!-- ======================= 4 · TERMINAL ======================= -->
+<section class="spread s4" id="trace">
+  <div class="bignum">III</div>
+  <div class="wrap">
+    <span class="kicker reveal">03 · Anatomy of a Trace</span>
+    <h2 class="display reveal" style="--d:.1s">Read the<br>trace.</h2>
+    <p class="deck reveal" style="--d:.2s;font-family:var(--sans);color:#bff5d3;margin-top:1.5rem">A trace is “all of the steps an AI agent took to get an answer back.” A span is “a unit of work.” The demo: a travel-planning agent.</p>
+
+    <div class="layout">
+      <div class="win reveal" style="--d:.2s">
+        <div class="bar"><i></i><i></i><i></i><span>travel-agent · demo project · trace tree (simplified)</span></div>
+<pre><span class="dim">$</span> arize trace --open prague
+<span class="dim"># request: Prague, Czech Republic · 3 days · $800 · "more local, less touristy"</span>
+
+<span class="hl">ROOT SPAN</span>  <span class="dim">parent_id = null</span>      <span class="dim">← input + final output live here</span>
+├─ <span class="cy">research_agent</span>      <span class="dim">[agent]</span>
+│  ├─ <span class="pk">tool call</span>          <span class="dim">[tool]</span>   <span class="dim">weather, sites, essentials</span>
+│  ├─ <span class="cy">llm</span>                <span class="dim">[llm]</span>    <span class="dim">chose the tool</span>
+│  └─ <span class="cy">llm</span>                <span class="dim">[llm]</span>    <span class="dim">summarized the tool output</span>
+├─ <span class="cy">local agent</span>         <span class="dim">[agent]</span>  <span class="dim">knowledge-base retrieval</span>
+├─ <span class="cy">concise travel agent</span><span class="dim">[llm]</span>
+└─ <span class="hl">final itinerary</span>     <span class="dim">day 1 · day 2 · day 3</span>
+
+<span class="dim">$</span> <span class="cursor"></span></pre>
+      </div>
+      <div class="notes">
+        <div class="note reveal" style="--d:.3s"><b>Root span</b>Technically: parent ID equals null. Nothing sits above it, so the input and the final output usually live here.</div>
+        <div class="note reveal" style="--d:.4s"><b>Multi-agent</b>Several agents handle different tasks on behalf of the bigger one. This demo is a LangGraph agent with a few modular agents, no supervisor.</div>
+        <div class="note q reveal" style="--d:.5s"><b>Why two LLM spans?</b>The first LLM call chose the tool. The second received the tool’s data and summarized it for later steps.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 5 · ACADEMIC ======================= -->
+<section class="spread s5" id="types">
+  <div class="bignum">IV</div>
+  <div class="wrap">
+    <span class="kicker reveal">04 · A Field Guide</span>
+    <h2 class="display reveal" style="--d:.1s">Seven ways to <b>grade</b> an agent.</h2>
+
+    <div class="cols reveal" style="--d:.2s">
+      <p><strong>LLM as a judge</strong> is where we take a secondary LLM and ask it to grade some aspect of our agent: QA, summarization, relevance. You get a label and an explanation, the reasoning behind the label, so you are not taking it at face value. This is today’s focus.</p>
+      <p><strong>Decision models</strong> are new, and DeLucia thinks they will be “a huge part of evals in the future.” They are cheap and fast: a question goes in, a probability and a true/false or label comes out. No explanation, though.</p>
+      <p><strong>Code evals</strong> suit deterministic tests: is a word in the output, is something valid JSON. ROUGE and BLEU scores live here too. <strong>Annotations</strong> are golden truths on golden datasets, sometimes synthetic.</p>
+      <p><strong>Agent as a judge</strong> is a newer type, seen over roughly the last six months. A full agent evaluates something in a different agent, which suits super-complex success criteria. <strong>User feedback</strong> and <strong>business metrics</strong> round out the production side.</p>
+    </div>
+
+    <div class="callouts">
+      <div class="callout reveal" style="--d:.1s"><span class="tag">Across the life cycle</span><h3>The first four travel with you</h3><p>LLM judge, decision model, code and annotations work in development and production. Don’t throw away your dev investment.</p></div>
+      <div class="callout reveal" style="--d:.2s"><span class="tag">Production</span><h3>The last three live in prod</h3><p>Agent-as-judge leans complex; user feedback and business metrics come once real users arrive.</p></div>
+      <div class="callout reveal" style="--d:.3s"><span class="tag">Try this</span><h3>Pit judge against judge</h3><p>Convert an LLM judge into a decision judge question, then compare the performance and see which is better.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 6 · GOLD ======================= -->
+<section class="spread s6" id="start-small">
+  <div class="wrap">
+    <div class="layout">
+      <div>
+        <span class="kicker reveal">05 · Start Small</span>
+        <div class="hero-stat reveal" style="--d:.1s">32</div>
+        <h2 class="reveal" style="--d:.2s">evals now run on <i>Alex</i>, Arize’s own in-product agent.</h2>
+        <p class="deck reveal" style="--d:.3s">The first set was tiny: QA correctness, some user frustration, and the safety basics, jailbreak and toxicity. Real production usage told her what else she needed to define success.</p>
+      </div>
+      <div>
+        <p style="font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#ffb020;font-size:1.1rem" class="reveal">The labels a judge can return</p>
+        <div class="badges">
+          <div class="badge a reveal" style="--d:.1s"><b>✓</b><span>Correct</span></div>
+          <div class="badge b reveal" style="--d:.2s"><b>✗</b><span>Incorrect</span></div>
+          <div class="badge c reveal" style="--d:.3s"><b>~</b><span>Partially correct</span></div>
+          <div class="badge d reveal" style="--d:.4s"><b>—</b><span>Not applicable</span></div>
+        </div>
+        <p class="reveal">The eval returns only one label. Multi-label setups matter: in Alex, she needs to know when something is “somewhat correct, but not fully.”</p>
+        <div class="path reveal"><span>Out-of-the-box template</span><em>→</em><span>Align to your use case</span><em>→</em><span>Make it specific</span></div>
+        <blockquote class="reveal">An eval is better than no eval at all.</blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 7 · BROADSHEET ======================= -->
+<section class="spread s7" id="criteria">
+  <div class="bignum">VI</div>
+  <div class="wrap">
+    <div class="mast reveal"><h3>The Criteria Gazette</h3><p><span>Vol. 1 · Concrete Beats Vague</span><span>One Quality Per Eval</span></p></div>
+    <span class="kicker reveal" style="margin-top:2.5rem">06 · Define What Good Means</span>
+    <h2 class="reveal" style="--d:.1s">Write down what <em>good</em> means.</h2>
+    <div class="banner reveal" style="--d:.2s">Judge one quality per eval <span>START WITH ONE · ADD MORE LATER</span></div>
+
+    <div class="paper">
+      <div class="reveal">
+        <h3>Vague vs. concrete</h3>
+        <p class="strike">Helpful, accurate, good response.</p>
+        <p style="margin-top:1rem"><span class="good">Instead:</span> follows the user’s follow-ups, matches the requested number of days, keeps totals within the stated budget.</p>
+      </div>
+      <div class="reveal" style="--d:.1s">
+        <h3>Six things to write down</h3>
+        <ol>
+          <li>The task</li>
+          <li>What success looks like</li>
+          <li>What failure looks like</li>
+          <li>What is being judged</li>
+          <li>Three bullets for pass</li>
+          <li>Three bullets for fail</li>
+        </ol>
+      </div>
+      <div class="reveal" style="--d:.2s">
+        <h3>The worked example</h3>
+        <p><b>Task:</b> user sends a follow-up about their trip.</p>
+        <p><span class="good">Success:</span> answers the follow-up directly using the trip’s details.</p>
+        <p><span class="bad">Failure:</span> falls back to a generic budget.</p>
+        <p style="margin-top:1rem">Why one-liners aren’t enough: these bullets become the judge’s prompt. Research shows an LLM judge handles one criterion at a time best.</p>
+      </div>
+    </div>
+
+    <p class="pull reveal">Treat it like describing success to a coworker or a stakeholder: be that specific.</p>
+  </div>
+</section>
+
+<!-- ======================= 8 · NEON ======================= -->
+<section class="spread s8" id="build">
+  <div class="floor"></div>
+  <div class="bignum">VII</div>
+  <div class="wrap">
+    <span class="kicker reveal">07 · Build the Judge</span>
+    <h2 class="display reveal" style="--d:.1s">Turn criteria<br>into a <em>prompt.</em></h2>
+
+    <div class="steps">
+      <div class="step reveal" style="--d:.05s"><b>01</b><h3>Filter the spans</h3><p>Root spans: <code>parent ID = null</code>. Judging a tool call? Filter by name.</p></div>
+      <div class="step reveal" style="--d:.12s"><b>02</b><h3>Save to a dataset</h3><p>Select the spans you’re judging and add them to a new dataset.</p></div>
+      <div class="step reveal" style="--d:.19s"><b>03</b><h3>Open the prompt playground</h3><p>Not the agent playground, which tests your agent end to end.</p></div>
+      <div class="step reveal" style="--d:.26s"><b>04</b><h3>Write the template</h3><p>Start with a blank eval. Open with the job, add the data, paste in your pass/fail bullets.</p></div>
+      <div class="step reveal" style="--d:.33s"><b>05</b><h3>Map variables</h3><p>Connect to your exact data, so evals stay flexible when a dataset and traces name fields differently.</p></div>
+      <div class="step reveal" style="--d:.4s"><b>06</b><h3>Set labels</h3><p>Correct/incorrect, or more. Pick the optimization direction. Keep explanations on.</p></div>
+      <div class="step reveal" style="--d:.47s"><b>07</b><h3>Run and iterate</h3><p>Run it (the demo used 4.1 mini), agree or disagree with the outputs, tweak the prompt, repeat.</p></div>
+      <div class="step reveal" style="--d:.54s"><b>08</b><h3>Save the evaluator</h3><p>It’s then available across the platform, for the demo project or any app you bring in.</p></div>
+    </div>
+
+    <div class="emerge">
+      <div class="reveal"><b>Prompt tip</b>“I always kind of center it in its job.” Open with what the LLM is evaluating, then provide the data, then the criteria.</div>
+      <div class="reveal" style="--d:.15s"><b>Shortcut</b>Instrument your own app by letting your coding agent figure it out, then nudge it along. Alex can also run the playground, read results and update the prompt for you.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 9 · CLEAN PRODUCT ======================= -->
+<section class="spread s9" id="loop">
+  <div class="bignum">VIII</div>
+  <div class="wrap">
+    <span class="kicker reveal">08 · Close the Loop</span>
+    <h2 class="display reveal" style="--d:.1s">An eval is a <em>start,</em> not a finish.</h2>
+
+    <div class="layout">
+      <div class="feat">
+        <div class="reveal"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 17l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg></span><div><h3>Alex</h3><p>Runs the playground, looks at the results, updates the prompt and repeats. Best used after your first pass.</p></div></div>
+        <div class="reveal" style="--d:.1s"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span><div><h3>Signal</h3><p>A managed agent that looks at your traces, finds issues and even makes fixes.</p></div></div>
+        <div class="reveal" style="--d:.2s"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/></svg></span><div><h3>Alignment</h3><p>Annotate the examples in your dataset, run the eval, and check that it matches human feedback.</p></div></div>
+        <div class="reveal" style="--d:.3s"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 14-5.3L20 9"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 0 1-14 5.3L4 15"/><path d="M4 20v-5h5"/></svg></span><div><h3>Online evals</h3><p>Put the eval in a task that runs continuously over your traces. Every trace sent in is evaluated automatically, so you can monitor.</p></div></div>
+      </div>
+
+      <div class="card reveal" style="--d:.2s">
+        <div class="hd"><b>Online eval task</b><span class="pill">Running on every trace</span></div>
+        <div class="row"><span>Itinerary matches request</span><span class="ok">Correct</span></div>
+        <div class="row"><span>Budget kept in range</span><span class="no">Incorrect</span></div>
+        <div class="row"><span>Answers the follow-up</span><span class="ho">Partially</span></div>
+        <p class="cap">Illustrative mockup of the concept. Labels shown are examples, not real results.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 10 · CLOSER ======================= -->
+<section class="spread s10" id="closer">
+  <div class="bignum">X</div>
+  <div class="wrap">
+    <div class="layout">
+      <div>
+        <span class="kicker reveal">09 · The Takeaway</span>
+        <h2 class="reveal" style="--d:.1s">Every <em>stakeholder</em> evaluates the agent.</h2>
+        <div class="who reveal" style="--d:.2s"><span>Product</span><span>Engineering</span><span>Support</span><span>Experts</span><span>Security</span></div>
+        <p class="deck reveal" style="--d:.25s">This is not one role’s job. Get everyone with a stake in the room, and have each define what success looks like for their outcomes.</p>
+        <p class="bigquote reveal" style="--d:.3s">A metric tells you that something might be broken, but evals tell you what the actual failure mode is.<cite>— SallyAnn DeLucia, Arize AI</cite></p>
+      </div>
+      <aside class="side reveal" style="--d:.2s">
+        <span class="kicker">Your move</span>
+        <h3>Start small.</h3>
+        <ul>
+          <li><span><b>20 traces</b>, maybe</span></li>
+          <li><span><b>One dimension</b></span></li>
+          <li><span><b>One judge</b></span></li>
+          <li><span>Read the <b>explanations</b></span></li>
+          <li><span><b>Iterate</b>, then add more evals</span></li>
+        </ul>
+        <div class="try"><b>Go deeper</b>Arize docs on evaluating your LLM as a judge, plus deep dives on decision-model benchmarking.</div>
+      </aside>
+    </div>
+    <div class="colophon reveal"><span><b>How to Write Your First AI Eval</b> · SallyAnn DeLucia, Head of Product, Arize AI</span><span>Magazine edition · 10 spreads</span></div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
+  },{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+  els.forEach(function(e){io.observe(e)});
+})();
+</script>
+</body>
+</html>

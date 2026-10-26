@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Power of Pull — An 86-Minute Guide to Finding PMF</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300..800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;font-size:1.15rem;line-height:1.6;background:#111;color:#222;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Fraunces',Georgia,serif}
+.spread{position:relative;min-height:100vh;padding:6rem 4rem;display:flex;align-items:center;overflow:hidden;isolation:isolate}
+.wrap{position:relative;z-index:2;width:100%;max-width:1400px;margin:0 auto}
+.noise::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.22;mix-blend-mode:multiply;
+background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.noise-light::after{mix-blend-mode:screen;opacity:.07}
+.ghost{position:absolute;font-family:'Fraunces',serif;font-weight:900;line-height:.8;pointer-events:none;user-select:none;z-index:0}
+.kicker{font-family:'Inter',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;margin-bottom:1.5rem;display:block}
+h1,h2,h3{font-family:'Fraunces',serif}
+.h-mega{font-size:clamp(3rem,10vw,9rem);line-height:.9;letter-spacing:-.04em;font-weight:900}
+.h-big{font-size:clamp(3rem,8vw,7.5rem);line-height:.92;letter-spacing:-.035em;font-weight:800}
+.deck{font-size:clamp(1.2rem,1.8vw,1.6rem);line-height:1.5;font-weight:300;max-width:46ch}
+.attr{font-size:1.1rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+p+p{margin-top:1.1rem}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.d1{transition-delay:.12s}.d2{transition-delay:.24s}.d3{transition-delay:.36s}.d4{transition-delay:.48s}.d5{transition-delay:.6s}
+
+/* 1 COVER */
+#s1{background:radial-gradient(ellipse at 50% 0%,#fbf5e4 0%,#efe3c4 60%,#e4d4ac 100%);color:#2a1d10;text-align:center;justify-content:center}
+#s1 .ghost{font-size:62vw;left:50%;top:50%;transform:translate(-50%,-50%);color:rgba(150,110,50,.08);font-weight:300;font-style:italic}
+.rule{display:flex;align-items:center;gap:1.5rem;justify-content:center;color:#a0521d;margin:2rem auto}
+.rule::before,.rule::after{content:"";height:1px;background:currentColor;flex:0 1 220px}
+.rule span{font-size:1.5rem}
+#s1 .kicker{color:#a0521d}
+#s1 h1{font-size:clamp(3.5rem,13vw,11rem);font-weight:900;letter-spacing:-.05em;line-height:.85}
+#s1 h1 em{font-weight:300;font-style:italic;letter-spacing:-.03em;color:#a0521d}
+#s1 .sub{font-family:'Fraunces',serif;font-size:clamp(1.5rem,3vw,2.6rem);font-weight:300;font-style:italic;max-width:28ch;margin:0 auto;line-height:1.2}
+.toc{display:grid;grid-template-columns:repeat(5,1fr);gap:.4rem 2rem;max-width:1100px;margin:3rem auto 0;text-align:left;font-size:1.1rem}
+.toc div{border-top:1px solid rgba(42,29,16,.3);padding:.7rem 0;font-weight:500;line-height:1.3}
+.toc b{display:block;font-family:'Fraunces',serif;font-size:1.5rem;color:#a0521d;font-weight:700}
+
+/* 2 MIDNIGHT */
+#s2{background:#0d1117;color:#dbe6f5}
+#s2::before{content:"";position:absolute;width:900px;height:900px;right:-250px;top:-300px;background:radial-gradient(circle,rgba(56,130,255,.35),transparent 65%);z-index:0}
+#s2::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 10% 100%,rgba(80,60,255,.2),transparent 50%)}
+#s2 .ghost{font-size:34vw;right:2vw;bottom:-6vw;color:rgba(90,150,255,.07)}
+#s2 .kicker{color:#5aa2ff}
+#s2 h2 span{color:#5aa2ff;font-style:italic;font-weight:400}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:4rem;border-top:1px solid rgba(90,162,255,.3)}
+.stat{padding:2rem 2rem 0 0}
+.stat+.stat{padding-left:2rem;border-left:1px solid rgba(90,162,255,.2)}
+.stat .n{font-family:'Fraunces',serif;font-size:clamp(3.5rem,7vw,6.5rem);font-weight:900;line-height:1;letter-spacing:-.04em;color:#fff;text-shadow:0 0 40px rgba(90,162,255,.5)}
+.stat .l{font-size:1.1rem;color:#8fa8c8;margin-top:.5rem}
+#s2 .grid2{display:grid;grid-template-columns:1.2fr 1fr;gap:5rem;align-items:end}
+#s2 blockquote{font-family:'Fraunces',serif;font-size:clamp(1.5rem,2.4vw,2.2rem);line-height:1.3;font-weight:300;font-style:italic;border-left:3px solid #5aa2ff;padding-left:2rem;color:#fff}
+#s2 blockquote cite{display:block;font-family:'Inter';font-style:normal;font-size:1.1rem;letter-spacing:.15em;text-transform:uppercase;color:#5aa2ff;margin-top:1.2rem;font-weight:600}
+
+/* 3 WARM EDITORIAL */
+#s3{background:#ece0c4;color:#2b2217;background-image:linear-gradient(rgba(60,40,10,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(60,40,10,.08) 1px,transparent 1px);background-size:60px 60px}
+#s3 .ghost{font-size:40vw;left:-3vw;bottom:-8vw;color:rgba(120,70,20,.08);font-weight:900}
+#s3 .kicker{color:#b3391c}
+#s3 .cols{display:grid;grid-template-columns:1.1fr 1fr;gap:5rem;align-items:center}
+#s3 h2 em{color:#b3391c;font-weight:300}
+.pq{font-family:'Fraunces',serif;font-size:clamp(1.6rem,2.6vw,2.4rem);font-weight:500;font-style:italic;line-height:1.25;margin-top:2.5rem;padding-top:1.5rem;border-top:4px solid #2b2217}
+.panel{background:#17120c;color:#f0e6cc;padding:3rem;box-shadow:16px 16px 0 #b3391c}
+.panel .row{display:grid;grid-template-columns:5rem 1fr;gap:1.5rem;padding:1.4rem 0;border-bottom:1px solid rgba(240,230,204,.2)}
+.panel .row:last-child{border:0}
+.panel .let{font-family:'Fraunces',serif;font-size:4.5rem;font-weight:900;line-height:.9;color:#e6a23c}
+.panel h3{font-size:1.6rem;font-weight:700;letter-spacing:-.01em;margin-bottom:.2rem}
+.panel p{font-size:1.1rem;font-weight:300;line-height:1.5;color:#d8ccb0}
+
+/* 4 ROSE */
+#s4{background:#150709;color:#f8dde1;background-image:radial-gradient(ellipse at 80% 20%,rgba(220,30,70,.25),transparent 55%),repeating-linear-gradient(135deg,transparent 0 22px,rgba(255,255,255,.015) 22px 23px)}
+#s4 .ghost{font-size:36vw;left:-2vw;top:-4vw;color:rgba(230,40,80,.08)}
+#s4 .kicker{color:#ff5878}
+#s4 .head{display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:center;margin-bottom:3.5rem}
+#s4 h2 em{color:#ff5878;font-weight:300}
+.stamp{width:220px;height:220px;border:6px double #ff3f63;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;color:#ff3f63;transform:rotate(-14deg);font-family:'Fraunces',serif;font-weight:900;font-size:1.5rem;line-height:1;letter-spacing:.02em;text-transform:uppercase;padding:1rem;position:relative;box-shadow:inset 0 0 0 10px rgba(255,63,99,.08)}
+.stamp small{display:block;font-family:'Inter';font-size:1.1rem;letter-spacing:.2em;margin-top:.5rem;font-weight:700}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid rgba(255,88,120,.4)}
+.vs>div{padding:2.5rem}
+.vs>div+div{border-left:1px solid rgba(255,88,120,.4);background:rgba(255,40,80,.06)}
+.vs h3{font-size:clamp(1.8rem,3vw,2.8rem);font-weight:800;letter-spacing:-.02em;margin-bottom:.3rem}
+.vs .tag{font-size:1.1rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+.ok{color:#6be39a}.no{color:#ff5878}
+.vs ul{list-style:none;margin-top:1.5rem}
+.vs li{display:grid;grid-template-columns:3rem 1fr;gap:1rem;padding:.85rem 0;border-top:1px solid rgba(248,221,225,.14);font-size:1.1rem;line-height:1.45}
+.vs li b{font-family:'Fraunces',serif;font-size:1.8rem;line-height:1}
+.alertq{margin-top:3rem;font-family:'Fraunces',serif;font-size:clamp(1.5rem,2.6vw,2.4rem);font-weight:300;font-style:italic;max-width:32ch}
+.alertq b{color:#ff5878;font-weight:800;font-style:normal}
+
+/* 5 TERMINAL */
+#s5{background:#010803;color:#4cff8a;font-family:'JetBrains Mono','SF Mono',Menlo,Consolas,monospace;background-image:repeating-linear-gradient(0deg,rgba(76,255,138,.04) 0 2px,transparent 2px 4px),radial-gradient(ellipse at 50% 40%,rgba(30,200,90,.14),transparent 70%)}
+#s5 .ghost{font-family:'Fraunces';font-size:34vw;right:-2vw;top:-3vw;color:rgba(76,255,138,.05)}
+#s5 .kicker{color:#4cff8a;font-family:'Inter'}
+#s5 h2{font-family:'Fraunces',serif;color:#e8ffef;font-size:clamp(3rem,8vw,7rem);line-height:.92;letter-spacing:-.04em;font-weight:800;margin-bottom:2.5rem}
+#s5 h2 em{color:#4cff8a;font-weight:300}
+.win{border:1px solid #1d7a42;background:rgba(0,12,4,.88);box-shadow:0 0 70px rgba(30,200,90,.2)}
+.chrome{display:flex;gap:.6rem;align-items:center;padding:.9rem 1.2rem;border-bottom:1px solid #1d7a42;background:#04180b;font-size:1.1rem;color:#7fd9a0}
+.chrome i{width:14px;height:14px;border-radius:50%;display:inline-block}
+.chrome i:nth-child(1){background:#ff5f56}.chrome i:nth-child(2){background:#ffbd2e}.chrome i:nth-child(3){background:#27c93f}
+.chrome span{margin-left:1rem}
+.term{display:grid;grid-template-columns:1.1fr 1fr;gap:0}
+.term>div{padding:2rem 2.2rem;font-size:1.1rem;line-height:1.75}
+.term>div+div{border-left:1px solid #1d7a42}
+.term .c{color:#4f9a6c}
+.term .y{color:#ffe14d}
+.term .w{color:#e8ffef}
+.term table{width:100%;border-collapse:collapse}
+.term td{padding:.55rem 0;border-bottom:1px dashed #1d5a35;vertical-align:top}
+.term td:last-child{text-align:right;color:#ffe14d;font-weight:700;white-space:nowrap;padding-left:1rem}
+.cursor{display:inline-block;width:.65em;height:1.15em;background:#4cff8a;vertical-align:text-bottom;animation:blink 1s steps(1) infinite;margin-left:.2em}
+@keyframes blink{50%{opacity:0}}
+
+/* 6 ACADEMIC */
+#s6{background:#0a1431;color:#d7def0;background-image:radial-gradient(circle at 15% 15%,rgba(90,120,220,.22),transparent 45%),linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px);background-size:auto,100% 34px}
+#s6 .ghost{font-size:44vw;right:-4vw;bottom:-10vw;color:rgba(130,160,255,.06);font-weight:300;font-style:italic}
+#s6 .kicker{color:#e8c872}
+#s6 h2 em{color:#e8c872;font-weight:300}
+.acad{display:grid;grid-template-columns:2fr 1fr;gap:4rem;margin-top:3rem}
+.cols2{column-count:2;column-gap:3rem;column-rule:1px solid rgba(215,222,240,.25);font-size:1.15rem;line-height:1.75;text-align:justify;hyphens:auto}
+.cols2 p:first-child::first-letter{font-family:'Fraunces',serif;font-weight:900;font-size:8.5rem;float:left;line-height:.75;padding:.5rem 1rem 0 0;color:#e8c872}
+.callout{border:1px solid #e8c872;padding:2rem;background:rgba(232,200,114,.07);align-self:start}
+.callout+.callout{margin-top:1.5rem}
+.callout h3{font-size:1.4rem;font-weight:700;color:#e8c872;margin-bottom:.6rem}
+.callout p{font-size:1.1rem;line-height:1.55}
+.bar{display:flex;height:3.2rem;margin:1rem 0 .6rem;font-weight:700;font-size:1.1rem}
+.bar div{display:flex;align-items:center;justify-content:center}
+.bar .a{width:10%;background:#e8c872;color:#0a1431}
+.bar .b{width:90%;background:#3a58b8;color:#fff}
+
+/* 7 GOLD */
+#s7{background:#120d03;color:#f5e8c4;background-image:radial-gradient(circle at 25% 50%,rgba(255,180,30,.22),transparent 55%),repeating-linear-gradient(90deg,transparent 0 99px,rgba(255,200,80,.04) 99px 100px)}
+#s7 .kicker{color:#f2b630}
+.gold-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.bignum{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(14rem,34vw,32rem);line-height:.75;letter-spacing:-.06em;background:linear-gradient(180deg,#ffe28a 0%,#f2b630 45%,#a8690e 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 50px rgba(242,182,48,.3))}
+.bignum-l{font-family:'Fraunces',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:300;font-style:italic;color:#f2b630;line-height:1.1;margin-top:1rem}
+#s7 h2{font-size:clamp(2.6rem,5.5vw,5rem);line-height:.95;letter-spacing:-.03em;font-weight:800;margin-bottom:2rem}
+.grades{display:grid;gap:1rem;margin:2rem 0}
+.grade{display:grid;grid-template-columns:5.5rem 1fr;gap:1.5rem;align-items:center;padding:1rem 1.4rem;border:1px solid rgba(242,182,48,.35);background:rgba(242,182,48,.05)}
+.badge{width:5.5rem;height:5.5rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:2.6rem;font-weight:900;border:3px solid #f2b630;color:#f2b630}
+.grade.low .badge{border-color:#8a6a2a;color:#8a6a2a}
+.grade b{display:block;font-size:1.1rem;letter-spacing:.18em;text-transform:uppercase;color:#f2b630}
+.grade.low b{color:#a58a50}
+.grade span{font-family:'Fraunces',serif;font-style:italic;font-size:1.3rem;line-height:1.3}
+.steps{list-style:none;counter-reset:s;margin-top:1.5rem}
+.steps li{counter-increment:s;display:grid;grid-template-columns:3rem 1fr;gap:1rem;padding:.7rem 0;border-top:1px solid rgba(245,232,196,.18);font-size:1.1rem;line-height:1.45}
+.steps li::before{content:counter(s);font-family:'Fraunces',serif;font-size:1.8rem;font-weight:800;color:#f2b630;line-height:1}
+
+/* 8 BROADSHEET */
+#s8{background:#f2ebda;color:#1c1a16;padding-top:5rem}
+#s8 .ghost{font-size:42vw;right:-3vw;bottom:-9vw;color:rgba(0,0,0,.045)}
+.mast{border-top:6px double #1c1a16;border-bottom:6px double #1c1a16;padding:1.2rem 0;text-align:center;margin-bottom:1.5rem}
+.mast h2{font-family:'Fraunces',serif;font-size:clamp(3rem,9vw,8rem);font-weight:900;letter-spacing:-.04em;line-height:.9;text-transform:uppercase;font-variation-settings:'opsz' 144}
+.mast p{font-size:1.1rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;border-top:1px solid #1c1a16;margin-top:1rem;padding-top:.7rem}
+.banner{background:#c5231b;color:#fff;padding:1.4rem 2rem;display:flex;gap:2rem;align-items:center;margin-bottom:2rem}
+.banner .n{font-family:'Fraunces',serif;font-size:clamp(3rem,6vw,5.5rem);font-weight:900;line-height:.9;letter-spacing:-.04em;white-space:nowrap}
+.banner p{font-family:'Fraunces',serif;font-size:clamp(1.3rem,2.2vw,2rem);line-height:1.2;font-weight:600;font-style:italic}
+.news{column-count:3;column-gap:2.5rem;column-rule:1px solid #1c1a16;font-size:1.1rem;line-height:1.65;text-align:justify;hyphens:auto}
+.news h3{font-size:1.8rem;line-height:1.05;font-weight:800;letter-spacing:-.02em;margin:0 0 .6rem;break-after:avoid;text-align:left}
+.news section{break-inside:avoid;margin-bottom:1.8rem;padding-bottom:1.5rem;border-bottom:1px solid #1c1a16}
+.news section:last-child{border:0}
+.news .by{font-size:1.1rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#c5231b;display:block;margin-bottom:.5rem;text-align:left}
+.news blockquote{font-family:'Fraunces',serif;font-size:1.5rem;font-style:italic;line-height:1.25;font-weight:500;margin:.8rem 0;padding:.8rem 0;border-top:3px solid #1c1a16;border-bottom:3px solid #1c1a16;text-align:left}
+
+/* 9 NEON */
+#s9{background:#04060d;color:#d7f7ff;perspective:900px}
+#s9 .floor{position:absolute;left:-50%;right:-50%;bottom:0;height:55%;z-index:0;transform:rotateX(62deg);transform-origin:bottom;
+background-image:linear-gradient(rgba(0,240,255,.55) 2px,transparent 2px),linear-gradient(90deg,rgba(255,0,200,.55) 2px,transparent 2px);background-size:80px 80px;mask-image:linear-gradient(to top,#000 10%,transparent 90%);-webkit-mask-image:linear-gradient(to top,#000 10%,transparent 90%);animation:glide 6s linear infinite}
+@keyframes glide{to{background-position:0 80px,80px 0}}
+#s9::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 35%,rgba(0,240,255,.18),transparent 55%),radial-gradient(ellipse at 85% 10%,rgba(255,0,200,.2),transparent 45%);z-index:0}
+#s9 .ghost{font-size:40vw;left:50%;top:5vw;transform:translateX(-50%);color:rgba(0,240,255,.05)}
+#s9 .kicker{color:#00f0ff;text-shadow:0 0 14px #00f0ff}
+#s9 h2 em{font-style:normal;color:#ff2bd6;text-shadow:0 0 30px rgba(255,43,214,.7)}
+#s9 h2{text-shadow:0 0 40px rgba(0,240,255,.35)}
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin:3.5rem 0 2.5rem;position:relative}
+.node{border:1px solid #00f0ff;background:rgba(4,12,24,.82);padding:1.8rem;box-shadow:0 0 30px rgba(0,240,255,.25),inset 0 0 30px rgba(0,240,255,.06);position:relative}
+.node:nth-child(2){border-color:#ff2bd6;box-shadow:0 0 30px rgba(255,43,214,.3),inset 0 0 30px rgba(255,43,214,.07)}
+.node:nth-child(3){border-color:#9dff3c;box-shadow:0 0 30px rgba(157,255,60,.25),inset 0 0 30px rgba(157,255,60,.06)}
+.node:not(:last-child)::after{content:"→";position:absolute;right:-1.7rem;top:50%;transform:translateY(-50%);font-size:2rem;color:#fff;z-index:3}
+.node .nn{font-family:'Fraunces',serif;font-size:3rem;font-weight:900;color:#00f0ff;line-height:1}
+.node:nth-child(2) .nn{color:#ff2bd6}.node:nth-child(3) .nn{color:#9dff3c}
+.node h3{font-size:1.7rem;font-weight:700;margin:.4rem 0}
+.node p{font-size:1.1rem;color:#b9d6dd;line-height:1.5}
+.emerge{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.emerge>div{border-left:4px solid #00f0ff;background:rgba(0,240,255,.07);padding:1.6rem 2rem;font-size:1.1rem;line-height:1.55}
+.emerge>div:nth-child(2){border-color:#9dff3c;background:rgba(157,255,60,.07)}
+.emerge b{display:block;font-family:'Fraunces',serif;font-size:1.5rem;color:#fff;margin-bottom:.4rem}
+
+/* 10 CLEAN PRODUCT */
+#s10{background:#fff;color:#16163a;background-image:radial-gradient(circle at 90% 5%,rgba(99,102,241,.12),transparent 40%),radial-gradient(circle at 0% 100%,rgba(99,102,241,.08),transparent 40%)}
+#s10 .ghost{font-size:38vw;left:-2vw;bottom:-9vw;color:rgba(99,102,241,.06)}
+#s10 .kicker{color:#4f46e5}
+#s10 h2 em{color:#4f46e5;font-weight:300}
+.prod{display:grid;grid-template-columns:1fr 1fr;gap:5rem;margin-top:3.5rem;align-items:start}
+.feats{list-style:none}
+.feats li{display:grid;grid-template-columns:3.4rem 1fr;gap:1.2rem;padding:1.1rem 0;border-bottom:1px solid #e5e7f5;align-items:start}
+.ico{width:3.4rem;height:3.4rem;border-radius:14px;background:#eef0ff;color:#4f46e5;display:flex;align-items:center;justify-content:center}
+.ico svg{width:1.7rem;height:1.7rem;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.feats b{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:700;display:block;line-height:1.15}
+.feats span{font-size:1.1rem;color:#4b4d73;line-height:1.5}
+.card{background:#fff;border-radius:24px;box-shadow:0 30px 80px rgba(79,70,229,.22),0 0 0 1px #e1e3fa;overflow:hidden}
+.card .top{background:#4f46e5;color:#fff;padding:1.4rem 2rem;font-size:1.1rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;display:flex;justify-content:space-between}
+.card .body{padding:2rem}
+.card .f{padding:1rem 0;border-bottom:1px solid #eceefb}
+.card .f small{font-size:1.1rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#4f46e5;display:block}
+.card .f span{font-family:'Fraunces',serif;font-size:1.3rem;font-style:italic;color:#555880}
+.final{margin-top:4rem;padding-top:2.5rem;border-top:4px solid #4f46e5;display:grid;grid-template-columns:1.4fr 1fr;gap:3rem;align-items:end}
+.final q{font-family:'Fraunces',serif;font-size:clamp(2.2rem,5vw,4.6rem);font-weight:800;line-height:1;letter-spacing:-.03em;quotes:none}
+.final q em{color:#4f46e5;font-weight:300}
+.final p{font-size:1.15rem;color:#4b4d73}
+.final strong{color:#16163a}
+
+@media(max-width:900px){
+.spread{padding:4rem 1.5rem}
+.toc{grid-template-columns:1fr 1fr}
+#s2 .grid2,#s3 .cols,.acad,.gold-grid,.prod,.final,.term,.vs,.emerge,#s4 .head{grid-template-columns:1fr}
+.stats{grid-template-columns:1fr}.stat+.stat{padding-left:0;border-left:0;border-top:1px solid rgba(90,162,255,.2);margin-top:1.5rem}
+.cols2{column-count:1}.news{column-count:1}
+.term>div+div{border-left:0;border-top:1px solid #1d7a42}
+.vs>div+div{border-left:0;border-top:1px solid rgba(255,88,120,.4)}
+.flow{grid-template-columns:1fr}.node:not(:last-child)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-2.2rem;transform:translateX(-50%)}
+.banner{flex-direction:column;align-items:flex-start}
+.stamp{width:170px;height:170px;font-size:1.2rem}
+.panel{padding:1.8rem}
+}
+</style>
+</head>
+<body>
+
+<!-- 1 COVER -->
+<section class="spread noise" id="s1">
+  <div class="ghost">P</div>
+  <div class="wrap">
+    <span class="kicker reveal">Lenny’s Podcast &nbsp;·&nbsp; An 86-Minute Field Guide</span>
+    <h1 class="reveal d1">The Power<br>of <em>Pull</em></h1>
+    <div class="rule reveal d2"><span>❦</span></div>
+    <p class="sub reveal d2">How to find product-market fit by finding the person who would be weird not to buy.</p>
+    <p class="attr reveal d3" style="margin-top:2.5rem">Rob Snyder · Author, <em>The Power of Pull</em> · Newsletter: <em>The Physics of Startups</em></p>
+    <p class="reveal d3" style="font-size:1.1rem;margin-top:.4rem;opacity:.75">Source: “An 86-minute guide to finding PMF,” in conversation with Lenny Rachitsky</p>
+    <div class="toc reveal d4">
+      <div><b>01</b>Pull is a person</div>
+      <div><b>02</b>P · U · L · L</div>
+      <div><b>03</b>All four or nothing</div>
+      <div><b>04</b>Founder magic</div>
+      <div><b>05</b>Earn the secret</div>
+      <div><b>06</b>Five calls</div>
+      <div><b>07</b>Break glass</div>
+      <div><b>08</b>The case study factory</div>
+      <div><b>09</b>The metal detector</div>
+      <div><b>10</b>Think less</div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 MIDNIGHT -->
+<section class="spread noise noise-light" id="s2">
+  <div class="ghost">I</div>
+  <div class="wrap">
+    <span class="kicker reveal">01 — The Premise</span>
+    <div class="grid2">
+      <div>
+        <h2 class="h-big reveal d1">Pull is a <span>person</span>, not a company.</h2>
+      </div>
+      <blockquote class="reveal d2">“You’re not selling to SpaceX. You’re selling to the head of legal at SpaceX who has a project on her to-do list that they can’t do themselves.”<cite>Rob Snyder</cite></blockquote>
+    </div>
+    <div class="stats">
+      <div class="stat reveal d2"><div class="n">50</div><div class="l">startups taken from zero to over $1M in ARR, roughly, with Rob’s help</div></div>
+      <div class="stat reveal d3"><div class="n">2 yrs</div><div class="l">Rob spent “smashed into a wall” as a founder despite hair-on-fire pain and daily design partners</div></div>
+      <div class="stat reveal d4"><div class="n">weird</div><div class="l">not to buy. That is the test. A person with pull should rip the product out of your hands.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 WARM EDITORIAL -->
+<section class="spread noise" id="s3">
+  <div class="ghost">II</div>
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <span class="kicker reveal">02 — The Framework</span>
+        <h2 class="h-mega reveal d1">Four letters. <em>One coiled spring.</em></h2>
+        <p class="deck reveal d2" style="margin-top:2rem">Pain points, value props and design partners are not what make people buy. A certain kind of priority does: somebody trying to get something done right now who can’t do it with their existing options.</p>
+        <p class="pq reveal d3">“Pull describes a person who would be weird not to buy.”</p>
+      </div>
+      <div class="panel reveal d2">
+        <div class="row"><div class="let">P</div><div><h3>Project</h3><p>A job to be done. Not “I want to buy recruitment software” but “I want to hire more employees.”</p></div></div>
+        <div class="row"><div class="let">U</div><div><h3>Unavoidable</h3><p>A thing I have to do right now. Why now? Why not later?</p></div></div>
+        <div class="row"><div class="let">L</div><div><h3>List of options</h3><p>Hiring someone, the existing team, tools I already have, tools on the market.</p></div></div>
+        <div class="row"><div class="let">L</div><div><h3>Limitations</h3><p>Why those options are not good enough to get the project done.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 ROSE -->
+<section class="spread noise noise-light" id="s4">
+  <div class="ghost">III</div>
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <span class="kicker reveal">03 — Diagnosis</span>
+        <h2 class="h-big reveal d1">Same job. <em>Different force.</em></h2>
+      </div>
+      <div class="stamp reveal d2"><div>All four<br>or<br>nothing<small>REAL PULL</small></div></div>
+    </div>
+    <div class="vs">
+      <div class="reveal d1">
+        <span class="tag ok">Pull ✓ &nbsp; Jump · AI notetaker for financial advisors</span>
+        <h3>Financial advisors</h3>
+        <ul>
+          <li><b class="ok">P</b><span>Minimize the time spent taking client-meeting notes and putting them into the CRM.</span></li>
+          <li><b class="ok">U</b><span>If they don’t take notes and log them in the CRM, “they could go to jail.”</span></li>
+          <li><b class="ok">L</b><span>Generic AI notetakers, of which there are many.</span></li>
+          <li><b class="ok">L</b><span>No integration with the advisor CRM, and unclear SEC compliance.</span></li>
+        </ul>
+      </div>
+      <div class="reveal d2">
+        <span class="tag no">No pull ✗ &nbsp; Same product, new audience</span>
+        <h3>Insurance agents</h3>
+        <ul>
+          <li><b class="ok">P</b><span>Same project: minimize time spent on meeting notes.</span></li>
+          <li><b class="no">U</b><span>Missing. They’re “not required to put meeting notes into their CRM.”</span></li>
+          <li><b class="no">L</b><span>Their existing option is simply not taking notes, which they were already doing.</span></li>
+          <li><b class="no">L</b><span>“The force isn’t there. They’re fine.”</span></li>
+        </ul>
+      </div>
+    </div>
+    <p class="alertq reveal d3">After 18 months of head-banging, Jump found pull. One advisor said <b>“this must be how Alexander Graham Bell felt when he invented the telephone.”</b></p>
+  </div>
+</section>
+
+<!-- 5 TERMINAL -->
+<section class="spread" id="s5">
+  <div class="ghost">IV</div>
+  <div class="wrap">
+    <span class="kicker reveal">04 — Founder Magic</span>
+    <h2 class="reveal d1">Just say something <em>interesting.</em></h2>
+    <div class="win reveal d2">
+      <div class="chrome"><i></i><i></i><i></i><span>~/outreach — goal: 2–3 conversations per day</span></div>
+      <div class="term">
+        <div>
+          <div class="c"># weekly LinkedIn schedule</div>
+          <table>
+            <tr><td>connect with potential customers</td><td>100–150 / wk</td></tr>
+            <tr><td>roughly per day</td><td>20</td></tr>
+            <tr><td>accept the request</td><td>30–40%</td></tr>
+            <tr><td>of those, reply</td><td>30–50%</td></tr>
+            <tr><td>of repliers</td><td>“yeah, sure, why not”</td></tr>
+          </table>
+          <br>
+          <div class="c"># low accepts?</div>
+          <div class="w">&gt; check your profile</div>
+          <div class="c"># accepts but no replies?</div>
+          <div class="w">&gt; your message isn’t interesting<span class="cursor"></span></div>
+        </div>
+        <div>
+          <div class="c"># messages that worked</div>
+          <div class="y">$ send --to cold_prospect</div>
+          <div class="w">“Hey, Snoop Dogg invested in us and I thought you’d find it interesting, too. Would you be open to chat?”</div>
+          <br>
+          <div class="w">“Hey, I dropped out of my PhD and I’m now working on something for content marketers.”</div>
+          <br>
+          <div class="w">“I worked at my family’s plumbing company in high school…” <span class="c">(for HVAC buyers)</span></div>
+          <br>
+          <div class="c"># don’t</div>
+          <div class="w">pitch pain points · lean on AI personalization<br><span class="c">“that looks like Claude wrote it”</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 ACADEMIC -->
+<section class="spread noise noise-light" id="s6">
+  <div class="ghost">V</div>
+  <div class="wrap">
+    <span class="kicker reveal">05 — Where Ideas Come From</span>
+    <h2 class="h-big reveal d1">Earn the <em>secret.</em></h2>
+    <div class="acad">
+      <div class="cols2 reveal d2">
+        <p>These things don’t emerge from a whiteboard. Rob’s friend from school had no product idea at all, only a wish to serve small businesses. He listed industries, then shadowed them, working alongside people for days at a time. Solar panel installers: “he hated them and they hated him.” Independent physical therapists: he loved them and they loved him.</p>
+        <p>He watched over their shoulders for days. He even tried to buy a physical therapy franchise so he could see the P&amp;L. Somewhere in there he noticed: it looks like you’re trying to do X and are stuck. He wrote it up as a pull hypothesis, showed it to a therapist (“Is this you?”) and heard, “Oh my god, yeah, that’s exactly the thing.”</p>
+        <p>Then came the step that mattered: five more physical therapists, to make sure it repeated. They pulled too. The deeper reason is philosophical: if you don’t have firsthand experience, how will you make the thousands of decisions it takes to build something that serves them?</p>
+      </div>
+      <div>
+        <div class="callout reveal d3">
+          <h3>Where Rob’s 50 ideas came from</h3>
+          <div class="bar"><div class="a">10%</div><div class="b">90%</div></div>
+          <p>10% own experience. 90% going and getting firsthand experience, doing the job alongside the customer.</p>
+        </div>
+        <div class="callout reveal d4">
+          <h3>The two-slide test</h3>
+          <p><b>Slide 1:</b> “Here’s what I hear. You’re trying to do X right now because of Y; you’ve considered this but it’s not good enough for this reason. Do I have that roughly right?”</p>
+          <p><b>Slide 2:</b> a conceptual overview of how you could help.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 GOLD -->
+<section class="spread noise noise-light" id="s7">
+  <div class="wrap">
+    <span class="kicker reveal">06 — The Sales Call</span>
+    <div class="gold-grid">
+      <div class="reveal d1">
+        <div class="bignum">5</div>
+        <div class="bignum-l">calls, then stop and check in. Did anyone lean in?</div>
+      </div>
+      <div>
+        <h2 class="reveal d1">If you have pull, they’ll rip it out of your hands.</h2>
+        <div class="grades reveal d2">
+          <div class="grade"><div class="badge">A</div><div><b>Pull-shaped action</b><span>“I need this right now. How do we move forward right now?”</span></div></div>
+          <div class="grade low"><div class="badge">C</div><div><b>Pushing into the future</b><span>“I could totally see us using this in Q4.”</span></div></div>
+          <div class="grade low"><div class="badge">F</div><div><b>Leaned-out enthusiasm</b><span>“Tell me more.” “Could you send more information?”</span></div></div>
+        </div>
+        <ol class="steps reveal d3">
+          <li><span>Book 30 minutes. Smaller blocks don’t register on a calendar and people don’t show.</span></li>
+          <li><span>Open with: “Why did you take the call with me today?”</span></li>
+          <li><span>Get a thumbs-up on the agenda, then ask: “Do you mind if I ask a few questions?”</span></li>
+          <li><span>Pitch small: “It sounds like you’re looking for X without the hassle of Y. Roughly right?”</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 BROADSHEET -->
+<section class="spread noise" id="s8">
+  <div class="ghost">VI</div>
+  <div class="wrap">
+    <div class="mast">
+      <span class="kicker" style="color:#c5231b;margin:0 0 .6rem">07 — Special Edition</span>
+      <h2 class="reveal">Break Glass in Case of Emergency</h2>
+      <p><span>Hail Mary</span><span>Goblin Mode</span><span>No Design Partners</span></p>
+    </div>
+    <div class="banner reveal d1"><div class="n">20</div><p>“Is there anything on your to-do list that you would pay me to do right now?” A founder booked 20 conference meetings and said: you tell me what to build.</p></div>
+    <div class="news reveal d2">
+      <section>
+        <span class="by">The Hail Mary</span>
+        <h3>When the call goes lukewarm, ask the open question</h3>
+        <p>Not every call has pull. So throw the Hail Mary: is there anything you’d pay somebody to take off your plate? One startup selling an applicant tracking system into governments heard, “Yeah, that’s kind of interesting.” Then, after the Hail Mary: what they’d actually pay to solve was a job description problem. That became their first contract and first customer, and they’ve grown fast since.</p>
+        <blockquote>“I’m just seeing if they need help with anything they are stuck on.”</blockquote>
+      </section>
+      <section>
+        <span class="by">Goblin Mode</span>
+        <h3>Zoomies, but for founders</h3>
+        <p>“You know when dogs get the zoomies?” That is Rob’s image of goblin mode: somewhat crazy things to get in front of customers right now. A conference in Europe tomorrow? Get on a plane. Tiro, a dental hygienist staffing company, had the founder’s parents go door to door to dental offices. It worked. Break glass in case of emergency, because “staying stuck is awful.”</p>
+      </section>
+      <section>
+        <span class="by">The Pivot</span>
+        <h3>Five banking calls, nothing. One intro, everything.</h3>
+        <p>A startup did five calls into banking and felt nothing. One contact said it didn’t seem relevant but suggested defense companies. They knew nothing about defense. In the first conversation: “Holy, are you serious?” They changed their pull hypothesis.</p>
+      </section>
+      <section>
+        <span class="by">Sell, Don’t Pilot</span>
+        <h3>The design partner trap</h3>
+        <p>A design partner “buys into your vision,” gives feedback, and never buys. The feedback is just them “playing Steve Jobs.” People with something truly important to get done “don’t want to be a design partner. They just want that thing done.” No pilots, no proofs of concept, unless the buyer insists.</p>
+        <p><b>On price:</b> early on, test willingness to transact, not to pay. Frame by the Ls: the value of the finished project, or the cost of the alternatives, such as $50,000 a year for consultants. When you need a big number, show a case study: projects from $80,000 up to a million. “You tell me how you’re thinking about this.”</p>
+      </section>
+    </div>
+  </div>
+</section>
+
+<!-- 9 NEON -->
+<section class="spread noise noise-light" id="s9">
+  <div class="floor"></div>
+  <div class="ghost">VII</div>
+  <div class="wrap">
+    <span class="kicker reveal">08 — The Mental Model</span>
+    <h2 class="h-big reveal d1">We don’t make software here. We make <em>case studies.</em></h2>
+    <div class="flow">
+      <div class="node reveal d1"><div class="nn">01</div><h3>Pipeline</h3><p>How do we get people to talk to us?</p></div>
+      <div class="node reveal d2"><div class="nn">02</div><h3>Sales</h3><p>How do we turn potential customers into actual customers?</p></div>
+      <div class="node reveal d3"><div class="nn">03</div><h3>Delivery</h3><p>How do we make customers weird to churn?</p></div>
+    </div>
+    <div class="emerge">
+      <div class="reveal d3"><b>One case study, a million times</b>A startup is “a thing that repeats one case study infinite times.” Find the bottleneck with the theory of constraints, solve only that, then move to the next.</div>
+      <div class="reveal d4"><b>Everyone churns, until X</b>For Rob’s restaurant retention software, a notification that someone was about to quit, within two weeks of purchase, made customers “go insane.” Design onboarding around that moment. One horizontal AI product with 90%+ churn found freight forwarders and went premium.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 CLEAN PRODUCT -->
+<section class="spread" id="s10">
+  <div class="ghost">VIII</div>
+  <div class="wrap">
+    <span class="kicker reveal">09 — The Whole Loop</span>
+    <h2 class="h-big reveal d1">A metal detector, <em>not a spoon.</em></h2>
+    <div class="prod">
+      <ul class="feats reveal d2">
+        <li><div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div><div><b>Stake a pull hypothesis</b><span>Pick a specific person who is stuck. Do the job firsthand.</span></div></li>
+        <li><div class="ico"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/></svg></div><div><b>Get the call</b><span>One interesting sentence, not a value prop.</span></div></li>
+        <li><div class="ico"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></div><div><b>Sell, see if they try to buy</b><span>Five calls, then check in. Hail Mary if it’s lukewarm.</span></div></li>
+        <li><div class="ico"><svg viewBox="0 0 24 24"><path d="M3 12h13M12 6l6 6-6 6"/></svg></div><div><b>Deliver firsthand</b><span>Find the moment they can’t live without it.</span></div></li>
+        <li><div class="ico"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12h8M8 8h8M8 16h5"/></svg></div><div><b>Repeat the case study</b><span>Hell-yes customers before and after they buy.</span></div></li>
+      </ul>
+      <div class="card reveal d3">
+        <div class="top"><span>Pull hypothesis</span><span>v1</span></div>
+        <div class="body">
+          <div class="f"><small>Project</small><span>There’s a project on your to-do list: ______</span></div>
+          <div class="f"><small>Unavoidable</small><span>It’s unavoidable right now because ______</span></div>
+          <div class="f"><small>List of options</small><span>The options you looked into are ______</span></div>
+          <div class="f" style="border:0"><small>Limitations</small><span>They’re lacking because ______</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="final">
+      <q class="reveal">Pull framework. Sell. See if they try to buy. <em>Think less.</em></q>
+      <div class="reveal d2">
+        <p>“You could give me a 100x better printer for my house and I won’t buy it because I’m not blocked.”</p>
+        <p style="margin-top:1rem"><strong>Rob Snyder</strong> · <em>The Power of Pull</em> · newsletter: <em>The Physics of Startups</em>. “I’m not giving you a spoon.”</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

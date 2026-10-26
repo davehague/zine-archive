@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Business of Selling Empty Wedding Seats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,500;1,9..144,800&family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --display:'Fraunces', Georgia, serif;
+  --body:'Inter', system-ui, sans-serif;
+  --mono:ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --noise:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);font-size:1.15rem;line-height:1.6;background:#111;color:#222;-webkit-font-smoothing:antialiased}
+p,li,blockquote,span,div,small,label{font-size:inherit}
+.spread{position:relative;min-height:100vh;width:100%;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:6rem 4rem}
+.spread::before{content:"";position:absolute;inset:0;background-image:var(--noise);opacity:.07;mix-blend-mode:multiply;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:2;width:100%;max-width:1400px;margin:0 auto}
+.kicker{font-family:var(--body);font-weight:700;text-transform:uppercase;letter-spacing:.28em;font-size:1.1rem;margin-bottom:1.6rem;display:inline-block}
+.ghost{position:absolute;z-index:1;font-family:var(--display);font-weight:900;line-height:.8;pointer-events:none;user-select:none}
+h1,h2,h3{font-family:var(--display);font-weight:900}
+.h-xl{font-size:clamp(3rem,9vw,9rem);line-height:.92;letter-spacing:-.035em}
+.h-lg{font-size:clamp(3rem,7.4vw,7.4rem);line-height:.95;letter-spacing:-.03em}
+.deck{font-size:clamp(1.15rem,1.7vw,1.6rem);line-height:1.5;font-weight:300;max-width:46rem}
+/* reveal */
+.reveal{opacity:0;transform:translateY(38px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1);transition-delay:calc(var(--d,0) * 130ms)}
+.reveal.in{opacity:1;transform:none}
+.no-io .reveal{opacity:1;transform:none}
+
+/* 1 COVER */
+.s1{background:radial-gradient(ellipse at 50% 30%,#fbf5e4 0%,#f1e6c9 60%,#e6d7b0 100%);color:#2a1f14;text-align:center}
+.s1 .kicker{color:#8c3b2a}
+.s1 h1{font-size:clamp(3rem,10vw,9rem);line-height:.9;letter-spacing:-.04em;font-weight:900;margin:.5rem 0 0}
+.s1 h1 em{font-style:italic;font-weight:300;letter-spacing:-.02em;color:#8c3b2a}
+.s1 .rule{display:flex;align-items:center;justify-content:center;gap:1.4rem;margin:2.6rem auto;max-width:640px;color:#8c3b2a}
+.s1 .rule::before,.s1 .rule::after{content:"";flex:1;height:0;border-top:3px double #8c3b2a}
+.s1 .rule span{font-family:var(--display);font-size:2rem}
+.s1 .deck{margin:0 auto;font-family:var(--display);font-style:italic;font-weight:300;font-size:clamp(1.3rem,2.2vw,2rem)}
+.s1 .src{margin-top:3rem;font-size:1.1rem;letter-spacing:.18em;text-transform:uppercase;font-weight:500;color:#5a4632}
+.s1 .src b{font-weight:900;color:#2a1f14}
+.s1 .ghost{font-size:clamp(20rem,46vw,46rem);color:#8c3b2a;opacity:.06;left:50%;top:50%;transform:translate(-50%,-48%);white-space:nowrap}
+
+/* 2 MIDNIGHT */
+.s2{background:#0d1117;color:#e6edf3;background-image:radial-gradient(circle at 80% 10%,rgba(56,139,253,.28),transparent 45%),radial-gradient(circle at 5% 95%,rgba(88,166,255,.15),transparent 40%)}
+.s2::before{mix-blend-mode:screen;opacity:.05}
+.s2 .kicker{color:#58a6ff}
+.s2 .ghost{font-size:clamp(14rem,34vw,34rem);right:-2rem;top:-1rem;color:#58a6ff;opacity:.07}
+.s2 h2{margin-bottom:1.6rem;background:linear-gradient(180deg,#fff 30%,#7db6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.s2 .deck{color:#9fb0c4;margin-bottom:4rem}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #243041}
+.stat{padding:2.4rem 2rem 1rem 0;border-right:1px solid #243041;padding-left:2rem}
+.stat:first-child{padding-left:0}.stat:last-child{border-right:none}
+.stat .n{font-family:var(--display);font-weight:300;font-size:clamp(3rem,6.5vw,6.5rem);line-height:1;letter-spacing:-.04em;color:#58a6ff;text-shadow:0 0 40px rgba(88,166,255,.5)}
+.stat .l{margin-top:.8rem;color:#9fb0c4;font-size:1.15rem;max-width:18rem}
+
+/* 3 WARM EDITORIAL */
+.s3{background:#efe4cc;color:#2b2118;background-image:linear-gradient(rgba(60,40,20,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(60,40,20,.08) 1px,transparent 1px);background-size:64px 64px}
+.s3 .grid{display:grid;grid-template-columns:1.7fr 1fr;gap:4rem;align-items:stretch}
+.s3 .kicker{color:#b4531f}
+.s3 .ghost{font-size:clamp(14rem,30vw,30rem);left:-1rem;bottom:-4rem;color:#b4531f;opacity:.1;font-style:italic}
+.s3 h2{margin-bottom:2rem}
+.s3 h2 i{font-weight:300;color:#b4531f}
+.s3 blockquote{font-family:var(--display);font-style:italic;font-weight:500;font-size:clamp(1.6rem,2.8vw,2.7rem);line-height:1.2;border-left:6px solid #b4531f;padding-left:2rem;margin:2.4rem 0}
+.s3 blockquote cite{display:block;margin-top:1rem;font-family:var(--body);font-style:normal;font-weight:700;letter-spacing:.2em;text-transform:uppercase;font-size:1.1rem;color:#6b5238}
+.s3 .side{background:#1d1610;color:#f1e6c9;padding:3rem 2.6rem;display:flex;flex-direction:column;justify-content:center;box-shadow:14px 14px 0 #b4531f}
+.s3 .side h3{font-size:1.1rem;letter-spacing:.26em;text-transform:uppercase;font-family:var(--body);font-weight:700;color:#e8a06f;margin-bottom:1.6rem}
+.s3 .side ol{list-style:none;counter-reset:s}
+.s3 .side li{counter-increment:s;display:flex;gap:1.2rem;align-items:baseline;padding:1.2rem 0;border-top:1px solid rgba(241,230,201,.2);font-family:var(--display);font-size:1.6rem;font-weight:500;line-height:1.2}
+.s3 .side li::before{content:counter(s);font-size:3rem;font-weight:900;color:#e8a06f;line-height:1}
+
+/* 4 ROSE */
+.s4{background:#1a0509;color:#fde8ec;background-image:radial-gradient(circle at 15% 20%,rgba(225,29,72,.3),transparent 45%),repeating-linear-gradient(45deg,transparent 0 22px,rgba(225,29,72,.05) 22px 23px)}
+.s4::before{mix-blend-mode:screen;opacity:.05}
+.s4 .kicker{color:#fb7185}
+.s4 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:3rem;margin-bottom:3.5rem}
+.s4 h2{color:#fff}
+.s4 h2 em{color:#fb7185;font-weight:300}
+.stamp{flex:0 0 auto;width:clamp(190px,22vw,290px);aspect-ratio:1;transform:rotate(-14deg);color:#e11d48;animation:wob 6s ease-in-out infinite}
+@keyframes wob{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(-9deg)}}
+.stamp svg{width:100%;height:100%;overflow:visible}
+.stamp text{font-family:var(--body);font-weight:900;letter-spacing:.2em;fill:currentColor}
+.stamp .core{font-family:var(--display);font-weight:900;font-size:34px;letter-spacing:.02em}
+.s4 .cols{display:grid;grid-template-columns:1fr 1fr;gap:0;border:2px solid #e11d48}
+.s4 .col{padding:2.6rem 2.6rem}
+.s4 .col+.col{border-left:2px solid #e11d48;background:rgba(225,29,72,.1)}
+.s4 .col h3{font-family:var(--body);font-size:1.1rem;letter-spacing:.28em;text-transform:uppercase;color:#fb7185;font-weight:700;margin-bottom:1.2rem}
+.s4 .col p{font-family:var(--display);font-size:clamp(1.4rem,2.2vw,2.1rem);line-height:1.25;font-weight:400}
+.s4 .col p b{font-weight:900;color:#fff}
+.s4 .ghost{font-size:clamp(14rem,30vw,30rem);right:-1rem;bottom:-3rem;color:#e11d48;opacity:.09}
+
+/* 5 TERMINAL */
+.s5{background:#030803;color:#33ff66;font-family:var(--mono);background-image:repeating-linear-gradient(0deg,rgba(51,255,102,.04) 0 2px,transparent 2px 4px),radial-gradient(ellipse at center,rgba(51,255,102,.1),transparent 65%)}
+.s5::before{display:none}
+.s5 .kicker{font-family:var(--mono);color:#33ff66;letter-spacing:.2em}
+.s5 h2{font-family:var(--mono);font-weight:700;font-size:clamp(3rem,7vw,7rem);line-height:1;letter-spacing:-.04em;color:#baffcc;text-shadow:0 0 22px rgba(51,255,102,.55);margin-bottom:2.4rem}
+.win{border:1px solid #1d6b34;border-radius:12px;background:rgba(0,12,3,.85);box-shadow:0 0 60px rgba(51,255,102,.15)}
+.win .bar{display:flex;align-items:center;gap:.6rem;padding:1rem 1.4rem;border-bottom:1px solid #1d6b34}
+.win .bar i{width:14px;height:14px;border-radius:50%;display:block}
+.win .bar i:nth-child(1){background:#ff5f56}.win .bar i:nth-child(2){background:#ffbd2e}.win .bar i:nth-child(3){background:#27c93f}
+.win .bar span{margin-left:1rem;color:#5fcf80;font-size:1.1rem}
+.log{padding:1.8rem 2rem 2.2rem;display:grid;gap:.9rem}
+.row{display:grid;grid-template-columns:8.5rem 1fr;gap:1.5rem;font-size:clamp(1.1rem,1.55vw,1.4rem);line-height:1.45}
+.row .t{color:#1f9c46}
+.row .w{color:#8dffa9}
+.row .w b{color:#fff;background:rgba(51,255,102,.22);padding:0 .3rem;font-weight:700}
+.prompt{display:flex;align-items:center;gap:.7rem;font-size:1.4rem;margin-top:.6rem;color:#33ff66}
+.cursor{display:inline-block;width:.8rem;height:1.5rem;background:#33ff66;animation:blink 1s steps(1) infinite;box-shadow:0 0 12px #33ff66}
+@keyframes blink{50%{opacity:0}}
+.s5 .ghost{display:none}
+
+/* 6 ACADEMIC */
+.s6{background:#0b1a33;color:#dfe8f7;background-image:radial-gradient(circle at 90% 90%,rgba(201,162,92,.12),transparent 40%),linear-gradient(180deg,#0b1a33,#0a1428)}
+.s6::before{mix-blend-mode:screen;opacity:.05}
+.s6 .kicker{color:#d4b06a}
+.s6 .ghost{font-size:clamp(16rem,36vw,36rem);left:-1rem;top:-2rem;color:#d4b06a;opacity:.06;font-style:italic}
+.s6 h2{margin-bottom:3rem;font-weight:300;font-style:italic}
+.s6 h2 b{font-weight:900;font-style:normal;color:#d4b06a}
+.s6 .body{display:grid;grid-template-columns:1fr 1fr;gap:4rem;column-gap:4.5rem}
+.s6 .text{column-count:1;font-size:1.2rem;line-height:1.75;color:#c3d1e8}
+.s6 .text p+p{margin-top:1.3rem}
+.s6 .text p:first-child::first-letter{font-family:var(--display);font-weight:900;font-size:9.5rem;float:left;line-height:.74;padding:.5rem 1.2rem 0 0;color:#d4b06a}
+.s6 .call{border:1px solid #d4b06a;padding:2.4rem;margin-bottom:2rem;position:relative;background:rgba(212,176,106,.07)}
+.s6 .call::before{content:"";position:absolute;inset:8px;border:1px solid rgba(212,176,106,.35);pointer-events:none}
+.s6 .call h3{font-family:var(--body);font-size:1.1rem;letter-spacing:.26em;text-transform:uppercase;color:#d4b06a;margin-bottom:1rem;font-weight:700}
+.s6 .call p{font-family:var(--display);font-size:clamp(1.5rem,2.3vw,2.2rem);line-height:1.25;font-weight:500}
+.s6 .beats{list-style:none;counter-reset:b}
+.s6 .beats li{counter-increment:b;display:flex;gap:1.2rem;padding:1rem 0;border-bottom:1px solid rgba(223,232,247,.15);font-family:var(--display);font-size:1.5rem;font-style:italic}
+.s6 .beats li::before{content:"0" counter(b);font-family:var(--body);font-style:normal;font-weight:700;color:#d4b06a;letter-spacing:.1em;font-size:1.1rem;padding-top:.5rem}
+
+/* 7 GOLD STAT */
+.s7{background:#0c0a06;color:#f5e9c8;background-image:radial-gradient(ellipse at 50% 45%,rgba(245,166,35,.25),transparent 55%),repeating-radial-gradient(circle at 50% 45%,transparent 0 60px,rgba(245,166,35,.05) 60px 61px)}
+.s7::before{mix-blend-mode:screen;opacity:.05}
+.s7 .wrap{text-align:center}
+.s7 .kicker{color:#f5a623}
+.s7 .big{font-family:var(--display);font-weight:900;font-size:clamp(5rem,23vw,21rem);line-height:.82;letter-spacing:-.06em;background:linear-gradient(180deg,#ffe29a 0%,#f5a623 55%,#a35e07 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 50px rgba(245,166,35,.35))}
+.s7 .cap{font-family:var(--display);font-style:italic;font-weight:300;font-size:clamp(1.5rem,3vw,2.8rem);margin:1.6rem auto 3rem;max-width:50rem;color:#f5e9c8}
+.badges{display:flex;justify-content:center;gap:1.6rem;flex-wrap:wrap}
+.badge{border:2px solid #f5a623;padding:1.2rem 2rem;min-width:15rem;position:relative;background:rgba(245,166,35,.06)}
+.badge small{display:block;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#f5a623;font-size:1.1rem}
+.badge strong{display:block;font-family:var(--display);font-size:2.4rem;font-weight:900;line-height:1.1;margin-top:.3rem}
+.s7 .ghost{display:none}
+
+/* 8 BROADSHEET */
+.s8{background:#f3ecdb;color:#1a1814;background-image:repeating-linear-gradient(0deg,rgba(0,0,0,.025) 0 1px,transparent 1px 3px)}
+.paper{border-top:6px double #1a1814;border-bottom:6px double #1a1814;padding:1.5rem 0 3rem}
+.mast{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #1a1814;padding-bottom:1rem;margin-bottom:1.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;font-size:1.1rem;gap:1rem;flex-wrap:wrap}
+.mast .name{font-family:var(--display);font-weight:900;font-size:clamp(1.6rem,3vw,2.6rem);letter-spacing:.02em;text-transform:none;font-style:italic}
+.s8 h2{font-size:clamp(3rem,8.4vw,8.4rem);line-height:.9;letter-spacing:-.04em;text-align:center;margin:1.2rem 0 1.6rem}
+.s8 h2 u{text-decoration:none;color:#b3141c}
+.banner{background:#b3141c;color:#fff;text-align:center;padding:1rem 1.5rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase;font-size:clamp(1.1rem,1.8vw,1.6rem);margin-bottom:2.4rem}
+.s8 .cols{column-count:3;column-gap:3rem;column-rule:1px solid #1a1814;font-family:var(--display);font-size:1.3rem;line-height:1.55;text-align:justify;hyphens:auto}
+.s8 .cols p+p{margin-top:1rem}
+.s8 .cols p:first-child::first-letter{font-weight:900;font-size:4.6rem;float:left;line-height:.8;padding:.3rem .5rem 0 0}
+.s8 .cols .pq{break-inside:avoid;font-size:1.9rem;font-weight:900;font-style:italic;line-height:1.15;border-top:3px solid #1a1814;border-bottom:3px solid #1a1814;padding:1rem 0;margin:1.2rem 0;text-align:left;color:#b3141c}
+.s8 .ghost{font-size:clamp(14rem,30vw,30rem);left:50%;top:50%;transform:translate(-50%,-50%);opacity:.04;color:#000;white-space:nowrap}
+
+/* 9 NEON */
+.s9{background:#04060d;color:#d6fff6;background-image:radial-gradient(ellipse at 50% 100%,rgba(0,255,213,.2),transparent 60%),radial-gradient(circle at 80% 15%,rgba(255,0,200,.18),transparent 40%)}
+.s9::before{display:none}
+.floor{position:absolute;left:-30%;right:-30%;bottom:-6%;height:55%;z-index:1;transform:perspective(520px) rotateX(62deg);transform-origin:50% 100%;background-image:linear-gradient(rgba(0,255,213,.55) 2px,transparent 2px),linear-gradient(90deg,rgba(0,255,213,.55) 2px,transparent 2px);background-size:80px 80px;animation:grid 3s linear infinite;mask-image:linear-gradient(to top,#000 30%,transparent);-webkit-mask-image:linear-gradient(to top,#000 30%,transparent)}
+@keyframes grid{to{background-position:0 80px}}
+.s9 .kicker{color:#00ffd5;text-shadow:0 0 12px #00ffd5}
+.s9 h2{font-size:clamp(3rem,10vw,10rem);line-height:.88;letter-spacing:-.045em;color:#fff;text-shadow:0 0 14px #00ffd5,0 0 50px rgba(0,255,213,.6);margin-bottom:2rem}
+.s9 h2 span{color:#ff2bd6;text-shadow:0 0 14px #ff2bd6,0 0 50px rgba(255,43,214,.6);font-style:italic;font-weight:300}
+.s9 .grid{display:grid;grid-template-columns:1.1fr 1fr;gap:3.5rem;align-items:end}
+.s9 .deck{color:#a7e8de;font-size:clamp(1.3rem,2vw,1.8rem)}
+.s9 .deck q{color:#fff;font-weight:500;font-family:var(--display);font-style:italic}
+.emerge{border:1px solid #00ffd5;background:rgba(0,20,30,.72);padding:2.2rem;box-shadow:0 0 30px rgba(0,255,213,.35),inset 0 0 30px rgba(0,255,213,.08);backdrop-filter:blur(6px)}
+.emerge h3{font-family:var(--body);font-size:1.1rem;letter-spacing:.26em;text-transform:uppercase;color:#ff2bd6;margin-bottom:1rem;font-weight:700;text-shadow:0 0 10px #ff2bd6}
+.emerge p{font-family:var(--display);font-size:clamp(1.4rem,2.1vw,2rem);line-height:1.25;font-weight:500}
+.s9 .ghost{font-size:clamp(14rem,30vw,30rem);right:0;top:-2rem;color:#00ffd5;opacity:.06}
+
+/* 10 PRODUCT */
+.s10{background:#ffffff;color:#16163a;background-image:radial-gradient(circle at 90% 0%,rgba(99,102,241,.14),transparent 45%),radial-gradient(circle at 0% 100%,rgba(99,102,241,.1),transparent 40%)}
+.s10 .kicker{color:#4f46e5}
+.s10 .grid{display:grid;grid-template-columns:1.1fr 1fr;gap:5rem;align-items:center}
+.s10 h2{font-size:clamp(3rem,8vw,8rem);line-height:.9;letter-spacing:-.04em;margin-bottom:1.6rem}
+.s10 h2 em{color:#4f46e5;font-weight:300}
+.s10 .deck{color:#4a4a72;margin-bottom:2.4rem}
+.feat{list-style:none;display:grid;gap:1.1rem}
+.feat li{display:flex;align-items:center;gap:1.1rem;font-weight:500;font-size:1.2rem}
+.feat .ic{flex:0 0 auto;width:3rem;height:3rem;border-radius:.9rem;background:#eef0ff;color:#4f46e5;display:grid;place-items:center;font-size:1.4rem;font-weight:900}
+.card{background:#fff;border-radius:28px;box-shadow:0 30px 80px -20px rgba(79,70,229,.45),0 0 0 1px rgba(79,70,229,.12);overflow:hidden;transform:rotate(2deg)}
+.card .hd{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;padding:2rem 2.2rem}
+.card .hd small{display:block;letter-spacing:.24em;text-transform:uppercase;font-weight:700;font-size:1.1rem;opacity:.85}
+.card .hd strong{font-family:var(--display);font-size:clamp(2rem,3.4vw,3.2rem);line-height:1;font-weight:900;display:block;margin-top:.6rem;letter-spacing:-.02em}
+.card .bd{padding:2rem 2.2rem}
+.card .line{display:flex;justify-content:space-between;padding:.9rem 0;border-bottom:1px dashed #d9dcf5;font-size:1.15rem}
+.card .line span:first-child{color:#6a6a92}
+.card .line span:last-child{font-weight:700}
+.card .quote{margin-top:1.6rem;padding:1.4rem 1.6rem;background:#f5f6ff;border-radius:16px;font-family:var(--display);font-style:italic;font-size:1.4rem;line-height:1.3}
+.card .quote b{display:block;margin-top:.5rem;font-family:var(--body);font-style:normal;font-size:1.1rem;color:#4f46e5;font-weight:700}
+.s10 .ghost{font-size:clamp(14rem,30vw,30rem);left:-1rem;bottom:-4rem;color:#4f46e5;opacity:.05}
+.closing{margin-top:4rem;border-top:2px solid #16163a;padding-top:2rem;display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap;align-items:baseline}
+.closing p{font-family:var(--display);font-size:clamp(1.6rem,3vw,2.8rem);font-weight:500;font-style:italic;max-width:56rem;line-height:1.2}
+.closing span{font-weight:700;letter-spacing:.2em;text-transform:uppercase;font-size:1.1rem;color:#4f46e5}
+
+@media (max-width:900px){
+  .spread{padding:4.5rem 1.6rem}
+  .stats,.s3 .grid,.s4 .cols,.s6 .body,.s9 .grid,.s10 .grid{grid-template-columns:1fr}
+  .stat{border-right:none;border-bottom:1px solid #243041;padding:1.6rem 0}
+  .s4 .top{flex-direction:column}
+  .s4 .col+.col{border-left:none;border-top:2px solid #e11d48}
+  .s8 .cols{column-count:1}
+  .row{grid-template-columns:1fr;gap:.1rem}
+  .s3 .side{box-shadow:8px 8px 0 #b4531f}
+  .card{transform:none}
+  .s6 .text p:first-child::first-letter{font-size:7rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}.reveal{transition:none}}
+</style>
+</head>
+<body>
+
+<!-- 1 COVER -->
+<section class="spread s1">
+  <div class="ghost" aria-hidden="true">I Do</div>
+  <div class="wrap">
+    <div class="kicker reveal">The Weddings Desk &nbsp;·&nbsp; October 2026</div>
+    <h1 class="reveal" style="--d:1">The Business of Selling <em>Empty</em> Wedding Seats</h1>
+    <div class="rule reveal" style="--d:2"><span>❦</span></div>
+    <p class="deck reveal" style="--d:3">A website now lets you buy a ticket to someone else’s wedding. One co-host would rather stay home and watch Netflix.</p>
+    <p class="src reveal" style="--d:4">Source &nbsp;<b>The business of selling empty wedding seats</b> &nbsp;·&nbsp; 27 seconds of podcast</p>
+  </div>
+</section>
+
+<!-- 2 MIDNIGHT -->
+<section class="spread s2">
+  <div class="ghost" aria-hidden="true">I</div>
+  <div class="wrap">
+    <div class="kicker reveal">Spread I &nbsp;·&nbsp; The Premise</div>
+    <h2 class="h-xl reveal" style="--d:1">There’s now<br>a website.</h2>
+    <p class="deck reveal" style="--d:2">It “essentially lets you buy tickets to go to someone else’s wedding.” No guest list. No save-the-date. Just a seat, and a stranger’s big day.</p>
+    <div class="stats">
+      <div class="stat reveal" style="--d:3"><div class="n">1</div><div class="l">website selling tickets to someone else’s wedding</div></div>
+      <div class="stat reveal" style="--d:4"><div class="n">+1</div><div class="l">more just like it, in India</div></div>
+      <div class="stat reveal" style="--d:5"><div class="n">20,000</div><div class="l">users on the Indian site, “already”</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 WARM EDITORIAL -->
+<section class="spread s3">
+  <div class="ghost" aria-hidden="true">II</div>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <div class="kicker reveal">Spread II &nbsp;·&nbsp; The Concept</div>
+        <h2 class="h-lg reveal" style="--d:1">A ticket to<br><i>somebody else’s</i><br>wedding.</h2>
+        <blockquote class="reveal" style="--d:2">“This is you paying to go to someone else’s wedding with an empty seat.”<cite>— The host, laying out the pitch</cite></blockquote>
+        <p class="deck reveal" style="--d:3">The “empty seat” is the product. Someone has room, someone else has a ticket, and a website sits in the middle.</p>
+      </div>
+      <aside class="side reveal" style="--d:3">
+        <h3>The Business, in Three Steps</h3>
+        <ol>
+          <li>Find a wedding with an empty seat.</li>
+          <li>Buy a ticket to it.</li>
+          <li>Show up to someone else’s big day.</li>
+        </ol>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- 4 ROSE -->
+<section class="spread s4">
+  <div class="ghost" aria-hidden="true">III</div>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="kicker reveal">Spread III &nbsp;·&nbsp; Alert from India</div>
+        <h2 class="h-xl reveal" style="--d:1">There’s also<br>one in <em>India.</em></h2>
+      </div>
+      <div class="stamp reveal" style="--d:2" aria-hidden="true">
+        <svg viewBox="0 0 300 300">
+          <defs><path id="circ" d="M150,150 m-112,0 a112,112 0 1,1 224,0 a112,112 0 1,1 -224,0"/></defs>
+          <circle cx="150" cy="150" r="140" fill="none" stroke="currentColor" stroke-width="8"/>
+          <circle cx="150" cy="150" r="86" fill="none" stroke="currentColor" stroke-width="3"/>
+          <text font-size="25"><textPath href="#circ" startOffset="0">★ VIBE CODED ★ 20,000 USERS ★ ALREADY </textPath></text>
+          <text class="core" x="150" y="145" text-anchor="middle">20K</text>
+          <text x="150" y="182" text-anchor="middle" font-size="22">USERS</text>
+        </svg>
+      </div>
+    </div>
+    <div class="cols reveal" style="--d:3">
+      <div class="col">
+        <h3>The Red Flag</h3>
+        <p>“It’s crazy. It’s <b>vibe coded</b>…”</p>
+      </div>
+      <div class="col">
+        <h3>The Plot Twist</h3>
+        <p>“…but if you look at the website, they already have <b>20,000 users.</b>”</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 TERMINAL -->
+<section class="spread s5">
+  <div class="wrap">
+    <div class="kicker reveal">Spread IV &nbsp;·&nbsp; transcript.log</div>
+    <h2 class="reveal" style="--d:1">Would you do this, Sam?</h2>
+    <div class="win reveal" style="--d:2">
+      <div class="bar"><i></i><i></i><i></i><span>~/podcast/empty-seats — tail -f transcript.log</span></div>
+      <div class="log">
+        <div class="row"><span class="t">[00:00:00]</span><span class="w">There’s now a website that essentially lets you <b>buy tickets</b> to go to someone else’s wedding.</span></div>
+        <div class="row"><span class="t">[00:00:05]</span><span class="w">There’s also one of these in <b>India</b>.</span></div>
+        <div class="row"><span class="t">[00:00:09]</span><span class="w">It’s vibe coded, but… they already have <b>20,000 users</b>.</span></div>
+        <div class="row"><span class="t">[00:00:11]</span><span class="w">This is you paying to go to someone else’s wedding with an <b>empty seat</b>.</span></div>
+        <div class="row"><span class="t">[00:00:14]</span><span class="w">Would you do this, Sam?</span></div>
+        <div class="row"><span class="t">[00:00:15]</span><span class="w">This is ridiculous. <b>No, not a chance.</b></span></div>
+        <div class="prompt"><span>$</span><span class="cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 ACADEMIC -->
+<section class="spread s6">
+  <div class="ghost" aria-hidden="true">V</div>
+  <div class="wrap">
+    <div class="kicker reveal">Spread V &nbsp;·&nbsp; The Response</div>
+    <h2 class="h-lg reveal" style="--d:1">An anatomy of <b>“No.”</b></h2>
+    <div class="body">
+      <div class="text reveal" style="--d:2">
+        <p>Fourteen seconds into this conversation, the question lands: would you do this, Sam? Sam does not ask for details. He does not ask about the price or the couple or the venue.</p>
+        <p>He answers in four short sentences, and each one closes a door the previous one left open. It is less an opinion than a verdict, delivered at the pace of a man who has already picked what to watch on Netflix.</p>
+        <p>The pitch was a paid seat at a stranger’s wedding. The reply was a couch.</p>
+      </div>
+      <div class="reveal" style="--d:3">
+        <div class="call">
+          <h3>Callout</h3>
+          <p>“I’d rather sit home and watch Netflix. I’m not going to a wedding.”</p>
+        </div>
+        <ol class="beats">
+          <li>This is ridiculous.</li>
+          <li>No, not a chance.</li>
+          <li>I’d rather sit home and watch Netflix.</li>
+          <li>I’m not going to a wedding.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 GOLD -->
+<section class="spread s7">
+  <div class="wrap">
+    <div class="kicker reveal">Spread VI &nbsp;·&nbsp; The Number</div>
+    <div class="big reveal" style="--d:1">20,000</div>
+    <p class="cap reveal" style="--d:2">users, “already,” on a vibe-coded site that sells seats at other people’s weddings.</p>
+    <div class="badges reveal" style="--d:3">
+      <div class="badge"><small>Origin</small><strong>India</strong></div>
+      <div class="badge"><small>Built</small><strong>Vibe Coded</strong></div>
+      <div class="badge"><small>Sam’s verdict</small><strong>Not a chance</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 BROADSHEET -->
+<section class="spread s8">
+  <div class="ghost" aria-hidden="true">VII</div>
+  <div class="wrap">
+    <div class="paper">
+      <div class="mast reveal"><span>Spread VII</span><span class="name">The Seat Ledger</span><span>Opinion &amp; Comedy</span></div>
+      <h2 class="reveal" style="--d:1">“If you invite me,<br>you’re <u>an asshole.</u>”</h2>
+      <div class="banner reveal" style="--d:2">A comedian said it &nbsp;·&nbsp; the host agreed</div>
+      <div class="cols reveal" style="--d:3">
+        <p>“I heard a comedian say this once,” the host recalls. The joke is short and hostile to the whole wedding industry: “If you invite me to your wedding, you’re an asshole.”</p>
+        <p>Then comes the part that matters for anyone building a ticketing site. “And I agreed with that.” It is a small confession, and it undercuts the market the conversation has just described.</p>
+        <p class="pq">“I can’t imagine that people want to go to weddings voluntarily.”</p>
+        <p>The word is “voluntarily.” An invitation is an obligation with a dress code, which is the comedian’s whole point. A ticket, by contrast, is a choice someone made on purpose, with their own money.</p>
+        <p>Whether anyone makes that choice is an open question, but 20,000 users on one site suggests the answer isn’t zero.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 NEON -->
+<section class="spread s9">
+  <div class="ghost" aria-hidden="true">VIII</div>
+  <div class="floor" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="kicker reveal">Spread VIII &nbsp;·&nbsp; The Alternative</div>
+    <h2 class="reveal" style="--d:1">Netflix<br><span>wins.</span></h2>
+    <div class="grid">
+      <p class="deck reveal" style="--d:2">The competition for an empty wedding seat isn’t another wedding. It’s the couch. <q>I’d rather sit home and watch Netflix.</q></p>
+      <div class="emerge reveal" style="--d:3">
+        <h3>⚠ Emerging Problem</h3>
+        <p>“I can’t imagine that people want to go to weddings voluntarily.” The business needs exactly the person this conversation can’t picture.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 PRODUCT / CLOSER -->
+<section class="spread s10">
+  <div class="ghost" aria-hidden="true">IX</div>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <div class="kicker reveal">Spread IX &nbsp;·&nbsp; The Last Word</div>
+        <h2 class="reveal" style="--d:1">Would <em>you</em> do this?</h2>
+        <p class="deck reveal" style="--d:2">The product, in plain terms: a ticket, a stranger’s wedding, an empty seat.</p>
+        <ul class="feat reveal" style="--d:3">
+          <li><span class="ic">✓</span>A ticket instead of an invitation</li>
+          <li><span class="ic">♥</span>Someone else’s wedding</li>
+          <li><span class="ic">◌</span>One empty seat</li>
+          <li><span class="ic">20k</span>Users on the Indian site, already</li>
+        </ul>
+      </div>
+      <div class="card reveal" style="--d:3">
+        <div class="hd"><small>Admit One</small><strong>Someone Else’s Wedding</strong></div>
+        <div class="bd">
+          <div class="line"><span>Seat</span><span>Empty</span></div>
+          <div class="line"><span>Paid by</span><span>You</span></div>
+          <div class="line"><span>Built</span><span>Vibe coded</span></div>
+          <div class="line"><span>Sam says</span><span>Not a chance</span></div>
+          <div class="quote">“I’m not going to a wedding.”<b>— SAM</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="closing reveal" style="--d:4">
+      <p>“I can’t imagine that people want to go to weddings voluntarily.”</p>
+      <span>End of issue</span>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){document.documentElement.classList.add('no-io');return;}
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+  },{threshold:.15,rootMargin:'0px 0px -5% 0px'});
+  els.forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>

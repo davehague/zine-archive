@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Do You Know It Works?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--fr:'Fraunces',Georgia,serif;--in:'Inter',system-ui,sans-serif;--mo:'JetBrains Mono',ui-monospace,monospace}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--in);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;background:#111}
+  section{min-height:100vh;padding:5.5rem 4rem;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+  .wrap{max-width:1400px;margin:0 auto;width:100%;position:relative;z-index:2}
+  .kicker{text-transform:uppercase;letter-spacing:.3em;font-weight:700;font-size:.9rem;color:var(--ac)}
+  .deck{font-size:1.35rem;line-height:1.55;max-width:62ch;margin-top:1.4rem}
+  h1,h2,h3{font-family:var(--fr);line-height:.95;font-weight:600}
+  h2{font-size:clamp(3rem,7.4vw,7.2rem);letter-spacing:-.03em;margin-top:.9rem}
+  h3{font-size:clamp(1.6rem,2.5vw,2.2rem);line-height:1.05;letter-spacing:-.01em}
+  p,li{font-size:1.15rem}
+  .bignum{font-family:var(--fr);position:absolute;font-weight:800;line-height:1;opacity:.06;z-index:1;pointer-events:none;font-size:clamp(14rem,34vw,34rem);right:-2rem;bottom:-5rem}
+  .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .d1{transition-delay:.08s}.d2{transition-delay:.18s}.d3{transition-delay:.28s}.d4{transition-delay:.38s}.d5{transition-delay:.48s}
+  .quote{font-family:var(--fr);font-style:italic;font-weight:400;line-height:1.22;font-size:clamp(1.5rem,2.6vw,2.3rem)}
+  .by{font-size:1.1rem;font-weight:600;letter-spacing:.04em;margin-top:.8rem;opacity:.75}
+  .chip{display:inline-block;margin-top:1rem;padding:.5rem 1.05rem;border:1.5px dashed var(--ac);border-radius:999px;color:var(--ac);font-weight:600;font-size:1.02rem;text-decoration:none;letter-spacing:.01em;transition:background .2s,color .2s;font-family:var(--in)}
+  .chip.queue{border-style:solid;border-width:2px}
+  .chip:hover{background:var(--ac);color:var(--chipfg,#000);border-style:solid}
+  .chips{display:flex;flex-wrap:wrap;gap:.6rem}
+
+  /* the narrative frame on every spread */
+  .arc{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}
+  .rail{display:flex;gap:6px}
+  .rail i{display:block;width:28px;height:6px;border-radius:3px;background:currentColor;opacity:.18}
+  .rail i.done{opacity:.45}
+  .rail i.on{opacity:1;background:var(--ac);width:44px}
+  .bridge{margin-top:1.6rem;max-width:68ch;font-size:1.3rem;line-height:1.55;border-left:4px solid var(--ac);padding:.2rem 0 .2rem 1.4rem}
+  .bridge b{display:block;font-size:.9rem;text-transform:uppercase;letter-spacing:.24em;color:var(--ac);margin-bottom:.4rem}
+  .next{margin-top:3.2rem;font-size:1.25rem;font-weight:600;display:flex;gap:.8rem;align-items:baseline;max-width:70ch}
+  .next span{color:var(--ac);font-size:.95rem;text-transform:uppercase;letter-spacing:.22em;white-space:nowrap}
+
+  @media(max-width:900px){
+    section{padding:3.5rem 1.25rem}
+    .deck,.bridge{font-size:1.15rem}
+    .two,.three,.four,.split,.feat,.acts,.fix,.cards{grid-template-columns:1fr!important}
+    .cols{column-count:1!important}
+    .bignum{font-size:12rem}
+    .rail i{width:18px}.rail i.on{width:30px}
+    .next{flex-direction:column;gap:.3rem}
+  }
+
+  /* I — COVER */
+  #cover{--ac:#9a3412;--chipfg:#fff;background:radial-gradient(circle at 50% 0%,#fffaf0 0%,#f3e9d6 60%,#eadcc2 100%);color:#231d16}
+  #cover .top{text-align:center}
+  #cover h1{font-size:clamp(3.6rem,10.5vw,9.6rem);letter-spacing:-.045em;font-weight:700;line-height:.88;margin-top:1.6rem}
+  #cover h1 em{font-weight:300;font-style:italic;color:var(--ac)}
+  #cover .sub{font-family:var(--fr);font-style:italic;font-size:clamp(1.4rem,2.3vw,2rem);max-width:38ch;margin:2rem auto 0;line-height:1.3}
+  #cover .stats{display:flex;justify-content:center;gap:3.2rem;flex-wrap:wrap;margin-top:2.4rem}
+  #cover .stats b{display:block;font-family:var(--fr);font-size:clamp(2.6rem,5vw,4.2rem);font-weight:700;line-height:1}
+  #cover .stats span{font-size:1rem;text-transform:uppercase;letter-spacing:.16em;font-weight:600;opacity:.7}
+  #cover .acts{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:3rem;border-top:2px solid #231d16}
+  #cover .act{padding:1.6rem 1.8rem 0 0}
+  #cover .act+.act{border-left:1px solid #231d1633;padding-left:1.8rem}
+  #cover .act .lab{font-size:.9rem;text-transform:uppercase;letter-spacing:.24em;font-weight:700;color:var(--ac)}
+  #cover .act h3{margin:.5rem 0 .7rem;font-size:2rem}
+  #cover .act ol{list-style:none;margin-top:.9rem;border-top:1px solid #231d1622}
+  #cover .act li{border-bottom:1px solid #231d1622}
+  #cover .act li a{display:flex;gap:.8rem;padding:.5rem 0;color:inherit;text-decoration:none;font-size:1.1rem}
+  #cover .act li b{font-family:var(--fr);color:var(--ac);min-width:2.2rem}
+  #cover .legend{margin-top:2.4rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+  #cover .legend .chip{margin:0;pointer-events:none}
+  #cover .src{margin-top:1.6rem;font-size:1.05rem;opacity:.7;text-align:center}
+  @media(max-width:900px){#cover .act+.act{border-left:0;padding-left:0}}
+
+  /* II — DARK MIDNIGHT */
+  #blind{--ac:#7fb2ff;--chipfg:#0d1117;background:#0d1117;color:#e7ecf3;background-image:radial-gradient(circle at 85% 10%,#1f3b6e66,transparent 45%),radial-gradient(circle at 5% 95%,#0e4a5a55,transparent 40%)}
+  #blind .three{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#7fb2ff33;border:1px solid #7fb2ff33;margin-top:3rem}
+  #blind .three>div{background:#0d1117;padding:2.2rem}
+  #blind .three .n{font-family:var(--fr);font-size:1.05rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ac);font-weight:700}
+  #blind .three h3{margin:.6rem 0 1rem;font-size:2.4rem}
+  #blind .three .quote{font-size:1.55rem;margin:1rem 0}
+  #blind .three p+p{margin-top:.9rem}
+
+  /* III — ROSE ALERT / STAMP */
+  #sure{--ac:#ff5c7a;--chipfg:#1a0a10;background:radial-gradient(circle at 15% 10%,#3d0d1c 0%,#1a0a10 55%,#0f0509 100%);color:#fbe8ec}
+  #sure .stamp{position:absolute;right:5rem;top:5rem;width:210px;height:210px;border:5px double #ff5c7a;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;transform:rotate(-14deg);color:#ff5c7a;font-weight:900;letter-spacing:.2em;opacity:.85;z-index:3;text-align:center}
+  #sure .stamp b{font-family:var(--fr);font-size:1.45rem;letter-spacing:.04em;line-height:1}
+  #sure .stamp span{font-size:.85rem;margin-top:.4rem}
+  #sure .two{display:grid;grid-template-columns:1.1fr 1fr;gap:3.5rem;margin-top:2.8rem;align-items:start}
+  #sure .buckets{display:grid;gap:.9rem;margin-top:1.2rem}
+  #sure .bucket{border:1px solid #ff5c7a55;background:#ff5c7a0d;padding:1.1rem 1.3rem;border-radius:4px}
+  #sure .bucket b{font-family:var(--fr);font-size:1.4rem;color:var(--ac);display:block;margin-bottom:.3rem}
+  #sure .bucket.win{border-color:#ff5c7a;background:#ff5c7a22}
+  #sure .lab{font-size:.95rem;text-transform:uppercase;letter-spacing:.24em;font-weight:700;color:var(--ac);margin-bottom:.8rem}
+  #sure .panel+.panel{margin-top:2.6rem;padding-top:2.2rem;border-top:1px solid #ff5c7a44}
+  @media(max-width:900px){#sure .stamp{position:relative;right:auto;top:auto;margin:0 0 2rem;width:160px;height:160px}}
+
+  /* IV — CLEAN PRODUCT */
+  #data{--ac:#4338ca;--chipfg:#fff;background:#fbfbfe;color:#16163a}
+  #data .split{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;margin-top:2.8rem;align-items:start}
+  #data .anchor{background:#fff;border-radius:22px;box-shadow:0 24px 70px #4338ca26;padding:2rem;border:2px solid #4338ca}
+  #data .anchor .tag{display:inline-block;background:#4338ca;color:#fff;font-weight:700;font-size:.9rem;letter-spacing:.16em;text-transform:uppercase;padding:.35rem .8rem;border-radius:999px}
+  #data .anchor h3{margin:1rem 0 .8rem}
+  #data .tierline{display:grid;grid-template-columns:3rem 1fr;gap:.8rem;align-items:center;padding:.55rem 0;border-bottom:1px solid #e3e3f3}
+  #data .tierline b{font-family:var(--fr);font-size:1.8rem;text-align:center;border-radius:8px;color:#fff;line-height:1.5}
+  #data .stat{margin-top:2rem;background:#16163a;color:#fff;border-radius:22px;padding:2rem;--ac:#a5b4ff}
+  #data .stat .big{display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;font-family:var(--fr)}
+  #data .stat .big b{font-size:clamp(3.4rem,6vw,5.4rem);line-height:1;color:#a5b4ff}
+  #data .stat .big span{font-size:1.6rem;opacity:.7}
+  #data .stat p{margin-top:.8rem}
+  #data .feat{display:flex;flex-direction:column;gap:2rem}
+  #data .feat .f{display:grid;grid-template-columns:3.2rem 1fr;gap:1rem;align-items:start}
+  #data .feat .ic{width:3.2rem;height:3.2rem;border-radius:12px;background:#eef0ff;color:#4338ca;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800}
+  #data .feat h3{font-size:1.6rem;margin-bottom:.4rem}
+
+  /* V — BIG STAT / GOLD */
+  #judge{--ac:#f5b324;--chipfg:#15110a;background:#15110a;color:#f6ecd4;background-image:radial-gradient(circle at 70% 70%,#4a360c 0%,transparent 55%)}
+  #judge .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:2.8rem}
+  #judge .card{border-top:3px solid var(--ac);padding-top:1.1rem}
+  #judge .card .n{font-family:var(--fr);font-size:2.6rem;color:var(--ac);line-height:1}
+  #judge .card h3{margin:.4rem 0 .6rem;font-size:1.7rem}
+  #judge .fixline{margin-top:1.6rem;font-size:1.2rem;max-width:80ch}
+  #judge .hero{display:grid;grid-template-columns:auto 1fr;gap:3rem;align-items:center;margin-top:3rem;border-top:1px solid #f5b32444;padding-top:2.6rem}
+  #judge .stat{font-family:var(--fr);font-size:clamp(8rem,19vw,16rem);font-weight:800;line-height:.8;color:var(--ac);letter-spacing:-.05em}
+  @media(max-width:900px){#judge .hero{grid-template-columns:1fr}}
+
+  /* VI — ACADEMIC NAVY */
+  #trust{--ac:#8ad1c2;--chipfg:#0a1a33;background:#0a1a33;color:#dfe7f5;background-image:radial-gradient(circle at 90% 90%,#1b3a6b88,transparent 50%)}
+  #trust .cols{column-count:2;column-gap:4rem;margin-top:2.8rem;column-rule:1px solid #8ad1c233}
+  #trust .cols p{margin-bottom:1.1rem;line-height:1.65}
+  #trust .cols p.first::first-letter{font-family:var(--fr);float:left;font-size:6.2rem;line-height:.82;padding:.4rem .7rem 0 0;color:var(--ac);font-weight:700}
+  #trust .callout{break-inside:avoid;border:1px solid #8ad1c255;background:#8ad1c20f;padding:1.5rem 1.7rem;margin:0 0 1.3rem;border-radius:4px}
+  #trust .callout .quote{font-size:1.55rem}
+  #trust .piles{display:flex;height:3.2rem;margin:.6rem 0 .5rem;font-weight:700;font-size:.95rem;break-inside:avoid}
+  #trust .piles div{display:flex;align-items:center;justify-content:center;color:#0a1a33;white-space:nowrap;overflow:hidden}
+  #trust .cap{font-size:1.05rem;opacity:.8;margin-bottom:1.3rem;break-inside:avoid}
+  #trust .chips{margin-bottom:1.3rem}
+
+  /* VII — BROADSHEET */
+  #bench{--ac:#b91c1c;--chipfg:#fff;background:#f3eddf;color:#1c1913;background-image:radial-gradient(#1c191310 1px,transparent 1px);background-size:6px 6px}
+  #bench .mast{border-top:5px double #1c1913;border-bottom:5px double #1c1913;padding:1rem 0;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:1rem;margin-top:1.4rem}
+  #bench .mast b{font-family:var(--fr);font-size:clamp(1.8rem,3.4vw,3rem);font-weight:800;letter-spacing:-.02em}
+  #bench .mast span{font-size:1rem;text-transform:uppercase;letter-spacing:.2em;font-weight:600}
+  #bench .banner{background:var(--ac);color:#fff;display:flex;gap:2rem;align-items:center;padding:1.3rem 2rem;margin-top:2rem;flex-wrap:wrap}
+  #bench .banner b{font-family:var(--fr);font-size:clamp(3rem,6vw,5rem);line-height:1}
+  #bench .banner span{font-size:1.25rem;max-width:48ch}
+  #bench .cols{column-count:3;column-gap:3rem;column-rule:1px solid #1c191355;margin-top:2.2rem}
+  #bench .cols p{margin-bottom:1rem;line-height:1.6}
+  #bench .cols h3{font-size:1.7rem;margin-bottom:.7rem;break-after:avoid}
+  #bench .box{break-inside:avoid;border:2px solid #1c1913;padding:1.3rem 1.4rem;margin-bottom:1.2rem}
+  #bench .chip{background:#f3eddf}
+  #bench .chips{margin-bottom:1.6rem}
+  @media(max-width:1100px){#bench .cols{column-count:2}}
+
+  /* VIII — TERMINAL */
+  #spec{--ac:#3dff8a;--chipfg:#001a08;background:#030b05;color:#bfffd5;font-family:var(--mo)}
+  #spec h2{font-family:var(--fr);color:#eafff1}
+  #spec .kicker{font-family:var(--mo)}
+  #spec .bridge{font-family:var(--in);color:#d6f5e2}
+  #spec .win{border:1px solid #3dff8a44;border-radius:10px;margin-top:2.6rem;background:#04130a;box-shadow:0 0 60px #3dff8a12}
+  #spec .bar{display:flex;gap:.5rem;padding:.9rem 1.1rem;border-bottom:1px solid #3dff8a33;align-items:center}
+  #spec .bar i{width:13px;height:13px;border-radius:50%;display:inline-block}
+  #spec .bar span{margin-left:1rem;font-size:1rem;opacity:.6}
+  #spec .body{padding:2rem 2.2rem;display:grid;grid-template-columns:1fr 1fr;gap:2.2rem 3rem}
+  #spec .cmd{color:var(--ac);font-weight:700;font-size:1.15rem}
+  #spec .out{margin-top:.6rem;font-size:1.08rem;line-height:1.6}
+  #spec .out q{color:#eafff1}
+  #spec .who{opacity:.6;font-size:1rem;margin-top:.4rem}
+  #spec .chip{font-family:var(--mo);font-size:.98rem}
+  #spec .next{font-family:var(--in);color:#eafff1}
+  #spec .cursor{display:inline-block;width:.6em;height:1.2em;background:var(--ac);vertical-align:-.2em;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  @media(max-width:900px){#spec .body{grid-template-columns:1fr;padding:1.4rem}}
+
+  /* IX — WARM EDITORIAL: the loop */
+  #loop{--ac:#b4532a;--chipfg:#fff;background:#f2e8d5;color:#26211b;background-image:linear-gradient(#26211b0c 1px,transparent 1px),linear-gradient(90deg,#26211b0c 1px,transparent 1px);background-size:44px 44px}
+  #loop .split{display:grid;grid-template-columns:1.25fr 1fr;gap:3.5rem;margin-top:2.6rem;align-items:start}
+  #loop .ring{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:1.2rem 0}
+  #loop .ring span{background:#26211b;color:#f2e8d5;padding:.5rem 1rem;border-radius:999px;font-weight:600;font-size:1.05rem}
+  #loop .ring i{font-style:normal;color:var(--ac);font-weight:800;font-size:1.3rem}
+  #loop .vs{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.4rem}
+  #loop .vs div{border:2px solid #26211b;padding:1.2rem 1.3rem}
+  #loop .vs h3{font-size:1.5rem;margin-bottom:.5rem}
+  #loop .side{background:#1f1b16;color:#f2e8d5;padding:2.4rem;--ac:#f0a273;--chipfg:#1f1b16}
+  #loop .side .big{font-family:var(--fr);font-size:clamp(3.4rem,6vw,5.4rem);font-weight:800;line-height:1;color:var(--ac)}
+  #loop .side .big small{font-size:.45em;font-weight:400;color:#f2e8d5;opacity:.8}
+  #loop .side p{margin-top:1rem}
+  #loop .side hr{border:0;border-top:1px solid #f2e8d533;margin:2rem 0}
+  #loop .lower{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;margin-top:2.8rem}
+  @media(max-width:900px){#loop .vs,#loop .lower{grid-template-columns:1fr}}
+
+  /* X — NEON CLOSER */
+  #closer{--ac:#22e3ff;--chipfg:#04020e;background:#05030f;color:#e6faff;background-image:radial-gradient(circle at 80% 0%,#2a0a4f 0%,transparent 55%)}
+  #closer .floor{position:absolute;left:-20%;right:-20%;bottom:-10%;height:45%;background-image:linear-gradient(#22e3ff22 1px,transparent 1px),linear-gradient(90deg,#22e3ff22 1px,transparent 1px);background-size:70px 70px;transform:perspective(500px) rotateX(62deg);transform-origin:bottom;z-index:0;mask-image:linear-gradient(transparent,#000 70%);-webkit-mask-image:linear-gradient(transparent,#000 70%)}
+  #closer .fix{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2.4rem}
+  #closer .fix div{border:1px solid #22e3ff66;border-radius:10px;padding:1.4rem;background:#22e3ff0a}
+  #closer .fix b{font-family:var(--fr);font-size:2.8rem;color:var(--ac);display:block;line-height:1}
+  #closer .fix h3{font-size:1.5rem;margin:.5rem 0}
+  #closer .two{display:grid;grid-template-columns:1fr 1fr;gap:2.6rem;margin-top:2.6rem}
+  #closer .lab{font-size:.95rem;text-transform:uppercase;letter-spacing:.24em;font-weight:700;color:#ff3ddb;margin-bottom:.7rem}
+  #closer .path{margin-top:3.2rem;border:1px solid #ff3ddb88;border-radius:14px;padding:2.2rem 2.4rem;background:#ff3ddb0a;box-shadow:0 0 50px #ff3ddb1a;--ac:#ff6be6;--chipfg:#05030f}
+  #closer .path h3{font-size:clamp(1.9rem,3vw,2.6rem)}
+  #closer .path ol{list-style:none;counter-reset:p;margin-top:1.2rem}
+  #closer .path li{counter-increment:p;display:grid;grid-template-columns:2.2rem 1fr;gap:.6rem;align-items:baseline;padding:.2rem 0}
+  #closer .path li::before{content:counter(p);font-family:var(--fr);font-size:1.8rem;color:var(--ac);font-weight:700}
+  #closer .path li em{display:block;font-style:normal;opacity:.75;font-size:1.05rem;margin-top:.15rem}
+  #closer .path li .chip{margin-top:.4rem}
+  #closer .floorcount{margin-top:2.4rem;display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:center;border-top:1px solid #22e3ff44;padding-top:2rem}
+  #closer .floorcount b{font-family:var(--fr);font-size:clamp(3.6rem,7vw,6rem);color:var(--ac);line-height:1}
+  #closer .last{font-family:var(--fr);font-size:clamp(2.2rem,4.5vw,4rem);line-height:1.05;margin-top:3rem;font-weight:600;letter-spacing:-.02em}
+  #closer .last em{color:var(--ac);font-style:italic;font-weight:400}
+  #closer .foot{margin-top:2.4rem;font-size:1.05rem;opacity:.6}
+  @media(max-width:900px){#closer .floorcount{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- I — COVER -->
+<section id="cover">
+  <div class="wrap">
+    <div class="top">
+      <div class="kicker reveal">Podcast Picks · From the cutting floor · Issue No. 1 · 14 October 2026</div>
+      <h1 class="reveal d1">How do you know<br><em>it works?</em></h1>
+      <p class="sub reveal d2">Agents you can't read, judges with biases, benchmarks that leak. Twenty-nine clips the taste scorer cut, put back together as one argument.</p>
+      <div class="stats reveal d3">
+        <div><b>29</b><span>from the cutting floor</span></div>
+        <div><b>65</b><span>minutes of them</span></div>
+        <div><b>1</b><span>anchor from your queue</span></div>
+        <div><b>9</b><span>chapters, 3 acts</span></div>
+      </div>
+    </div>
+    <div class="acts reveal d3">
+      <div class="act">
+        <div class="lab">Act I · The problem</div>
+        <h3>You can't see in, and it never sounds unsure</h3>
+        <p>Agents can't be read like code, their reasoning isn't really reasoning, and the output is always confident. So you need a way to check.</p>
+        <ol><li><a href="#blind"><b>II</b>You can't read it anymore</a></li><li><a href="#sure"><b>III</b>It always sounds right</a></li></ol>
+      </div>
+      <div class="act">
+        <div class="lab">Act II · Looking</div>
+        <h3>Check the output, then check the checker</h3>
+        <p>Start with the data. Hand the volume to an AI judge. Test the judge. Then test models on your own work rather than theirs.</p>
+        <ol><li><a href="#data"><b>IV</b>Look at the data</a></li><li><a href="#judge"><b>V</b>Every judge has a type</a></li><li><a href="#trust"><b>VI</b>Who checks the checker?</a></li><li><a href="#bench"><b>VII</b>Your benchmark, not theirs</a></li></ol>
+      </div>
+      <div class="act">
+        <div class="lab">Act III · Proving</div>
+        <h3>Write down what right means, and run the loop</h3>
+        <p>Where you can, state the intent and prove the code meets it. Where checking is cheap, try thousands of ideas. Then count outcomes.</p>
+        <ol><li><a href="#spec"><b>VIII</b>Write down what right means</a></li><li><a href="#loop"><b>IX</b>Run the loop</a></li><li><a href="#closer"><b>X</b>Measure what matters</a></li></ol>
+      </div>
+    </div>
+    <div class="legend reveal d4">
+      <span class="chip">✂ dashed: from the cutting floor</span>
+      <span class="chip queue">● solid: from your queue</span>
+    </div>
+    <p class="src reveal d5">From AI Engineer, The Cognitive Revolution, Latent Space, The AI Daily Brief, The AI Automators, All-In, The New Stack, Hamel Husain and Jake Van Clief · Clip links play only on David's private network</p>
+  </div>
+</section>
+
+<!-- II -->
+<section id="blind">
+  <div class="bignum">II</div>
+  <div class="wrap">
+    <div class="arc reveal"><span class="kicker">Act I · The problem · Chapter 1 of 9</span><span class="rail" aria-label="chapter 1 of 9"><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span></div>
+    <h2 class="reveal d1">You can't read it anymore</h2>
+    <p class="bridge reveal d2"><b>Where this fits</b>Everything later in this issue answers one problem. With ordinary software you find out what it does by reading it. With an agent, reading stops working. Here are three things you used to be able to read, and why you can't now.</p>
+    <div class="three">
+      <div class="reveal d1">
+        <div class="n">1 · The code</div>
+        <h3>Read the traces instead</h3>
+        <p>“With traditional software, you can read the code and you can tell with some degree of reliability what exactly that code is going to do. With agents, you have no idea.”</p>
+        <p class="quote">“Your code isn't the source of truth for what does my agent do. Instead, the traces are your source of truth.”</p>
+        <p class="by">Laurie Voss · Arize AI</p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45843-192/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why traces, not code, are an agent&#x27;s source of truth (AI Engineer)">&#9654; 1:38 &middot; ✂ cut &middot; fit 60</a>
+      </div>
+      <div class="reveal d2">
+        <div class="n">2 · The reasoning</div>
+        <h3>It isn't step by step</h3>
+        <p>Eric Bigelow of Goodfire, which studies what goes on inside models: DeepSeek's R1 will “say wait 50 times or more in a single reasoning chain, that's a lot of epiphanies to have when you're working through one problem.”</p>
+        <p class="quote">“It's almost like a soup of tokens they create and then they just go back and skim out something out of that soup.”</p>
+        <p>In his words, “reasoning is almost like a misnomer.”</p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46149-2579/clip.mp3" target="_blank" rel="noopener" title="Private network only: What reasoning models actually do: a soup of tokens (Cognitive Revolution &quot;How AI Changes Everything&quot;)">&#9654; 3:40 &middot; ✂ cut &middot; fit 42</a>
+      </div>
+      <div class="reveal d3">
+        <div class="n">3 · The language</div>
+        <h3>It drifts out of English</h3>
+        <p>Reward a model only for its final answer and “there isn't necessarily an incentive to keep things human readable.” So “they might as well speak to their sub agents in like weird nonhuman languages.”</p>
+        <p class="quote">“If you optimize for chain of thought being monitorable then sometimes the chains of thought are less faithful.”</p>
+        <p>Bigelow, again. Force the reasoning to look readable and it may only look sensible.</p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46149-5557/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why AI chains of thought are drifting into strange language (Cognitive Revolution &quot;How AI Changes Everything&quot;)">&#9654; 3:24 &middot; ✂ cut &middot; fit 46</a>
+      </div>
+    </div>
+    <p class="next reveal d3"><span>Next →</span>If you can't see inside, can you at least trust what comes out? Chapter 2: why not.</p>
+  </div>
+</section>
+
+<!-- III -->
+<section id="sure">
+  <div class="stamp"><b>HIGH<br>CONVICTION</b><span>every answer</span></div>
+  <div class="wrap">
+    <div class="arc reveal"><span class="kicker">Act I · The problem · Chapter 2 of 9</span><span class="rail" aria-label="chapter 2 of 9"><i class="done"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span></div>
+    <h2 class="reveal d1">It always sounds right</h2>
+    <p class="bridge reveal d2"><b>Where this fits</b>Chapter 1 said you can't see inside. This chapter adds the catch: the output never tells you when it's wrong, and the rarer the failures get, the less ready you are for one. That's why the rest of the issue is about checking, and about who pays when a check is missed.</p>
+    <div class="two">
+      <div class="reveal d2">
+        <div class="panel">
+          <div class="lab">The tone · Tariq Shaukat, Sonar</div>
+          <p class="quote">“AI always gives you very high conviction plausible output.”</p>
+          <p style="margin-top:1rem">“It never says I think the answer is this. It always just says, the answer is this.” So the human job becomes knowing “where do I need to poke,” the way you learn where to look with a new intern.</p>
+          <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45966-738/clip.mp3" target="_blank" rel="noopener" title="Private network only: Skills that matter when agents write the code (AI Engineer)">&#9654; 2:30 &middot; ✂ cut &middot; fit 52</a>
+        </div>
+        <div class="panel">
+          <div class="lab">The odds · Nathan Labenz, Cognitive Revolution</div>
+          <p>Misbehaviour is falling with each model generation while the length of tasks AI can take on rises. Multiply them: “Problems will be really rare, but when they do hit, they might be like quite severe.” His worry is “people kind of forgetting that we even need to be able to take control back because it seems to be working so reliably.”</p>
+          <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46233-5381/clip.mp3" target="_blank" rel="noopener" title="Private network only: Rare but severe AI failures and atrophying control (Cognitive Revolution &quot;How AI Changes Everything&quot;)">&#9654; 2:52 &middot; ✂ cut &middot; fit 54</a>
+        </div>
+      </div>
+      <div class="reveal d3">
+        <div class="lab">The bill · Abhi Arya, Reducto</div>
+        <p>Building for agents, he says, “comes down to one question, and that is who pays for the agent being wrong.” His three answers:</p>
+        <div class="buckets">
+          <div class="bucket"><b>Auto mode</b>“When it messes up, which it will, you won't have any idea because it's really confident about what it's doing.” Your users pay.</div>
+          <div class="bucket"><b>User-first</b>Every knob goes to the user, and the agent “can't really do much, which is basically just a chatbot experience.”</div>
+          <div class="bucket win"><b>Agent experience in service of the user</b>Rich, scoped capabilities, “and even where the human can still verify the work that it's doing.” The one he thinks wins.</div>
+        </div>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46023-104/clip.mp3" target="_blank" rel="noopener" title="Private network only: Agent-first software: who pays when the agent is wrong (AI Engineer)">&#9654; 2:14 &middot; ✂ cut &middot; fit 54</a>
+      </div>
+    </div>
+    <p class="next reveal d3"><span>Next →</span>Act II begins with the cheapest check there is, and the one every speaker in this issue starts with: looking.</p>
+  </div>
+</section>
+
+<!-- IV -->
+<section id="data">
+  <div class="bignum">IV</div>
+  <div class="wrap">
+    <div class="arc reveal"><span class="kicker">Act II · Looking · Chapter 3 of 9</span><span class="rail" aria-label="chapter 3 of 9"><i class="done"></i><i class="done"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span></div>
+    <h2 class="reveal d1">Look at the data</h2>
+    <p class="bridge reveal d2"><b>Where this fits</b>Act II is checking, in four steps: the data, the judge, the judge's judge, your own benchmark. It starts with the raw data, the outputs, traces and documents themselves, because that is where you learn what “good” means before you ask anything else to measure it.</p>
+    <div class="split">
+      <div class="reveal d2">
+        <div class="anchor">
+          <span class="tag">● Anchor · from your queue</span>
+          <h3>Hamel Husain's tier list</h3>
+          <p>He ranks every eval habit from S to F. The top tier is all one idea.</p>
+          <div style="margin-top:1rem">
+            <div class="tierline"><b style="background:#4338ca">S</b><span><b style="all:unset;font-weight:700">Error analysis</b>: “a structured approach to looking at your data quickly.”</span></div>
+            <div class="tierline"><b style="background:#4338ca">S</b><span><b style="all:unset;font-weight:700">Reading traces yourself</b>: “There's nothing more valuable than looking at the data.”</span></div>
+            <div class="tierline"><b style="background:#8a8ab0">C</b><span><b style="all:unset;font-weight:700">Writing evals before building</b>: “infinite surface area of things that can go wrong.”</span></div>
+            <div class="tierline"><b style="background:#2b2b44">D</b><span><b style="all:unset;font-weight:700">Evals that always pass</b>: “they're not telling you anything at all.”</span></div>
+          </div>
+          <a class="chip queue" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45976-51/clip.mp3" target="_blank" rel="noopener" title="Private network only: Look at your data before writing any evals (Hamel Husain)">&#9654; 2:37 &middot; ● queue anchor &middot; fit 74</a>
+        </div>
+        <div class="stat">
+          <div class="big"><b>30%</b><span>stale files →</span><b>80%</b></div>
+          <p>Leo Platzer, formerly of Deasy Labs: if 30% of a thousand files are stale or duplicated, “it can happen that up to 80% of your actual context your agent uses to answer a question is filled up with stale information.” Cleaning it “pretty much” doubled recall and lifted task completion “between 10 and 15%.” And “duplication and freshness is true no matter what.”</p>
+          <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45844-906/clip.mp3" target="_blank" rel="noopener" title="Private network only: How stale and duplicate documents flood a chatbot&#x27;s context (AI Engineer)">&#9654; 3:14 &middot; ✂ cut &middot; fit 38</a>
+        </div>
+      </div>
+      <div class="feat reveal d3">
+        <div class="f"><div class="ic">1</div><div><h3>Read data, not code</h3><p>Swyx, of AI Engineer and Latent Space, on who is worth hiring now: “people who look at data rather than code are more valuable these days.” That means “here's the logs, here's the traces, here's the schema,” and turning what you capture into an eval.</p></div></div>
+        <div class="f"><div class="ic">2</div><div><h3>Because the code won't show it</h3><p>His own bug: messages loaded on one refresh and not the next. Two coding agents, working at different times, had built two code paths with a race condition between them. “A human would never do that.” Reading every line won't save you; knowing what the whole system does will.</p><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45927-5656/clip.mp3" target="_blank" rel="noopener" title="Private network only: What matters for engineers working with coding agents (Cognitive Revolution &quot;How AI Changes Everything&quot;)">&#9654; 3:26 &middot; ✂ cut &middot; fit 52</a></div></div>
+        <div class="f"><div class="ic">3</div><div><h3>Users are data too</h3><p>Kent C. Dodds on putting a rough prototype in front of early adopters and watching what they do: “The problems that are really worth solving are the ones where people will just run through the glass cutting themselves and they're like, ‘We made it.’”</p><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45849-2986/clip.mp3" target="_blank" rel="noopener" title="Private network only: Run through glass: the problems worth solving (AI Engineer)">&#9654; 0:52 &middot; ✂ cut &middot; fit 40</a></div></div>
+      </div>
+    </div>
+    <p class="next reveal d3"><span>Next →</span>Looking by hand doesn't scale past a few hundred examples, so you hire a judge. Chapter 4: what the judge gets wrong.</p>
+  </div>
+</section>
+
+<!-- V -->
+<section id="judge">
+  <div class="bignum">V</div>
+  <div class="wrap">
+    <div class="arc reveal"><span class="kicker">Act II · Looking · Chapter 4 of 9</span><span class="rail" aria-label="chapter 4 of 9"><i class="done"></i><i class="done"></i><i class="done"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span></div>
+    <h2 class="reveal d1">Every judge has a type</h2>
+    <p class="bridge reveal d2"><b>Where this fits</b>Chapter 3 ended where looking by hand runs out. The usual next step is an LLM as judge: one model grading another's output. This chapter covers the judge's known biases, and the single change to the question that helps most.</p>
+    <div class="cards">
+      <div class="card reveal d1"><div class="n">01</div><h3>Position</h3><p>Shown two options, it “tends to favor whichever comes first.” Some models prefer the last, “but it always has some kind of preference to position.”</p></div>
+      <div class="card reveal d2"><div class="n">02</div><h3>Length</h3><p>“LLMs like longer responses.” They score them higher “even if the… extra length is just filler.”</p></div>
+      <div class="card reveal d3"><div class="n">03</div><h3>Confidence</h3><p>Chapter 2 again: “The judge gets fooled by a response that sounds confident just like humans do.”</p></div>
+      <div class="card reveal d4"><div class="n">04</div><h3>Self-preference</h3><p>“If you use the same model to do the generation as you use to do the judging, they tend to like their own output.”</p></div>
+    </div>
+    <p class="fixline reveal d3">Laurie Voss's fix for the last one: a judge from another family. He graded Haiku with Sonnet, “but it works even better if you use a different labs model entirely.”</p>
+    <div class="chips reveal d3"><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45845-5266/clip.mp3" target="_blank" rel="noopener" title="Private network only: Four biases that make AI judges unreliable (AI Engineer)">&#9654; 1:20 &middot; ✂ cut &middot; fit 50</a></div>
+    <div class="hero">
+      <div class="stat reveal d2">39%</div>
+      <div class="reveal d3">
+        <p class="quote">“Pointwise is not which dish do you want. Pointwise is do you want food, yes or no.”</p>
+        <p class="by">Tejas Kumar · IBM</p>
+        <p style="margin-top:1rem">Ask a judge to pick the better of two and you invite the position bias above. Ask it yes or no about one answer instead. In a study he cites, pairwise judging “was 39% more vulnerable to attack vectors than pointwise,” while pointwise “fell apart just like five times.”</p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45851-1024/clip.mp3" target="_blank" rel="noopener" title="Private network only: Ask a judge yes or no, not which of two (AI Engineer)">&#9654; 0:56 &middot; ✂ cut &middot; fit 58</a>
+      </div>
+    </div>
+    <p class="next reveal d3"><span>Next →</span>A judge with known biases is still a model you haven't tested. Chapter 5: what to test it against.</p>
+  </div>
+</section>
+
+<!-- VI -->
+<section id="trust">
+  <div class="bignum">VI</div>
+  <div class="wrap">
+    <div class="arc reveal"><span class="kicker">Act II · Looking · Chapter 5 of 9</span><span class="rail" aria-label="chapter 5 of 9"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span></div>
+    <h2 class="reveal d1">Who checks the checker?</h2>
+    <p class="bridge reveal d2"><b>Where this fits</b>The judge from Chapter 4 is a model, so it needs what any model needs: a baseline to compare against and data it has never seen. Three cut clips on how to tell whether a judge, or any small model you train, is actually good.</p>
+    <div class="cols reveal d2">
+      <p class="first">Humans are the baseline, and humans are bad at this too. Laurie Voss: two experts with the same output and the same rules disagree a surprising amount; human inter-rater reliability “is often as low as” 0.2 or 0.3. A judge that beats that is doing better than people.</p>
+      <div class="callout"><p class="quote">“What you're looking for is a judge that disagrees with you all of the time. That is the danger signal.”</p><p style="margin-top:.7rem">One that disagrees some of the time “is a judge correctly handling a genuinely ambiguous task.”</p></div>
+      <p>He closes with a principle he credits to Anthropic's eval teams: failures should seem fair. “If you look at a failing trace and you think that answer looks fine to me, the problem is probably the eval and not the agent.”</p>
+      <div class="chips"><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45845-5346/clip.mp3" target="_blank" rel="noopener" title="Private network only: A judge that sometimes disagrees with you is fine (AI Engineer)">&#9654; 1:20 &middot; ✂ cut &middot; fit 54</a></div>
+      <p>The second test is data the model has never seen. The AI Automators, fine-tuning a small model on about nine thousand support chats, call the split “the most important part,” and it happens “before you train anything.” Four piles:</p>
+      <div class="piles"><div style="width:59%;background:#8ad1c2">5,900 train</div><div style="width:14%;background:#c7e9e1">~1k quiz</div><div style="width:13%;background:#a9c7d9">1k calib.</div><div style="width:14%;background:#5b8fa3;color:#fff">1k test</div></div>
+      <p class="cap">Train on the first. Quiz after every pass and keep the best version, because a run “can actually go backwards.” Tune confidence on the third. The fourth plays “no part in anything until the very end.”</p>
+      <div class="callout"><p class="quote">“If you test a model on chats it's already trained on. It'll just remember the answers.”</p></div>
+      <div class="chips"><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45891-279/clip.mp3" target="_blank" rel="noopener" title="Private network only: Splitting data so a fine-tuned model&#x27;s score means something (The AI Automators)">&#9654; 1:15 &middot; ✂ cut &middot; fit 46</a></div>
+      <p>When is a small trained model worth it, as a judge or a decider? The same host: it “fits very well anywhere you make the same call over and over again where the available choices are reasonably stable and you have past examples of the right answer.” Trained on your own data, a 420-million-parameter model can beat a large general one.</p>
+      <div class="chips"><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45891-56/clip.mp3" target="_blank" rel="noopener" title="Private network only: When fine-tuning a small model beats a general one (The AI Automators)">&#9654; 0:46 &middot; ✂ cut &middot; fit 48</a></div>
+    </div>
+    <p class="next reveal d3"><span>Next →</span>Everything so far checks against your own data. Model makers check against public benchmarks. Chapter 6: why those tell you little.</p>
+  </div>
+</section>
+
+<!-- VII -->
+<section id="bench">
+  <div class="wrap">
+    <div class="arc reveal"><span class="kicker">Act II · Looking · Chapter 6 of 9</span><span class="rail" aria-label="chapter 6 of 9"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></span></div>
+    <div class="mast reveal"><b>The Benchmark Gazette</b><span>Last stop in Act II</span></div>
+    <h2 class="reveal d1">Your benchmark, not theirs</h2>
+    <p class="bridge reveal d2"><b>Where this fits</b>The last step of looking zooms out from one judge to choosing whole models. A public benchmark is someone else's data, graded someone else's way. Four cut clips on what that misses, and how cheap your own benchmark has become.</p>
+    <div class="banner reveal d2"><b>11 days</b><span>Nathaniel Whittemore's estimate of the average gap between frontier model releases. Each arrives with a benchmark table.</span></div>
+    <div class="cols reveal d3">
+      <h3>The tables leak</h3>
+      <p>Not because anyone is lying: “most of these benchmarks are now in the training datasets,” and “the longer they've been around, the less value there is.” Even a perfect table misses fit: “there are going to be times, I guarantee where the thing that is technically state of the art on some benchmark is worse at the version of the thing that you're doing.”</p>
+      <div class="box"><p class="quote" style="font-size:1.5rem">“There's kind of no shortcut solution to figuring out how a new model is or isn't going to fit into your process other than using it.”</p></div>
+      <div class="chips"><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45958-137/clip.mp3" target="_blank" rel="noopener" title="Private network only: Published AI benchmarks tell you little about your own work (The AI Daily Brief)">&#9654; 1:28 &middot; ✂ cut &middot; fit 45</a></div>
+      <h3>“Solved” means the benchmark</h3>
+      <p>Pushmeet Kohli of Google DeepMind on what AlphaFold actually beat: “someone got a structure, deposited it in the PDB, and we are trying to replicate and get the same structure. That's what we did, right? And it just so happens that it's useful. But that does not mean that we have understood all of protein dynamics.” Proteins, he says, “are not blocks.”</p>
+      <div class="chips"><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46111-974/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why protein folding is not actually solved (Latent Space)">&#9654; 2:12 &middot; ✂ cut &middot; fit 50</a></div>
+      <h3>Good enough is a real answer</h3>
+      <p>Nufar Gaspar, asked how open models compare in her testing: “some of the tasks are table stakes,” like email drafting or basic research, and there “you will not be able to see any noticeable difference.” Her verdict: “open source is good enough for most knowledge work task, especially if the harness in which it's working is a good one.”</p>
+      <div class="chips"><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45958-2741/clip.mp3" target="_blank" rel="noopener" title="Private network only: Is open source good enough for knowledge work (The AI Daily Brief)">&#9654; 1:02 &middot; ✂ cut &middot; fit 38</a></div>
+      <div class="box">
+        <h3>Now the agent builds it</h3>
+        <p style="margin-top:.6rem">A Cognitive Revolution co-host on how far delegation has come since January. His whole request about upgrading embedding models: “Please go look at all the embeddings models… make a benchmark if you know based on our own use cases, and then test all these things and give me a report.”</p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45986-8469/clip.mp3" target="_blank" rel="noopener" title="Private network only: Handing an agent a high-level goal now works (Cognitive Revolution &quot;How AI Changes Everything&quot;)">&#9654; 2:58 &middot; ✂ cut &middot; fit 54</a>
+      </div>
+    </div>
+    <p class="next reveal d3"><span>Next →</span>Act III. Looking tells you what went wrong after the fact. Chapter 7: in some work you can state what's right before you ship, and check against it.</p>
+  </div>
+</section>
+
+<!-- VIII -->
+<section id="spec">
+  <div class="wrap">
+    <div class="arc reveal"><span class="kicker">Act III · Proving · Chapter 7 of 9</span><span class="rail" aria-label="chapter 7 of 9"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="on"></i><i class=""></i><i class=""></i></span></div>
+    <h2 class="reveal d1">Write down what right means</h2>
+    <p class="bridge reveal d2"><b>Where this fits</b>Act II checked outputs after the fact. Act III moves the check earlier. Runtime Verification's guests on The Cognitive Revolution argue that writing down intent, the specification, is the part of programming that stays human, and that the act of writing it finds bugs by itself.</p>
+    <div class="win reveal d2">
+      <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span>~/how-do-you-know · proving</span></div>
+      <div class="body">
+        <div>
+          <div class="cmd">$ explain formal-verification</div>
+          <div class="out">The bridge analogy: you don't build a bridge, send cars over it and beef up the supports when it breaks. Writing the spec for Linux kernel code that parses untrusted input, <q>almost every time we ever do this, we find somewhere where the code does something unexpected.</q></div>
+          <div class="who"># Everett Hildenbrandt · Runtime Verification</div>
+          <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46233-1360/clip.mp3" target="_blank" rel="noopener" title="Private network only: Formal verification explained; writing the spec finds bugs (Cognitive Revolution &quot;How AI Changes Everything&quot;)">&#9654; 4:19 &middot; ✂ cut &middot; fit 58</a>
+        </div>
+        <div>
+          <div class="cmd">$ explain --what-stays-human</div>
+          <div class="out"><q>We didn't just take an LLM and point it at the Linux kernel and say go find us bugs which also works by the way.</q> They used methods with a track record. And: <q>formal verification is the very human process of writing down that intent and then ensuring that the software meets it.</q></div>
+          <div class="who"># Everett Hildenbrandt</div>
+          <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46233-2091/clip.mp3" target="_blank" rel="noopener" title="Private network only: Use proven methods, and keep the human work: stating intent (Cognitive Revolution &quot;How AI Changes Everything&quot;)">&#9654; 3:00 &middot; ✂ cut &middot; fit 58</a>
+        </div>
+        <div>
+          <div class="cmd">$ predict --packages</div>
+          <div class="out"><q>Writing code is a dead art in two years tops.</q> Packages will ship with formal specs and proofs. Mass-manufactured software, like factory bread: <q>it slices cleanly every time and it makes the same sandwich every time.</q> <q>It's too risky to build bridges that haven't been formally verified. In the same way, now it is too risky to build software that hasn't been.</q></div>
+          <div class="who"># Everett Hildenbrandt, his prediction</div>
+          <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46233-3120/clip.mp3" target="_blank" rel="noopener" title="Private network only: Software will come mass-manufactured, specified and verified (Cognitive Revolution &quot;How AI Changes Everything&quot;)">&#9654; 2:10 &middot; ✂ cut &middot; fit 56</a>
+        </div>
+        <div>
+          <div class="cmd">$ explain --guardrails</div>
+          <div class="out">Jonathan Bryce of the Cloud Native Computing Foundation: AI agents enable <q>much more rapid experimentation</q>, but <q>if you have a bunch of non-deterministic agents and models running out there</q>, the deterministic guard rails <q>becomes even more important than ever before.</q> The host's summary: <q>we're kind of using deterministic humans to wrangle probabilistic coding agents.</q></div>
+          <div class="who"># The New Stack</div>
+          <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45938-1500/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why agent-written code needs rock-solid foundations (The New Stack)">&#9654; 2:08 &middot; ✂ cut &middot; fit 35</a>
+        </div>
+        <div style="grid-column:1/-1"><span class="cmd">$</span> <span class="cursor"></span></div>
+      </div>
+    </div>
+    <p class="next reveal d3"><span>Next →</span>A spec makes checking cheap. Chapter 8: what happens when checking is cheap, and what happens when it isn't.</p>
+  </div>
+</section>
+
+<!-- IX -->
+<section id="loop">
+  <div class="bignum">IX</div>
+  <div class="wrap">
+    <div class="arc reveal"><span class="kicker">Act III · Proving · Chapter 8 of 9</span><span class="rail" aria-label="chapter 8 of 9"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="on"></i><i class=""></i></span></div>
+    <h2 class="reveal d1">Run the loop</h2>
+    <p class="bridge reveal d2"><b>Where this fits</b>Here the argument widens beyond software. When an idea can be checked cheaply, you can try thousands of them; when checking needs the physical world, everything slows to its pace. Four cut clips from mathematics, materials science and biology say the same thing: speed comes from how fast you can check.</p>
+    <div class="split">
+      <div class="reveal d2">
+        <h3>Why AI cracked maths and not trucking</h3>
+        <p style="margin-top:.8rem">David Friedberg on the All-In Podcast, after OpenAI's batch of new proofs, each from under three hours of compute. AI works in loops:</p>
+        <div class="ring"><span>an idea</span><i>→</i><span>test it</span><i>→</i><span>read the result</span><i>→</i><span>change the idea</span><i>↺</i></div>
+        <p>Mathematics is the ideal case, “because you can actually test your prediction on the compute. You don't have to go do anything in the physical world.”</p>
+        <div class="vs">
+          <div><h3>All in silicon</h3><p>Maths. Loops run in parallel, and each “can connect dots that humans otherwise might spend many days or years trying to find.”</p></div>
+          <div><h3>A physical step</h3><p>Drug discovery, materials, trucking. “The speed of the loop is actually gated primarily by the physical world step.”</p></div>
+        </div>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46107-2410/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why AI mastered math but not truck driving (All-In Podcast)">&#9654; 4:02 &middot; ✂ cut &middot; fit 54</a>
+      </div>
+      <aside class="side reveal d3">
+        <div class="big">30,000<small> tried</small></div>
+        <div class="big" style="font-size:clamp(2.4rem,4vw,3.6rem)">30<small> interesting</small></div>
+        <p>A Periodic Labs researcher on Latent Space, on how magnesium diboride, the highest-temperature conventional superconductor at ambient pressure, was found: a Japanese group “tried 30,000 different things. 30 of them seemed to host interesting superconductivity.” It wasn't theory. Automate the trying, and “we just really increased the surface area for luck.”</p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45997-4964/clip.mp3" target="_blank" rel="noopener" title="Private network only: Discovering superconductors by trying many things (Latent Space)">&#9654; 2:08 &middot; ✂ cut &middot; fit 52</a>
+        <hr>
+        <p class="quote" style="font-size:1.45rem">“The experiment is this little tiny linear probe, which has like eight bits or something of output.”</p>
+        <p>The same team: reality holds far more than any instrument reads, so “any data we collect is very precious and we don't delete any of it.”</p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45997-1625/clip.mp3" target="_blank" rel="noopener" title="Private network only: An experiment as a tiny probe of a huge reality (Latent Space)">&#9654; 1:14 &middot; ✂ cut &middot; fit 44</a>
+      </aside>
+    </div>
+    <div class="lower reveal d3">
+      <div><h3>The problem comes first</h3><p style="margin-top:.7rem">Pushmeet Kohli on the old machine learning habit: “here is some training data. Here is some test data. And we will just optimize the model. And that is broken.” His reading of the bitter lesson is to stop being “religious” about method. “The problem comes first.” Sometimes that means modelling, sometimes collecting the data.</p><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46111-343/clip.mp3" target="_blank" rel="noopener" title="Private network only: Start with the problem, not your favorite method (Latent Space)">&#9654; 3:26 &middot; ✂ cut &middot; fit 50</a></div>
+      <div><p class="quote" style="font-size:1.6rem">The fastest loop wins, and the loop is only as fast as its check.</p><p class="by">The editor, joining the four clips</p></div>
+    </div>
+    <p class="next reveal d3"><span>Next →</span>Last chapter: once you can check, what should you count?</p>
+  </div>
+</section>
+
+<!-- X -->
+<section id="closer">
+  <div class="floor"></div>
+  <div class="wrap">
+    <div class="arc reveal"><span class="kicker">Act III · Proving · Chapter 9 of 9</span><span class="rail" aria-label="chapter 9 of 9"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="on"></i></span></div>
+    <h2 class="reveal d1">Measure what matters</h2>
+    <p class="bridge reveal d2"><b>Where this fits</b>The ending brings the argument back to where it started. Once you can check, the question is what to count and where to spend the effort. Three cut clips, and the answer each time is outcomes, beginning with the data.</p>
+    <div class="fix reveal d2">
+      <div><b>1</b><h3>Data quality</h3><p>Stale knowledge base? “No amount of prompt iteration is going to help.”</p></div>
+      <div><b>2</b><h3>Prompting</h3><p>Few-shot examples, explicit constraints. “Often the highest ROI.”</p></div>
+      <div><b>3</b><h3>Model choice</h3><p>Can solve what prompting can't, but it “will also cost more and be slower.”</p></div>
+      <div><b>4</b><h3>Temperature, top-p</h3><p>Easy to tweak, seldom a big lever. “The last thing you try.”</p></div>
+    </div>
+    <div class="chips reveal d3"><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45845-6030/clip.mp3" target="_blank" rel="noopener" title="Private network only: Where to invest when improving an AI agent (AI Engineer)">&#9654; 1:02 &middot; ✂ cut &middot; fit 58</a></div>
+    <div class="two">
+      <div class="reveal d2"><div class="lab">Outcomes, not tokens</div><p>Davis Palmie of Factory: “Lines of code and tokens generated are gameable metrics.” Token leaderboards are “Goodhart's law in real time,” the same trap as the readable-reasoning one in Chapter 1. Count signal-to-production time, human interventions, median time to repair, shelf life of code, cost per PR. “Don't token max.”</p><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45963-984/clip.mp3" target="_blank" rel="noopener" title="Private network only: Measure outcomes, not tokens (AI Engineer)">&#9654; 1:38 &middot; ✂ cut &middot; fit 58</a></div>
+      <div class="reveal d3"><div class="lab">Outcomes, not certainty</div><p>Jake Van Clief to a student who had tripled his company's revenue and still felt he was building the wrong thing: “Put pressure on am I getting an outcome and am I building it in a way where I can fix it later.” “Outcomes matter more than is it right.”</p><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46125-3073/clip.mp3" target="_blank" rel="noopener" title="Private network only: Nobody Knows What They&#x27;re Doing; Judge Software By Outcomes (Jake Van Clief)">&#9654; 2:30 &middot; ✂ cut &middot; fit 46</a></div>
+    </div>
+    <div class="path reveal d3">
+      <h3>The whole argument in seven cut clips, about 16 minutes</h3>
+      <ol>
+        <li><div><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45843-192/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why traces, not code, are an agent&#x27;s source of truth (AI Engineer)">&#9654; Why traces, not code, are an agent&#x27;s source of truth &middot; 1:38</a><em>The problem: you can't read an agent</em></div></li>
+        <li><div><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45966-738/clip.mp3" target="_blank" rel="noopener" title="Private network only: Skills that matter when agents write the code (AI Engineer)">&#9654; Skills that matter when agents write the code &middot; 2:30</a><em>The catch: it always sounds sure</em></div></li>
+        <li><div><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45844-906/clip.mp3" target="_blank" rel="noopener" title="Private network only: How stale and duplicate documents flood a chatbot&#x27;s context (AI Engineer)">&#9654; How stale and duplicate documents flood a chatbot&#x27;s context &middot; 3:14</a><em>Why the data comes first</em></div></li>
+        <li><div><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45845-5266/clip.mp3" target="_blank" rel="noopener" title="Private network only: Four biases that make AI judges unreliable (AI Engineer)">&#9654; Four biases that make AI judges unreliable &middot; 1:20</a><em>What judges get wrong</em></div></li>
+        <li><div><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45845-5346/clip.mp3" target="_blank" rel="noopener" title="Private network only: A judge that sometimes disagrees with you is fine (AI Engineer)">&#9654; A judge that sometimes disagrees with you is fine &middot; 1:20</a><em>How to trust one anyway</em></div></li>
+        <li><div><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45958-137/clip.mp3" target="_blank" rel="noopener" title="Private network only: Published AI benchmarks tell you little about your own work (The AI Daily Brief)">&#9654; Published AI benchmarks tell you little about your own work &middot; 1:28</a><em>Why public benchmarks fall short</em></div></li>
+        <li><div><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46107-2410/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why AI mastered math but not truck driving (All-In Podcast)">&#9654; Why AI mastered math but not truck driving &middot; 4:02</a><em>Why fast checks change everything</em></div></li>
+      </ol>
+    </div>
+    <div class="floorcount reveal d3">
+      <b>29 / 74</b>
+      <p>This issue uses 29 of the 74 clips the taste scorer has cut since 13 October; one clip from your queue anchors Chapter 3. The cut runs through single talks: Laurie Voss's workshop has three clips here, and a fourth from the same talk is still in your queue.</p>
+    </div>
+    <p class="last reveal d4">Look at the data. <em>Then</em> decide whether to trust the judge.</p>
+    <p class="foot">Clip links play only on David's private network. No audio is embedded in this page. Quotes are from the clips' transcripts, lightly cleaned of filler words.</p>
+  </div>
+</section>
+
+<script>
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.08,rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

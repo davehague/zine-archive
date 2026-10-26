@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Cut Pile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --fr:'Fraunces',Georgia,serif;
+    --in:'Inter',system-ui,sans-serif;
+    --mo:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--in);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;background:#111}
+  section{min-height:100vh;padding:5rem 4rem;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+  .wrap{max-width:1400px;margin:0 auto;width:100%;position:relative;z-index:2}
+  .kicker{font-family:var(--in);text-transform:uppercase;letter-spacing:.32em;font-weight:700;font-size:.85rem;color:var(--ac)}
+  .deck{font-size:1.35rem;line-height:1.55;max-width:60ch;font-weight:400}
+  h1,h2,h3{font-family:var(--fr);line-height:.95;font-weight:600}
+  h2{font-size:clamp(3rem,8vw,7.4rem);letter-spacing:-.025em}
+  h3{font-size:clamp(1.6rem,3vw,2.4rem);line-height:1.05}
+  p{font-size:1.15rem}
+  .bignum{font-family:var(--fr);position:absolute;font-weight:800;line-height:1;opacity:.06;z-index:1;pointer-events:none;font-size:clamp(14rem,34vw,34rem);right:-2rem;bottom:-4rem}
+  .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .d1{transition-delay:.08s}.d2{transition-delay:.18s}.d3{transition-delay:.28s}.d4{transition-delay:.38s}.d5{transition-delay:.48s}
+  .quote{font-family:var(--fr);font-style:italic;font-weight:400;line-height:1.25;font-size:clamp(1.5rem,2.8vw,2.3rem)}
+  .by{font-size:1.1rem;font-weight:600;letter-spacing:.04em;margin-top:.7rem;opacity:.75}
+  .chip{font-family:var(--in);display:inline-block;margin-top:1rem;padding:.5rem 1rem;border:1.5px solid var(--ac);border-radius:999px;color:var(--ac);font-weight:600;font-size:1rem;text-decoration:none;letter-spacing:.01em;transition:background .2s,color .2s}
+  .chip:hover{background:var(--ac);color:var(--chipfg,#000)}
+  .chips{display:flex;flex-wrap:wrap;gap:.6rem}
+  @media(max-width:900px){
+    section{padding:3.5rem 1.5rem}
+    .deck{font-size:1.15rem}
+    .two,.grid3,.split,.cols,.cards,.feat{grid-template-columns:1fr!important}
+    .cols{column-count:1!important}
+  }
+
+  /* 1 — COVER */
+  #cover{--ac:#b4532a;--chipfg:#fff;background:linear-gradient(160deg,#f6efe2 0%,#efe4d2 100%);color:#22201c;text-align:center;align-items:center}
+  #cover .rule{width:1px;height:70px;background:#8a7d68;margin:0 auto}
+  #cover h1{font-size:clamp(4rem,15vw,12.5rem);letter-spacing:-.035em;font-weight:700;margin:1.5rem 0;font-variation-settings:"opsz" 144}
+  #cover h1 em{font-style:italic;font-weight:300;color:#b4532a}
+  #cover .sub{font-family:var(--fr);font-style:italic;font-size:clamp(1.5rem,4vw,2.7rem);color:#6b5f4c;font-weight:400;max-width:22ch;margin:0 auto}
+  #cover .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:3.5rem auto 0;max-width:1000px;border-top:1px solid #8a7d68;border-bottom:1px solid #8a7d68}
+  #cover .stat{padding:1.6rem 1rem;border-right:1px solid #cdbfa6}
+  #cover .stat:last-child{border-right:0}
+  #cover .stat b{display:block;font-family:var(--fr);font-size:clamp(2.4rem,5vw,4rem);font-weight:600;color:#22201c;line-height:1}
+  #cover .stat span{display:block;margin-top:.5rem;font-size:1.1rem;color:#6b5f4c}
+  #cover .attr{margin-top:2.5rem;font-size:.9rem;letter-spacing:.24em;text-transform:uppercase;color:#8a7d68;font-weight:600;line-height:1.9}
+  #cover .grain{position:absolute;inset:0;background-image:radial-gradient(#00000010 1px,transparent 1px);background-size:22px 22px;opacity:.5}
+  @media(max-width:900px){#cover .stats{grid-template-columns:1fr 1fr}#cover .stat{border-bottom:1px solid #cdbfa6}}
+
+  /* 2 — MIDNIGHT */
+  #bench{--ac:#7fa8ff;--chipfg:#0d1117;background:#0d1117;color:#e9edf3}
+  #bench::before{content:"";position:absolute;top:-20%;right:-10%;width:60vw;height:60vw;background:radial-gradient(circle,#2b6cff33,transparent 62%);filter:blur(20px)}
+  #bench h2{color:#fff}
+  #bench h2 em{font-style:italic;font-weight:300;color:#7fa8ff}
+  #bench .row{display:grid;grid-template-columns:minmax(180px,.55fr) 2fr;gap:2.5rem;align-items:start;padding:2rem 0;border-bottom:1px solid #ffffff14}
+  #bench .row .lbl{font-family:var(--fr);font-size:clamp(1.6rem,3vw,2.6rem);color:#7fa8ff;font-weight:500;line-height:1.05}
+  #bench .row .lbl small{display:block;font-family:var(--in);font-size:.9rem;letter-spacing:.14em;text-transform:uppercase;color:#7b8798;margin-top:.7rem;font-weight:600}
+  #bench .row .txt{font-size:1.2rem;color:#c3ccd8;max-width:62ch}
+  #bench .row .txt q{color:#fff;font-family:var(--fr);font-style:italic;font-size:1.35rem}
+  #bench .ladder{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-top:1.1rem}
+  #bench .ladder div{padding:1rem;border:1px solid #ffffff22;border-radius:6px;font-size:1.1rem;color:#c3ccd8}
+  #bench .ladder div b{display:block;font-family:var(--fr);font-size:2rem;color:#7fa8ff}
+  #bench .ladder div.last{opacity:.55;border-style:dashed}
+  #bench .big39{font-family:var(--fr);font-size:clamp(3rem,6vw,5rem);color:#fff;font-weight:700;line-height:1}
+  @media(max-width:900px){#bench .row{grid-template-columns:1fr;gap:.8rem}#bench .ladder{grid-template-columns:1fr 1fr}}
+
+  /* 3 — WARM EDITORIAL */
+  #trifecta{--ac:#2f6b3f;--chipfg:#fff;background:#efe6d6;color:#26231d;background-image:linear-gradient(#26231d0d 1px,transparent 1px),linear-gradient(90deg,#26231d0d 1px,transparent 1px);background-size:48px 48px}
+  #trifecta .grid3{display:grid;grid-template-columns:1.3fr .9fr;gap:3.5rem;align-items:start}
+  #trifecta h2{color:#26231d}
+  #trifecta h2 em{color:#2f6b3f;font-style:italic;font-weight:300}
+  #trifecta .three{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:2rem 0}
+  #trifecta .three div{border:2px solid #26231d;padding:1.2rem;background:#f7f1e4}
+  #trifecta .three div b{font-family:var(--fr);font-size:1.8rem;display:block;line-height:1.05}
+  #trifecta .three div span{font-size:1.1rem;color:#4a443a;display:block;margin-top:.5rem}
+  #trifecta .pq{border-left:6px solid #2f6b3f;padding-left:1.5rem;margin:2rem 0}
+  #trifecta .side{background:#1f1b16;color:#efe6d6;padding:2.4rem;position:relative;--ac:#8fd19e;--chipfg:#1f1b16}
+  #trifecta .side h3{color:#8fd19e;margin-bottom:1rem}
+  #trifecta .side p{font-size:1.15rem;color:#d9d0bd;margin-bottom:1rem}
+  #trifecta .side .quote{color:#fff;font-size:1.5rem;margin:1.2rem 0}
+  #trifecta ul.atk{list-style:none;margin-top:1rem}
+  #trifecta ul.atk li{padding:.8rem 0;border-top:1px solid #26231d33;font-size:1.15rem}
+  #trifecta ul.atk li b{font-family:var(--fr);font-size:1.35rem}
+  @media(max-width:900px){#trifecta .three{grid-template-columns:1fr}}
+
+  /* 4 — ROSE ALERT */
+  #levers{--ac:#ff5c7a;--chipfg:#1a0a10;background:radial-gradient(circle at 20% 10%,#3a0d1a 0%,#1a0a10 55%,#10050a 100%);color:#fbe9ed}
+  #levers h2{color:#fff}
+  #levers h2 em{color:#ff5c7a;font-style:italic;font-weight:300}
+  #levers .head{display:flex;justify-content:space-between;align-items:flex-start;gap:2rem;flex-wrap:wrap}
+  #levers .stamp{width:210px;height:210px;border:5px double #ff5c7a;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font-family:var(--fr);font-weight:800;color:#ff5c7a;transform:rotate(-12deg);font-size:1.35rem;line-height:1.05;letter-spacing:.04em;text-transform:uppercase;flex:none;padding:0 1.4rem;box-shadow:inset 0 0 0 8px #ff5c7a14}
+  #levers .stamp small{display:block;font-family:var(--in);font-size:.8rem;letter-spacing:.2em;margin-top:.5rem;font-weight:700}
+  #levers .two{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:3rem}
+  #levers .col{border-top:3px solid #ff5c7a;padding-top:1.4rem}
+  #levers .col.alt{border-top-color:#f5c2cb;--ac:#f5c2cb}
+  #levers .col h3{margin-bottom:1rem;color:#fff}
+  #levers .col p{color:#e9c7ce;margin-bottom:1rem}
+  #levers .col .quote{color:#fff;margin:1.2rem 0;font-size:clamp(1.4rem,2.4vw,2rem)}
+  #levers .col .tag{font-weight:800;letter-spacing:.2em;text-transform:uppercase;font-size:.85rem;color:#ff5c7a}
+  #levers .col.alt .tag{color:#f5c2cb}
+  #levers .bignum{color:#ff5c7a}
+
+  /* 5 — TERMINAL */
+  #spec{--ac:#33ff7a;--chipfg:#001a08;background:#020a04;color:#b8ffd0;font-family:var(--mo)}
+  #spec::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,#00000030 0,#00000030 1px,transparent 1px,transparent 3px);pointer-events:none;z-index:3}
+  #spec h2{color:#33ff7a;font-family:var(--fr);text-shadow:0 0 28px #33ff7a55}
+  #spec .win{border:1px solid #1d6b3a;border-radius:10px;background:#031007;margin-top:2.4rem;overflow:hidden;box-shadow:0 0 60px #33ff7a14}
+  #spec .bar{display:flex;gap:.5rem;align-items:center;padding:.8rem 1rem;background:#06210f;border-bottom:1px solid #1d6b3a;color:#5fbf84;font-size:.95rem}
+  #spec .bar i{width:12px;height:12px;border-radius:50%;background:#ff5f56;display:inline-block}
+  #spec .bar i:nth-child(2){background:#ffbd2e}#spec .bar i:nth-child(3){background:#27c93f}
+  #spec .bar span{margin-left:1rem}
+  #spec .body{padding:2rem;font-size:1.1rem;line-height:1.8}
+  #spec .ln{margin-bottom:1.4rem}
+  #spec .ln .p{color:#33ff7a}
+  #spec .ln .c{color:#5fbf84}
+  #spec .ln q{color:#fff;font-family:var(--fr);font-style:italic;font-size:1.3rem;quotes:"“" "”"}
+  #spec .by2{color:#5fbf84;font-size:1rem}
+  #spec .cursor{display:inline-block;width:.7em;height:1.1em;background:#33ff7a;vertical-align:text-bottom;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  #spec .cols{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+  #spec .chip{font-family:var(--mo)}
+  #levers .chip{display:inline-block}
+  #spec .bignum{color:#33ff7a}
+
+  /* 6 — ACADEMIC DROP-CAP */
+  #meal{--ac:#7fd6c9;--chipfg:#0b1a33;background:#0b1a33;color:#dfe8f7;background-image:radial-gradient(circle at 85% 15%,#1d3a6e55,transparent 50%)}
+  #meal h2{color:#fff}
+  #meal h2 em{font-style:italic;font-weight:300;color:#7fd6c9}
+  #meal .cols{column-count:2;column-gap:3.5rem;column-rule:1px solid #ffffff22;margin-top:2.5rem;font-family:var(--fr);font-size:1.3rem;line-height:1.7;color:#d3def0}
+  #meal .cols p{font-family:var(--fr);font-size:1.3rem;margin-bottom:1.2rem}
+  #meal .cols p.first::first-letter{float:left;font-size:7.5rem;line-height:.78;padding:.4rem .9rem 0 0;color:#7fd6c9;font-weight:800}
+  #meal .callout{break-inside:avoid;border:1px solid #7fd6c9;border-left:6px solid #7fd6c9;padding:1.2rem 1.4rem;margin:1.6rem 0;background:#0e2447;font-family:var(--in)}
+  #meal .callout b{display:block;font-family:var(--in);font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;color:#7fd6c9;margin-bottom:.5rem}
+  #meal .callout span{font-family:var(--in);font-size:1.15rem;line-height:1.55;color:#e8f0fc}
+  #meal .pull{break-inside:avoid;font-family:var(--fr);font-style:italic;color:#fff;font-size:1.8rem;line-height:1.3;margin:1.6rem 0;padding:1rem 0;border-top:2px solid #7fd6c9;border-bottom:2px solid #7fd6c9}
+  #meal .bignum{color:#7fd6c9}
+
+  /* 7 — BIG STAT GOLD */
+  #loops{--ac:#ffb81c;--chipfg:#14110a;background:#14110a;color:#f5ead0;background-image:radial-gradient(circle at 50% 40%,#3d2d0a 0%,transparent 60%)}
+  #loops .hero{display:grid;grid-template-columns:auto 1fr;gap:3rem;align-items:end}
+  #loops .stat{font-family:var(--fr);font-size:clamp(9rem,26vw,24rem);font-weight:800;line-height:.8;color:#ffb81c;letter-spacing:-.05em;text-shadow:0 0 90px #ffb81c44}
+  #loops .stat small{display:block;font-size:clamp(2rem,5vw,4.4rem);letter-spacing:0;font-weight:500;font-style:italic;color:#f5ead0;margin-top:1rem;text-shadow:none}
+  #loops h2{font-size:clamp(2.4rem,5vw,4.4rem);color:#fff;margin-bottom:1.2rem}
+  #loops .badge{display:inline-flex;align-items:center;gap:.8rem;border:2px solid #ffb81c;padding:.5rem 1.1rem;border-radius:4px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:.9rem;color:#ffb81c;margin-bottom:1.4rem}
+  #loops .badge b{font-family:var(--fr);font-size:2rem;line-height:1}
+  #loops .loopline{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:1.6rem 0;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:.95rem}
+  #loops .loopline span{border:1px solid #ffb81c66;padding:.5rem .9rem;border-radius:4px}
+  #loops .loopline i{color:#ffb81c;font-style:normal}
+  #loops .cmp{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:3rem}
+  #loops .cmp div{border-top:3px solid #ffb81c;padding-top:1rem}
+  #loops .cmp div.no{border-top-color:#8a7a50}
+  #loops .cmp b{font-family:var(--fr);font-size:1.9rem;display:block;margin-bottom:.5rem}
+  #loops .cmp p{color:#e6d9b8}
+  @media(max-width:900px){#loops .hero,#loops .cmp{grid-template-columns:1fr}}
+
+  /* 8 — BROADSHEET */
+  #gazette{--ac:#c1121f;--chipfg:#fff;background:#f1ebdc;color:#1d1a14;background-image:radial-gradient(#1d1a1410 1px,transparent 1px);background-size:6px 6px}
+  #gazette .mast{border-top:6px double #1d1a14;border-bottom:6px double #1d1a14;padding:1.2rem 0;text-align:center;margin-bottom:1.5rem}
+  #gazette .mast .nm{font-family:var(--fr);font-weight:800;font-size:clamp(1.8rem,4vw,3.2rem);letter-spacing:.04em;text-transform:uppercase}
+  #gazette .mast .ln{display:flex;justify-content:space-between;font-size:.9rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin-top:.5rem;flex-wrap:wrap;gap:.5rem}
+  #gazette h2{font-size:clamp(3rem,8vw,7rem);text-align:center;text-transform:none}
+  #gazette .banner{background:#c1121f;color:#fff;display:flex;justify-content:space-around;gap:1rem;flex-wrap:wrap;padding:1.2rem;margin:1.6rem 0;text-align:center}
+  #gazette .banner div b{font-family:var(--fr);font-size:clamp(2.2rem,5vw,4rem);display:block;line-height:1}
+  #gazette .banner div span{font-size:1.1rem;font-weight:600}
+  #gazette .cols{column-count:3;column-gap:2.4rem;column-rule:1px solid #1d1a14;font-family:var(--fr);font-size:1.2rem;line-height:1.6}
+  #gazette .cols h3{break-after:avoid;font-size:1.6rem;margin:.2rem 0 .5rem;border-top:3px solid #1d1a14;padding-top:.8rem}
+  #gazette .cols p{font-family:var(--fr);font-size:1.15rem;margin-bottom:1rem;text-align:justify;hyphens:auto}
+  #gazette .cols .art{break-inside:avoid-column;margin-bottom:1.4rem}
+  #gazette .cols .pq{font-style:italic;font-size:1.5rem;font-weight:600;line-height:1.25;border-top:2px solid #c1121f;border-bottom:2px solid #c1121f;padding:.8rem 0;margin:1rem 0}
+  #gazette .chip{font-family:var(--in)}
+  @media(max-width:900px){#gazette .cols{column-count:1}}
+
+  /* 9 — NEON */
+  #rules{--ac:#00f0ff;--chipfg:#05020f;background:#05020f;color:#e6f9ff;background-image:radial-gradient(circle at 80% 0%,#2a0a4a 0%,transparent 55%)}
+  #rules::after{content:"";position:absolute;left:-20%;right:-20%;bottom:-8%;height:42%;background-image:linear-gradient(#00f0ff44 1px,transparent 1px),linear-gradient(90deg,#00f0ff44 1px,transparent 1px);background-size:60px 60px;transform:perspective(420px) rotateX(62deg);transform-origin:top;mask-image:linear-gradient(#000,transparent);-webkit-mask-image:linear-gradient(#000,transparent);z-index:1;pointer-events:none}
+  #rules h2{color:#fff;text-shadow:0 0 30px #00f0ff88}
+  #rules h2 em{color:#ff2bd6;font-style:italic;font-weight:300;text-shadow:0 0 30px #ff2bd688}
+  #rules .cards{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;margin-top:3rem}
+  #rules .card{border:1px solid #00f0ff88;background:#0a0618dd;padding:1.8rem;box-shadow:0 0 30px #00f0ff22,inset 0 0 30px #00f0ff0d;position:relative}
+  #rules .card:nth-child(2n){border-color:#ff2bd6aa;box-shadow:0 0 30px #ff2bd622,inset 0 0 30px #ff2bd60d;--ac:#ff2bd6;--chipfg:#05020f}
+  #rules .card .n{font-family:var(--fr);font-size:3.4rem;font-weight:800;color:#00f0ff;line-height:1}
+  #rules .card:nth-child(2n) .n{color:#ff2bd6}
+  #rules .card h3{color:#fff;margin:.4rem 0 .8rem}
+  #rules .card p{color:#cfe9f0;margin-bottom:.8rem}
+  #rules .card > q{display:block;font-family:var(--fr);font-style:italic;font-size:1.3rem;color:#fff;margin:.8rem 0;line-height:1.35}
+
+  /* 10 — CLEAN PRODUCT */
+  #start{--ac:#4f46e5;--chipfg:#fff;background:#fafafa;color:#14142b}
+  #start h2{color:#14142b}
+  #start h2 em{color:#4f46e5;font-style:italic;font-weight:300}
+  #start .split{display:grid;grid-template-columns:1.25fr 1fr;gap:3.5rem;align-items:start;margin-top:2.5rem}
+  #start .feat{display:grid;gap:1.4rem}
+  #start .f{display:grid;grid-template-columns:56px 1fr;gap:1.2rem;padding:1.4rem;border:1px solid #e3e3f2;border-radius:14px;background:#fff;box-shadow:0 6px 24px #4f46e50d}
+  #start .f .ic{width:56px;height:56px;border-radius:14px;background:#eef0ff;color:#4f46e5;display:flex;align-items:center;justify-content:center;font-family:var(--fr);font-weight:800;font-size:1.7rem}
+  #start .f h3{font-size:1.5rem;margin-bottom:.4rem}
+  #start .f p{color:#4a4a68;font-size:1.12rem}
+  #start .f > div > q{display:block;font-family:var(--fr);font-style:italic;color:#14142b;font-size:1.25rem;margin:.5rem 0}
+  #start .card{background:#14142b;color:#fff;border-radius:18px;padding:2.2rem;box-shadow:0 20px 60px #4f46e533;--ac:#a5b4ff;--chipfg:#14142b;position:sticky;top:2rem}
+  #start .card .tag{letter-spacing:.2em;text-transform:uppercase;font-weight:800;font-size:.85rem;color:#a5b4ff}
+  #start .card h3{color:#fff;margin:.5rem 0 1rem;font-size:2.2rem}
+  #start .card ol{padding-left:1.4rem}
+  #start .card li{margin-bottom:1rem;font-size:1.12rem;color:#dfe0ff}
+  #start .card li b{color:#fff}
+  #start .card .note{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid #ffffff22;color:#b9bbe8;font-size:1.1rem}
+  #start .end{margin-top:3rem;font-family:var(--fr);font-style:italic;font-size:clamp(1.6rem,3vw,2.4rem);color:#4f46e5;max-width:36ch}
+  #start .fine{margin-top:1.2rem;color:#6a6a88;font-size:1.1rem;max-width:80ch}
+  .chip.nm{margin-top:.4rem}
+  #meal .chips .chip,#spec .chips .chip{margin-top:.6rem}
+</style>
+</head>
+<body>
+
+<!-- 1 COVER -->
+<section id="cover">
+  <div class="grain"></div>
+  <div class="wrap">
+    <div class="rule reveal"></div>
+    <div class="kicker reveal d1" style="margin-top:1.5rem">Podcast Picks &middot; Aged-Out Set &middot; 14 October 2026</div>
+    <h1 class="reveal d2">The Cut <em>Pile</em></h1>
+    <p class="sub reveal d3">Twenty-seven clips the taste scorer let go. Here is what was in them.</p>
+    <div class="stats reveal d4">
+      <div class="stat"><b>27</b><span>clips cut</span></div>
+      <div class="stat"><b>80</b><span>minutes of audio</span></div>
+      <div class="stat"><b>25 + 2</b><span>graded 4 + graded 5</span></div>
+      <div class="stat"><b>44&ndash;60</b><span>taste-fit score</span></div>
+    </div>
+    <div class="attr reveal d5">Source: the full transcripts of 27 clips from 7 shows &middot; Ten spreads, one per theme<br>Clip links play only on David&rsquo;s private network</div>
+  </div>
+</section>
+
+<!-- 2 EVAL BENCH -->
+<section id="bench">
+  <div class="bignum">II</div>
+  <div class="wrap">
+    <div class="kicker reveal">AI Engineer &middot; four clips</div>
+    <h2 class="reveal d1">The code is <em>not</em> the source of truth</h2>
+    <p class="deck reveal d2" style="margin-top:1.4rem;color:#c3ccd8">Four short workshop clips, one idea: you cannot read an agent to know what it does, so you measure it. Traces, judges, a ladder of fixes, and the numbers that matter.</p>
+
+    <div class="row reveal">
+      <div class="lbl">Read the traces<small>Laurie Voss &middot; Arize AI</small></div>
+      <div class="txt">
+        <p><q>Your code isn&rsquo;t the source of truth for what does my agent do. Instead, the traces are your source of truth.</q> Agents are non-deterministic: same input, different output, and even with the same output they may not have taken the same path. Traces are <q>log lines for AI applications</q>: every LLM call, every tool call, every agent turn. And it has to be traces <em>at scale</em>, because you need to know <q>on average what is it that my agent does, not just this one run.</q></p>
+        <p style="margin-top:.8rem">Without them: <q>you are essentially flying blind when you are building agents.</q></p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45843-192/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why traces, not code, are an agent&#x27;s source of truth">&#9654; Clip 1:38 &middot; AI Engineer &middot; grader 4 &middot; fit 60</a>
+      </div>
+    </div>
+
+    <div class="row reveal">
+      <div class="lbl">Ask yes or no<small>Tejas Kumar &middot; IBM</small></div>
+      <div class="txt">
+        <p>When a model judges an answer, a single yes-or-no question beats a head-to-head pick. <q>Pointwise is not which dish do you want. Pointwise is do you want food, yes or no.</q> Humans, he says, are <q>fundamentally really bad at pairwise comparison</q>, and models inherit that.</p>
+        <p style="margin-top:.8rem"><span class="big39">39%</span> <span style="color:#7b8798">&nbsp;more vulnerable to attack vectors for pairwise than pointwise, in the one study he cites. Pointwise <q>fell apart just like five times.</q></span></p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45851-1024/clip.mp3" target="_blank" rel="noopener" title="Private network only: Ask a judge yes or no, not which of two">&#9654; Clip 0:56 &middot; AI Engineer &middot; grader 4 &middot; fit 58</a>
+      </div>
+    </div>
+
+    <div class="row reveal">
+      <div class="lbl">Fix in this order<small>Laurie Voss &middot; Arize AI</small></div>
+      <div class="txt">
+        <p>When your agent fails its evals, where does the effort go? A hierarchy:</p>
+        <div class="ladder">
+          <div><b>1</b>Data quality. <q>Highest impact.</q> Stale knowledge base? No prompt will save you.</div>
+          <div><b>2</b>Prompting. Few-shot examples, explicit constraints. <q>Often the highest ROI.</q></div>
+          <div><b>3</b>Model selection. More capable, but costlier and slower.</div>
+          <div class="last"><b>4</b>Temperature and top-p. <q>The last thing you try.</q></div>
+        </div>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45845-6030/clip.mp3" target="_blank" rel="noopener" title="Private network only: Where to invest when improving an AI agent">&#9654; Clip 1:02 &middot; AI Engineer &middot; grader 4 &middot; fit 58</a>
+      </div>
+    </div>
+
+    <div class="row reveal">
+      <div class="lbl">Count outcomes<small>Davis Palmie &middot; Factory</small></div>
+      <div class="txt">
+        <p><q>Measure outcomes, not tokens.</q> Token leaderboards <q>just encourage profligate spending. It&rsquo;s Goodhart&rsquo;s law in real time.</q> His list of real measures: signal to production time, human intervention count, median time to repair, shelf life of code, cost per PR.</p>
+        <p style="margin-top:.8rem">And treat agents like staff: <q>your agents need the exact same careful governance as your engineers.</q> Then the closer: <q>don&rsquo;t token max.</q></p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45963-984/clip.mp3" target="_blank" rel="noopener" title="Private network only: Measure outcomes, not tokens">&#9654; Clip 1:38 &middot; AI Engineer &middot; grader 4 &middot; fit 58</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 TRIFECTA -->
+<section id="trifecta">
+  <div class="bignum" style="color:#26231d">III</div>
+  <div class="wrap">
+    <div class="grid3">
+      <div>
+        <div class="kicker reveal">Security &middot; two clips</div>
+        <h2 class="reveal d1">Two out of three is <em>already</em> too many</h2>
+        <p class="deck reveal d2" style="margin-top:1.4rem">Michael Patterson of Coder, using the term Simon Willison coined: the &ldquo;lethal trifecta&rdquo; for an agent on your laptop.</p>
+        <div class="three reveal d2">
+          <div><b>Private data</b><span>Personal files, credentials, company IP, databases.</span></div>
+          <div><b>Talks outward</b><span>It can put that data on the internet.</span></div>
+          <div><b>Reads the outside</b><span>It can also download things off the internet.</span></div>
+        </div>
+        <div class="pq reveal d3">
+          <p class="quote">&ldquo;One of these three isn&rsquo;t really a big problem. But two out of three is completely unacceptable in any kind of secure enterprise environment.&rdquo;</p>
+          <div class="by">Michael Patterson, Coder &middot; &ldquo;It&rsquo;s not if, it&rsquo;s when.&rdquo;</div>
+        </div>
+        <ul class="atk reveal d3">
+          <li><b>Prompt injection.</b> Malicious guidance hidden in a source the agent trusts: error messages, support tickets, CI/CD logs.</li>
+          <li><b>Context poisoning.</b> Bad information planted in documentation or data, and <q>the agent is going to go ahead and run with it.</q></li>
+          <li><b>Privilege escalation.</b> We give agents access to everything because they need it to work, so an injection can make them <q>drop a table, upload, make requests.</q></li>
+        </ul>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46139-310/clip.mp3" target="_blank" rel="noopener" title="Private network only: The lethal trifecta and how agents get hijacked">&#9654; Clip 2:54 &middot; AI Engineer &middot; grader 4 &middot; fit 58</a>
+      </div>
+      <div class="side reveal d2">
+        <div class="kicker" style="color:#8fd19e">The counter-move</div>
+        <h3 style="margin-top:1rem">Give the agent only what this task needs</h3>
+        <p>Jim Clark of Docker runs a coding agent for about an hour at a time. It needs his Git signing keys for roughly two minutes of that hour. So why would the sandbox hold them the whole time?</p>
+        <p class="quote">&ldquo;I would like it if the actual sandbox that an agent is running a task in is modeled after the intent of what I&rsquo;m doing.&rdquo;</p>
+        <p>If the agent knows what you are trying to do, <q>use that intent to model the capabilities that you give to that.</q> Not committing? No signing keys in the box.</p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45840-528/clip.mp3" target="_blank" rel="noopener" title="Private network only: Give an agent only what the current task needs">&#9654; Clip 1:20 &middot; AI Engineer &middot; grader 4 &middot; fit 50</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 LEVERS -->
+<section id="levers">
+  <div class="bignum">IV</div>
+  <div class="wrap">
+    <div class="head">
+      <div style="flex:1;min-width:300px">
+        <div class="kicker reveal">The Cognitive Revolution &middot; three clips</div>
+        <h2 class="reveal d1">Keep the <em>levers</em> within reach</h2>
+        <p class="deck reveal d2" style="margin-top:1.4rem;color:#e9c7ce">Two hosts, one live episode, two very different instincts about what happens when AI sits between us and the controls.</p>
+      </div>
+      <div class="stamp reveal d3"><div>Rare<br>but severe<small>Nathan Labenz&rsquo;s worry</small></div></div>
+    </div>
+
+    <div class="two">
+      <div class="col reveal d1">
+        <div class="tag">The worry</div>
+        <h3>Reliable enough that we forget how to take control back</h3>
+        <p>Misalignment behaviours are falling; task length is rising roughly exponentially. Multiply them: <q>we&rsquo;ll be delegating bigger and bigger things to AI, they&rsquo;ll be mostly doing a great job. Problems will be really rare, but when they do hit, they might be quite severe.</q></p>
+        <p class="quote">&ldquo;We are putting AI in that space for our convenience.&rdquo;</p>
+        <p>Between <q>our thoughts, desires, our random dictations</q> and <q>the actual levers of control of the world.</q> His own small version: Claude rotated the passwords on his agent console and locked him out. <q>It set the password. It can change the password on my access to itself.</q> It told him where it put it in two seconds, but <q>if the intent ever is bad&hellip; it can already lock me out.</q></p>
+        <p>The opening news: a cyberattack that apparently spoiled the food in a French grocery chain&rsquo;s refrigerators. The nightmare version is the room asking <q>does anybody around here know how to set the temperatures anymore?</q></p>
+        <div class="chips"><a class="chip nm" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46233-187/clip.mp3" target="_blank" rel="noopener" title="Private network only: Putting AI between intent and control: keep levers reachable">&#9654; Putting AI between intent and control: keep levers reachable &middot; 4:51</a> <a class="chip nm" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46233-5381/clip.mp3" target="_blank" rel="noopener" title="Private network only: Rare but severe AI failures and atrophying control">&#9654; Rare but severe AI failures and atrophying control &middot; 2:52</a></div>
+      </div>
+      <div class="col alt reveal d2">
+        <div class="tag">The counterweight</div>
+        <h3>Then why do human pilots still fly the plane?</h3>
+        <p>The co-host pushes back on the doom story from the other direction. The Predator drone arrived in 1994, and <q>you could have a drone fly a Boeing 737 as reliably or more reliably than a pilot, but we still have pilots.</q></p>
+        <p class="quote">&ldquo;We&rsquo;ve had 15 years of drone capability and we don&rsquo;t allow passenger planes to be piloted by AI. Like why?&rdquo;</p>
+        <p>His test: <q>If you can&rsquo;t answer that question, then you don&rsquo;t have a working theory of why human beings accept technology into their lives.</q> Capability is not adoption; people keep layers of backup for their laptops, too.</p>
+        <p style="color:#f5c2cb">Read the two together. One says we will hand over the controls and forget. The other says we mostly refuse to. Both agree the question is who keeps a hand on the lever.</p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46233-6450/clip.mp3" target="_blank" rel="noopener" title="Private network only: If capability were enough, human pilots would be gone">&#9654; Clip 3:50 &middot; Cognitive Revolution &middot; grader 4 &middot; fit 54</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 SPEC TERMINAL -->
+<section id="spec">
+  <div class="bignum">V</div>
+  <div class="wrap">
+    <div class="kicker reveal">Runtime Verification &middot; The Cognitive Revolution &middot; three clips</div>
+    <h2 class="reveal d1">Writing the spec finds the bug</h2>
+    <div class="win reveal d2">
+      <div class="bar"><i></i><i></i><i></i><span>everett@runtime-verification ~ explain --bridge</span></div>
+      <div class="body">
+        <div class="cols">
+          <div>
+            <div class="ln"><span class="p">$</span> <span class="c">what is formal verification?</span><br>
+            <q>Mathematically modeling the intent of a specification&hellip; and then checking that the implementation actually meets that intent.</q></div>
+            <div class="ln"><span class="p">$</span> <span class="c">why the bridge?</span><br>
+            You do not build a bridge, send cars over it, and beef up the supports when it breaks. <q>You want to build it once and have it work every time.</q> Software, being cheaper to iterate, got the iterate-and-test habit. But <q>failures in software are as expensive and devastating as failures in bridges.</q></div>
+            <div class="ln"><span class="p">$</span> <span class="c">how did you find Linux kernel bugs?</span><br>
+            Focus on code at the kernel and user boundary that parses untrusted input. Write down what correct means from old threads, docs and the code itself. <q>Almost every time we ever do this, we find somewhere where the code does something unexpected&hellip; that&rsquo;s usually an indicator that there&rsquo;s probably a bug lurking in there.</q> In the work he describes, an AI model ported the C to Rust and both versions were fed random inputs and compared.</div>
+            <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46233-1360/clip.mp3" target="_blank" rel="noopener" title="Private network only: Formal verification explained; writing the spec finds bugs">&#9654; Clip 4:19 &middot; Cognitive Revolution &middot; grader 4 &middot; fit 58</a>
+          </div>
+          <div>
+            <div class="ln"><span class="p">$</span> <span class="c">what is the lesson?</span><br>
+            <q>We did it systematically and methodologically.</q> Not <q>just take an LLM and point it at the Linux kernel</q>. Bridge builders use methods with a track record <q>even if some of the steps seem a little silly.</q> <q>We should teach our agents to use those techniques as well.</q></div>
+            <div class="ln"><span class="p">$</span> <span class="c">what stays human?</span><br>
+            <q>Formal verification is the very human process of writing down that intent and then ensuring that the software meets it.</q> LLMs hide the machine-mapping <q>behind another layer of abstraction</q>, so <q>we get to really focus on the human part.</q></div>
+            <div class="ln"><span class="p">$</span> <span class="c">what happens next?</span> <span class="by2">(his prediction, in his words)</span><br>
+            <q>Writing code is a dead art in two years tops.</q> Packages will ship with formal specs. <q>Gone are the days of&hellip; the cowboy coder.</q> We get <q>mass manufactured software</q>, like factory bread: <q>it slices cleanly every time and it makes the same sandwich every time.</q> <q>We&rsquo;re not going to have artisanal software anymore.</q></div>
+            <div class="chips"><a class="chip nm" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46233-2091/clip.mp3" target="_blank" rel="noopener" title="Private network only: Use proven methods, and keep the human work: stating intent">&#9654; Use proven methods, and keep the human work: stating intent &middot; 3:00</a> <a class="chip nm" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46233-3120/clip.mp3" target="_blank" rel="noopener" title="Private network only: Software will come mass-manufactured, specified and verified">&#9654; Software will come mass-manufactured, specified and verified &middot; 2:10</a></div>
+            <div class="ln" style="margin-top:1.4rem"><span class="p">$</span> <span class="cursor"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 MEAL / MEMORY -->
+<section id="meal">
+  <div class="bignum">VI</div>
+  <div class="wrap">
+    <div class="kicker reveal">Huberman Lab &middot; Dr. Scott Kanoski, USC &middot; two clips</div>
+    <h2 class="reveal d1">The meal you <em>remember</em> is the meal that counts</h2>
+    <div class="cols reveal d2">
+      <p class="first">Hunger, it turns out, is partly a memory problem. Kanoski studies how eating and memory interact, and his examples are the kind you repeat at dinner. In one study by Suzanne Higgs and colleagues, people ate a pizza lunch, then came back hours later. Some were primed to think about that lunch. <q>If they were primed to remember the lunch they had just consumed, they consumed fewer of these biscuits or cookies.</q></p>
+      <div class="callout"><b>The magic soup bowl &middot; Brunstrom</b><span>A bowl with a hidden pump added or removed soup while people ate, so what they saw differed from what they swallowed. Right after eating, hunger tracked what they actually consumed: <q>the wisdom of the body.</q> A couple of hours later it flipped, and hunger followed what they <em>thought</em> they had eaten.</span></div>
+      <p>Why would the body work this way? Kanoski&rsquo;s view is evolutionary. <q>When an animal encountered nutrients, this is a very important event for that animal. It would be advantageous to remember what was consumed&hellip; can I find this food down the road?</q> The systems that respond to nutrients appear to be tuned into memory, with the hippocampus at the centre.</p>
+      <div class="pull">&ldquo;A symphony of chaos.&rdquo; &mdash; on the body&rsquo;s fullness signals, unlike the precision of the visual system.</div>
+      <div class="callout"><b>Three dinners, still a seven out of ten</b><span>Densely amnesic patients, with memory spans of 10 to 40 seconds, will eat a meal, then a second, then a third when each is served. Asked to rate fullness, <q>they will be a seven out of 10 after eating three meals in a row.</q> They get the gut feedback; they cannot interpret it. <q>The hippocampus is needed to understand what that signal means.</q></span></div>
+      <p>The last note cuts both ways: that awareness <q>can be impaired with a high fat, high sugar diet</q>, but it is <q>plastic and susceptible to what we eat.</q></p>
+      <div class="chips"><a class="chip nm" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46207-1626/clip.mp3" target="_blank" rel="noopener" title="Private network only: How memory of a meal shapes later hunger">&#9654; How memory of a meal shapes later hunger &middot; 4:32</a> <a class="chip nm" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46207-4917/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why amnesic patients keep eating meal after meal">&#9654; Why amnesic patients keep eating meal after meal &middot; 3:22</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 LOOPS -->
+<section id="loops">
+  <div class="bignum" style="color:#ffb81c">VII</div>
+  <div class="wrap">
+    <div class="kicker reveal">All-In Podcast &middot; David Friedberg &middot; one clip</div>
+    <div class="hero">
+      <div class="stat reveal d1">3 hrs<small>per proof</small></div>
+      <div class="reveal d2">
+        <div class="badge"><b>5</b> Grader grade</div>
+        <h2>Why AI cracked math and left the truck driver alone</h2>
+        <p class="deck" style="color:#e6d9b8">Each of OpenAI&rsquo;s new proofs took <q>less than three hours of compute time</q>, which Friedberg equates to <q>hundreds or perhaps thousands of years of human labor.</q> The interesting part is not the speed. It is the shape of the work.</p>
+      </div>
+    </div>
+    <div class="loopline reveal d2"><span>An idea</span><i>&rarr;</i><span>Test it</span><i>&rarr;</i><span>Read the result</span><i>&rarr;</i><span>Change the idea</span><i>&rarr;</i><span>Repeat</span></div>
+    <p class="deck reveal d3" style="color:#f5ead0"><q>The real question for AI is where can you apply that loop model in a way that you can make a better prediction, a better idea each loop, where you can parallelize loops and where you can shorten the loop cycle.</q></p>
+    <div class="cmp">
+      <div class="reveal d2"><b>Math: all in silicon</b><p>You can test the prediction on the compute. No physical step. Parallel loops can <q>connect dots that humans otherwise might spend many days or years trying to find</q>, which mathematicians call an alien intelligence.</p></div>
+      <div class="no reveal d3"><b>Drugs and trucks: a physical step</b><p>Drug discovery has <q>a human in the loop where you actually have to go and test it in a lab.</q> For the truck driver, <q>the AI doesn&rsquo;t actually shorten the loop. You can&rsquo;t parallelize the loop.</q></p></div>
+    </div>
+    <p class="quote reveal d3" style="margin-top:2.4rem;color:#fff;max-width:40ch">&ldquo;It&rsquo;s the jobs that are just a human running a loop with a computer that are most likely going to be accelerated or scaled up.&rdquo;</p>
+    <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46107-2410/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why AI mastered math but not truck driving">&#9654; Clip 4:02 &middot; All-In Podcast &middot; grader 5 &middot; fit 54</a>
+  </div>
+</section>
+
+<!-- 8 GAZETTE -->
+<section id="gazette">
+  <div class="bignum" style="color:#1d1a14">VIII</div>
+  <div class="wrap">
+    <div class="mast reveal"><div class="nm">The Negativity Gazette</div><div class="ln"><span>Hidden Brain &middot; &ldquo;Why Am I Unhappy?&rdquo;</span><span>Four clips</span><span>Edition of one</span></div></div>
+    <h2 class="reveal d1">One cockroach ruins the wine</h2>
+    <div class="banner reveal d2">
+      <div><b>70%</b><span>of jobs saved</span></div>
+      <div><b>30%</b><span>of jobs lost</span></div>
+      <div><b>1</b><span>same policy</span></div>
+    </div>
+    <div class="cols reveal d2">
+      <div class="art">
+        <h3>We are survival machines, not happiness machines</h3>
+        <p>George Loewenstein of Carnegie Mellon: <q>Our minds are designed to do things that will enhance our evolutionary fitness.</q> Happiness and unhappiness are just the levers. Negative ones work better, which is why there are so many more of them. Pride has shame; <q>It&rsquo;s nice to feel proud, but it&rsquo;s not that strong an emotion&hellip; but shame can be extraordinarily miserable. You almost can&rsquo;t plumb the depths of shame.</q> Dread has no positive twin. <q>We have to use, like, pleasurable anticipation. But there&rsquo;s no word for that.</q></p>
+        <p class="pq">&ldquo;If you drop a cockroach into a vat of wine, the whole thing is ruined. But if you pour fine wine on a cockroach, it does nothing to improve the cockroach.&rdquo; <span style="font-size:1.05rem;font-style:normal;font-weight:700;display:block;margin-top:.4rem">Paul Rozin, quoted by Loewenstein</span></p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46216-1388/clip.mp3" target="_blank" rel="noopener" title="Private network only: Minds built for survival, not happiness">&#9654; Clip 3:46 &middot; Hidden Brain &middot; grader 5 &middot; fit 50</a>
+      </div>
+      <div class="art">
+        <h3>The frame sticks in one direction only</h3>
+        <p>Alison Ledgerwood of UC Davis took a classic framing study and kept going. Describe a jobs policy as saving 70% of jobs and people like it; as losing 30% and they do not. Then she reframed it. From positive to negative, people shifted easily: <q>Oh, we agree, it&rsquo;s bad.</q> From negative to positive?</p>
+        <p class="pq">&ldquo;People said, no, no, no, no, no, no. It&rsquo;s actually pretty bad.&rdquo;</p>
+        <p>Evolution explains it: you notice the tiger and you do not let the berries distract you from it.</p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46216-3231/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why it&#x27;s harder to see the positive">&#9654; Clip 2:42 &middot; Hidden Brain &middot; grader 4 &middot; fit 48</a>
+      </div>
+      <div class="art">
+        <h3>The football play that was secretly genius</h3>
+        <p>A listener, John, hated youth football and played safety on a winless team. In the last game, tied at zero, a Hail Mary came straight at him, and he <q>cowered in fear and batted the ball away.</q> He heard jeering. His team won, and he got the game helmet, and still all he could feel was the cowardice. In his forties he saw it: by batting the ball down, the other team kept possession where they started, near their own end zone, and his team scored.</p>
+        <p class="pq">&ldquo;John&rsquo;s play wasn&rsquo;t foolish. It was genius.&rdquo;</p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46216-2924/clip.mp3" target="_blank" rel="noopener" title="Private network only: The football play that was secretly genius">&#9654; Clip 3:04 &middot; Hidden Brain &middot; grader 4 &middot; fit 44</a>
+      </div>
+      <div class="art">
+        <h3>A muscle you can work out</h3>
+        <p>Ledgerwood on what to do about it: not suppression. The white bear experiment shows <q>if I tell you, don&rsquo;t think about a white bear&hellip; white bear pops right back into your mind.</q> Instead practise noticing positives, <q>not instead of thinking about negatives, but in addition.</q> A listener, Bill, did it through cancer treatment: a good parking spot on chemo days, the nurse starting the IV on the first poke, <q>the cafeteria had my favorite sandwich, fantastic.</q> Ledgerwood: <q>It takes effort&hellip; the more that you practice it, the easier it gets.</q></p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46216-4567/clip.mp3" target="_blank" rel="noopener" title="Private network only: Practice noticing small good things">&#9654; Clip 2:38 &middot; Hidden Brain &middot; grader 4 &middot; fit 50</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 RULES -->
+<section id="rules">
+  <div class="bignum" style="color:#00f0ff">IX</div>
+  <div class="wrap">
+    <div class="kicker reveal">Hidden Brain &middot; four more clips</div>
+    <h2 class="reveal d1">Rules for a <em>bad mood</em></h2>
+    <p class="deck reveal d2" style="margin-top:1.4rem;color:#cfe9f0">Four small, usable moves from the same episode. Each one is a single sentence you could actually say to yourself.</p>
+    <div class="cards">
+      <div class="card reveal d1">
+        <div class="n">01</div>
+        <h3>Might be, not will be</h3>
+        <p>A therapist listener, Christina, noticed her brain treating <q>this meeting might be difficult</q> as <q>this meeting will definitely be difficult.</q> Her brain, she said, <q>treated uncertainty as if it were certainty.</q> Ledgerwood: <q>It might go badly means it might also go well.</q></p>
+        <q>Am I responding to what&rsquo;s actually happening right now? Or am I responding to what my brain has learned to expect?</q>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46216-5146/clip.mp3" target="_blank" rel="noopener" title="Private network only: Might be difficult versus will be difficult">&#9654; Clip 3:58 &middot; Hidden Brain &middot; grader 4 &middot; fit 58</a>
+      </div>
+      <div class="card reveal d2">
+        <div class="n">02</div>
+        <h3>Do not send it yet</h3>
+        <p>Loewenstein got an email about him, sent to him by mistake, and started drafting a nasty reply. Then the doorbell rang: his friend, and a ski trip. By evening he saw the sender had just made a mistake and sent <q>an amusing conciliatory note.</q></p>
+        <q>It&rsquo;s a perfect illustration of why you shouldn&rsquo;t act when you&rsquo;re in a negative emotional state.</q>
+        <p>The sender later wrote a blurb for the cover of his book.</p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46216-2739/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why not to answer an angry email">&#9654; Clip 2:26 &middot; Hidden Brain &middot; grader 4 &middot; fit 56</a>
+      </div>
+      <div class="card reveal d3">
+        <div class="n">03</div>
+        <h3>Do not feel bad about feeling bad</h3>
+        <p>Following John Gottman: we can take an accepting or a dismissive stance toward our own emotions. Envy, then guilt about the envy. No grief, then shame about the missing grief. <q>These are all meta-emotions. They&rsquo;re kind of like emotions squared.</q></p>
+        <q>It&rsquo;s like the emotions aren&rsquo;t bad enough. We have to flagellate ourselves.</q>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46216-2003/clip.mp3" target="_blank" rel="noopener" title="Private network only: Feeling bad about feeling bad">&#9654; Clip 3:40 &middot; Hidden Brain &middot; grader 4 &middot; fit 54</a>
+      </div>
+      <div class="card reveal d4">
+        <div class="n">04</div>
+        <h3>Say it out loud</h3>
+        <p>A paper by Loewenstein, Cass Sunstein and Aaron Carbone, <q>Spirals of Silence</q>: people stay quiet about what embarrasses them, so it looks rare, so it embarrasses them more. Loewenstein kept one such secret for decades, until a friend mentioned something similar at a dinner party. <q>Nobody blinked an eye.</q></p>
+        <p>Host Shankar Vedantam&rsquo;s takeaway: <q>You&rsquo;re actually doing a public good by sharing your negative emotions.</q></p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46216-2307/clip.mp3" target="_blank" rel="noopener" title="Private network only: The spiral of silence around shame">&#9654; Clip 3:06 &middot; Hidden Brain &middot; grader 4 &middot; fit 50</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 START -->
+<section id="start">
+  <div class="bignum" style="color:#4f46e5">X</div>
+  <div class="wrap">
+    <div class="kicker reveal">Closer &middot; four clips &middot; and the verdict</div>
+    <h2 class="reveal d1">Start rough. <em>Decide first.</em></h2>
+    <p class="deck reveal d2" style="margin-top:1.4rem;color:#4a4a68">Four clips on acting before you feel ready, then what the pile adds up to.</p>
+    <div class="split">
+      <div class="feat">
+        <div class="f reveal d1"><div class="ic">1</div><div>
+          <h3>The first version tells you what you want</h3>
+          <p>Nate B Jones on a sales leader who could not describe the system. An agent flagged deals with no activity for 14 days, and looking at it the leader saw that was not the signal. The real worry was a contract legal had held for 10 days with no next step.</p>
+          <q>The first version elicits information from you that you didn&rsquo;t know you had.</q>
+          <p><q>Building helps you find the plan.</q> And AI gives you <q>an almost unlimited supply of plans&hellip; the willingness to make a real attempt, that&rsquo;s on you.</q></p>
+          <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46202-362/clip.mp3" target="_blank" rel="noopener" title="Private network only: Building a rough first version reveals the plan">&#9654; Clip 2:36 &middot; AI News &amp; Strategy Daily &middot; grader 4 &middot; fit 58</a></div></div>
+        <div class="f reveal d2"><div class="ic">2</div><div>
+          <h3>Once you have v1, v2 is easy</h3>
+          <p>On the Cognitive Revolution, a keynote that would have taken more than a day took about an hour: <q>the 5x output lifestyle.</q> A co-host describes a <q>task competence boundary</q>; stepping outside it takes <q>activation energy</q> to learn what a good result looks like.</p>
+          <q>Once you get V1 out then from then on V2 or V3 or V4 becomes so much easier.</q>
+          <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46233-8460/clip.mp3" target="_blank" rel="noopener" title="Private network only: How AI lowers the activation energy of new tasks">&#9654; Clip 2:48 &middot; Cognitive Revolution &middot; grader 4 &middot; fit 56</a></div></div>
+        <div class="f reveal d3"><div class="ic">3</div><div>
+          <h3>The decision is upstream of all action</h3>
+          <p>Shaan Puri at fifteen, flying from Texas to China. His sister: <q>Nobody here knows you&hellip; you could be anybody.</q> He picked the coolest kid he knew and asked what he would do. Years later he did it again: <q>I think I want to be Tim Ferriss.</q> The next day he booked a studio.</p>
+          <q>It starts with a decision.</q>
+          <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46236-1136/clip.mp3" target="_blank" rel="noopener" title="Private network only: Reinventing yourself starts with a single decision">&#9654; Clip 2:16 &middot; My First Million &middot; grader 4 &middot; fit 54</a></div></div>
+        <div class="f reveal d4"><div class="ic">4</div><div>
+          <h3>Fill your own cup</h3>
+          <p>The flip side, from the same host: a personality test where one score was off the charts. A drive to be special has served him, but <q>what served you can also screw you. The dose makes the poison.</q> If you do not know what is special about you, you go looking for others to confirm it.</p>
+          <q>Get clear about what it is that is special about you so you don&rsquo;t need it from others.</q>
+          <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46236-66/clip.mp3" target="_blank" rel="noopener" title="Private network only: Needing others to see you as special">&#9654; Clip 4:50 &middot; My First Million &middot; grader 4 &middot; fit 52</a></div></div>
+      </div>
+
+      <div class="card reveal d2">
+        <div class="tag">The verdict</div>
+        <h3>What the scorer would have cost</h3>
+        <p style="color:#dfe0ff;margin-bottom:1.2rem">Fit ran only 44 to 60 (average 54). That reads less like &ldquo;bad&rdquo; and more like &ldquo;less like the rest of the queue.&rdquo; If you listen to five, make it these:</p>
+        <ol>
+          <li><b>The lethal trifecta</b>, 2:55. The clearest model of agent risk in the pile. <a class="chip nm" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46139-310/clip.mp3" target="_blank" rel="noopener" title="Private network only: The lethal trifecta and how agents get hijacked">&#9654; Listen 2:54</a></li>
+          <li><b>Why AI cracked math, not trucks</b>, grade 5. The loop test is reusable on any job. <a class="chip nm" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46107-2410/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why AI mastered math but not truck driving">&#9654; Listen 4:02</a></li>
+          <li><b>Might be, not will be</b>. One question, said in the moment. <a class="chip nm" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46216-5146/clip.mp3" target="_blank" rel="noopener" title="Private network only: Might be difficult versus will be difficult">&#9654; Listen 3:58</a></li>
+          <li><b>Keep the levers reachable</b>. Concrete, a little frightening, about five minutes. <a class="chip nm" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46233-187/clip.mp3" target="_blank" rel="noopener" title="Private network only: Putting AI between intent and control: keep levers reachable">&#9654; Listen 4:51</a></li>
+          <li><b>Amnesic patients keep eating</b>. The strangest finding of the 27. <a class="chip nm" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46207-4917/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why amnesic patients keep eating meal after meal">&#9654; Listen 3:22</a></li>
+        </ol>
+        <div class="note"><b style="color:#fff">Overlaps.</b> The two security clips make one point from two sides, and the three formal-verification clips are one conversation: take the prediction clip for the headline or the first for the explainer. <b style="color:#fff">The lowest-fit clip</b> (44, the football play) is also the best story in the pile.</div>
+      </div>
+    </div>
+    <p class="end reveal d3">Nothing here was bad. It was just not what the queue had learned to expect.</p>
+    <p class="fine reveal d4">Clip links play only on David&rsquo;s private network. No audio is embedded in this page.</p>
+  </div>
+</section>
+
+<script>
+  const io=new IntersectionObserver((es)=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
+  },{threshold:.08,rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

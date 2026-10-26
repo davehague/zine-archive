@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Judging the Judges</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--fr:'Fraunces',Georgia,serif;--in:'Inter',system-ui,sans-serif;--mo:'JetBrains Mono',ui-monospace,monospace}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--in);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;background:#111}
+  section{min-height:100vh;padding:5.5rem 4rem;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+  .wrap{max-width:1400px;margin:0 auto;width:100%;position:relative;z-index:2}
+  .kicker{text-transform:uppercase;letter-spacing:.32em;font-weight:700;font-size:.9rem;color:var(--ac)}
+  .deck{font-size:1.35rem;line-height:1.55;max-width:62ch;margin-top:1.4rem}
+  h1,h2,h3{font-family:var(--fr);line-height:.95;font-weight:600}
+  h2{font-size:clamp(3rem,7.6vw,7.4rem);letter-spacing:-.03em;margin-top:1rem}
+  h3{font-size:clamp(1.6rem,2.6vw,2.3rem);line-height:1.05;letter-spacing:-.01em}
+  p,li{font-size:1.15rem}
+  .bignum{font-family:var(--fr);position:absolute;font-weight:800;line-height:1;opacity:.06;z-index:1;pointer-events:none;font-size:clamp(14rem,34vw,34rem);right:-2rem;bottom:-5rem}
+  .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .d1{transition-delay:.08s}.d2{transition-delay:.18s}.d3{transition-delay:.28s}.d4{transition-delay:.38s}.d5{transition-delay:.48s}
+  .quote{font-family:var(--fr);font-style:italic;font-weight:400;line-height:1.22;font-size:clamp(1.5rem,2.8vw,2.4rem)}
+  .by{font-size:1.1rem;font-weight:600;letter-spacing:.04em;margin-top:.8rem;opacity:.75}
+  .chip{display:inline-block;margin-top:1rem;padding:.5rem 1.05rem;border:1.5px solid var(--ac);border-radius:999px;color:var(--ac);font-weight:600;font-size:1.02rem;text-decoration:none;letter-spacing:.01em;transition:background .2s,color .2s;font-family:var(--in)}
+  .chip.cut{border-style:dashed}
+  .chip:hover{background:var(--ac);color:var(--chipfg,#000);border-style:solid}
+  .chips{display:flex;flex-wrap:wrap;gap:.6rem}
+  .ours{font-style:italic;opacity:.8}
+  @media(max-width:900px){
+    section{padding:3.5rem 1.25rem}
+    .deck{font-size:1.15rem}
+    .two,.grid4,.split,.feat,.bias-cards,.steps,.contents,.fix{grid-template-columns:1fr!important}
+    .cols{column-count:1!important}
+    .bignum{font-size:12rem}
+  }
+
+  /* I — COVER: cream, centred */
+  #cover{--ac:#9a3412;--chipfg:#fff;background:radial-gradient(circle at 50% 0%,#fffaf0 0%,#f3e9d6 60%,#eadcc2 100%);color:#231d16;text-align:center;align-items:center}
+  #cover .rule{width:120px;height:2px;background:#231d16;margin:2rem auto;opacity:.6}
+  #cover h1{font-size:clamp(4rem,12vw,10.5rem);letter-spacing:-.045em;font-weight:700;line-height:.86;margin-top:1.6rem}
+  #cover h1 em{font-weight:300;font-style:italic;color:var(--ac)}
+  #cover .sub{font-family:var(--fr);font-style:italic;font-size:clamp(1.4rem,2.4vw,2.1rem);max-width:34ch;margin:0 auto;line-height:1.3}
+  #cover .stats{display:flex;justify-content:center;gap:3.5rem;flex-wrap:wrap;margin-top:2.6rem}
+  #cover .stats b{display:block;font-family:var(--fr);font-size:clamp(2.6rem,5vw,4.4rem);font-weight:700;line-height:1}
+  #cover .stats span{font-size:1.05rem;text-transform:uppercase;letter-spacing:.16em;font-weight:600;opacity:.7}
+  #cover .legend{margin-top:2.4rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+  #cover .legend .chip{margin:0;pointer-events:none}
+  #cover .contents{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem 2.4rem;text-align:left;max-width:1000px;margin:3rem auto 0;border-top:1px solid #231d1633;padding-top:1.6rem}
+  #cover .contents a{color:inherit;text-decoration:none;font-size:1.1rem;display:flex;gap:.8rem}
+  #cover .contents a b{font-family:var(--fr);color:var(--ac);min-width:2.2rem}
+  #cover .src{margin-top:2.4rem;font-size:1.05rem;opacity:.7}
+
+  /* II — DARK MIDNIGHT */
+  #blind{--ac:#7fb2ff;--chipfg:#0d1117;background:#0d1117;color:#e7ecf3;background-image:radial-gradient(circle at 85% 10%,#1f3b6e66,transparent 45%),radial-gradient(circle at 5% 95%,#0e4a5a55,transparent 40%)}
+  #blind .two{display:grid;grid-template-columns:1.1fr 1fr;gap:4rem;margin-top:3rem;align-items:start}
+  #blind .statrow{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#7fb2ff33;border:1px solid #7fb2ff33;margin-bottom:2.2rem}
+  #blind .statrow div{background:#0d1117;padding:1.4rem}
+  #blind .statrow b{display:block;font-family:var(--fr);font-size:1.7rem;color:var(--ac);line-height:1.1;margin-bottom:.4rem}
+  #blind .statrow span{font-size:1.1rem;opacity:.8}
+  #blind .panel{border-left:3px solid var(--ac);padding-left:2rem}
+  #blind .panel p+p{margin-top:1rem}
+  #blind .bottom{margin-top:3.5rem;font-family:var(--fr);font-size:clamp(1.5rem,2.4vw,2.1rem);max-width:40ch;line-height:1.3}
+
+  /* III — WARM EDITORIAL: tier list */
+  #tiers{--ac:#b4532a;--chipfg:#fff;background:#f2e8d5;color:#26211b;background-image:linear-gradient(#26211b0c 1px,transparent 1px),linear-gradient(90deg,#26211b0c 1px,transparent 1px);background-size:44px 44px}
+  #tiers .split{display:grid;grid-template-columns:1.7fr 1fr;gap:3.5rem;margin-top:2.6rem;align-items:start}
+  #tiers .tiers .row{display:grid;grid-template-columns:5.5rem 1fr;border-top:2px solid #26211b}
+  #tiers .tiers .row:last-child{border-bottom:2px solid #26211b}
+  #tiers .tier{font-family:var(--fr);font-size:3.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;color:#fff}
+  #tiers .S{background:#b4532a}#tiers .A{background:#c98a2b}#tiers .C{background:#8a8f6a}#tiers .D{background:#6d6a74}#tiers .F{background:#2b2622}
+  #tiers .items{padding:1.1rem 1.4rem;display:flex;flex-direction:column;gap:.7rem}
+  #tiers .items p b{font-family:var(--fr);font-size:1.35rem;font-weight:700;margin-right:.4rem}
+  #tiers .items p i{opacity:.85}
+  @media(max-width:900px){#tiers .tiers .row{grid-template-columns:3.6rem 1fr}#tiers .tier{font-size:2.4rem}}
+  #tiers .side{background:#1f1b16;color:#f2e8d5;padding:2.6rem;--ac:#f0a273;--chipfg:#1f1b16}
+  #tiers .side .quote{font-size:clamp(1.5rem,2.3vw,2rem)}
+  #tiers .side p{margin-top:1.2rem}
+
+  /* IV — CLEAN PRODUCT: white, indigo */
+  #data{--ac:#4338ca;--chipfg:#fff;background:#fbfbfe;color:#16163a}
+  #data .split{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;margin-top:2.8rem;align-items:start}
+  #data .phone{background:#fff;border-radius:22px;box-shadow:0 24px 70px #4338ca26;padding:1.8rem;border:1px solid #e3e3f3}
+  #data .phone .hdr{font-size:1rem;text-transform:uppercase;letter-spacing:.18em;font-weight:700;color:#8a8ab0;margin-bottom:1.2rem}
+  #data .msg{padding:1rem 1.2rem;border-radius:18px;font-size:1.15rem;max-width:88%;margin-bottom:.9rem;line-height:1.4}
+  #data .them{background:#eef0ff;border-bottom-left-radius:4px}
+  #data .bot{background:#4338ca;color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+  #data .note{border:2px solid #dc2626;border-radius:14px;padding:1rem 1.2rem;margin-top:1.2rem;color:#7f1d1d;background:#fef2f2;font-size:1.12rem}
+  #data .note b{color:#dc2626}
+  #data .dash{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1.4rem}
+  #data .dash div{background:#f3f3fb;border-radius:12px;padding:1rem;text-align:center}
+  #data .dash b{display:block;font-family:var(--fr);font-size:2.2rem;color:#9a9ac0}
+  #data .dash span{font-size:1rem;color:#6b6b90}
+  #data .dashcap{font-size:1.1rem;margin-top:.7rem;color:#6b6b90;font-style:italic}
+  #data .feat{display:flex;flex-direction:column;gap:1.6rem}
+  #data .feat>.chip{align-self:flex-start}
+  #data .feat .f{display:grid;grid-template-columns:3.2rem 1fr;gap:1rem;align-items:start}
+  #data .feat .ic{width:3.2rem;height:3.2rem;border-radius:12px;background:#eef0ff;color:#4338ca;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:800}
+  #data .feat h3{font-size:1.6rem;margin-bottom:.4rem}
+
+  /* V — ROSE ALERT / STAMP */
+  #bias{--ac:#ff5c7a;--chipfg:#1a0a10;background:radial-gradient(circle at 15% 10%,#3d0d1c 0%,#1a0a10 55%,#0f0509 100%);color:#fbe8ec}
+  #bias .stamp{position:absolute;right:5rem;top:4.5rem;width:200px;height:200px;border:5px double #ff5c7a;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;transform:rotate(-14deg);color:#ff5c7a;font-weight:900;letter-spacing:.2em;opacity:.85;z-index:3}
+  #bias .stamp b{font-family:var(--fr);font-size:2.6rem;letter-spacing:.06em}
+  #bias .stamp span{font-size:.9rem}
+  #bias .bias-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:3rem}
+  #bias .card{border:1px solid #ff5c7a55;background:#ff5c7a0d;padding:1.6rem;border-radius:4px}
+  #bias .card .n{font-family:var(--fr);font-size:3rem;color:var(--ac);line-height:1}
+  #bias .card h3{margin:.6rem 0 .8rem;font-size:1.7rem}
+  #bias .two{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:2.6rem;border-top:1px solid #ff5c7a55}
+  #bias .two>div{padding:2rem 2.4rem 0 0}
+  #bias .two>div+div{border-left:1px solid #ff5c7a55;padding-left:2.4rem}
+  #bias .two .lab{font-size:.95rem;text-transform:uppercase;letter-spacing:.24em;font-weight:700;color:var(--ac);margin-bottom:.8rem}
+  @media(max-width:900px){#bias .stamp{position:relative;right:auto;top:auto;margin:0 0 2rem;width:150px;height:150px}#bias .two>div+div{border-left:0;padding-left:0}}
+
+  /* VI — BIG STAT / GOLD */
+  #ask{--ac:#f5b324;--chipfg:#15110a;background:#15110a;color:#f6ecd4;background-image:radial-gradient(circle at 30% 35%,#4a360c 0%,transparent 55%)}
+  #ask .hero{display:grid;grid-template-columns:auto 1fr;gap:3rem;align-items:center;margin-top:2rem}
+  #ask .stat{font-family:var(--fr);font-size:clamp(9rem,22vw,19rem);font-weight:800;line-height:.8;color:var(--ac);letter-spacing:-.05em}
+  #ask .grades{display:flex;gap:.7rem;margin-top:3rem;flex-wrap:wrap;align-items:center}
+  #ask .g{width:4rem;height:4rem;border-radius:50%;border:2px solid #f6ecd455;display:flex;align-items:center;justify-content:center;font-family:var(--fr);font-size:1.8rem;text-decoration:line-through;opacity:.45}
+  #ask .pf{padding:0 1.6rem;height:4rem;border-radius:999px;background:var(--ac);color:#15110a;display:flex;align-items:center;font-weight:800;letter-spacing:.14em;font-size:1.2rem}
+  #ask .arrow{font-size:2rem;opacity:.6;margin:0 .6rem}
+  #ask .two{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2.4rem;margin-top:2.8rem}
+  #ask .two h3{color:var(--ac);font-size:1.7rem;margin-bottom:.7rem}
+  #ask .except{margin-top:3rem;border:1px solid #f5b32466;padding:2rem 2.4rem;border-radius:6px;background:#f5b3240a}
+  #ask .except .lab{font-size:.95rem;text-transform:uppercase;letter-spacing:.24em;font-weight:700;color:var(--ac)}
+  @media(max-width:900px){#ask .hero,#ask .two{grid-template-columns:1fr}}
+
+  /* VII — ACADEMIC DROP-CAP: navy */
+  #trust{--ac:#8ad1c2;--chipfg:#0a1a33;background:#0a1a33;color:#dfe7f5;background-image:radial-gradient(circle at 90% 90%,#1b3a6b88,transparent 50%)}
+  #trust .cols{column-count:2;column-gap:4rem;margin-top:2.8rem;column-rule:1px solid #8ad1c233}
+  #trust .cols p{margin-bottom:1.1rem;line-height:1.65}
+  #trust .cols p.first::first-letter{font-family:var(--fr);float:left;font-size:6.2rem;line-height:.82;padding:.4rem .7rem 0 0;color:var(--ac);font-weight:700}
+  #trust .callout{break-inside:avoid;border:1px solid #8ad1c255;background:#8ad1c20f;padding:1.5rem 1.7rem;margin:0 0 1.3rem;border-radius:4px}
+  #trust .callout .quote{font-size:1.6rem}
+  #trust .bar{display:flex;height:3.2rem;margin:1rem 0 .4rem;font-weight:700;font-size:1rem;break-inside:avoid}
+  #trust .bar div{display:flex;align-items:center;justify-content:center;color:#0a1a33}
+  #trust .barcap{font-size:1.05rem;opacity:.8;margin-bottom:1.3rem;break-inside:avoid}
+
+  /* VIII — TERMINAL */
+  #check{--ac:#3dff8a;--chipfg:#001a08;background:#030b05;color:#bfffd5;font-family:var(--mo)}
+  #check h2{font-family:var(--fr);color:#eafff1}
+  #check .kicker{font-family:var(--mo)}
+  #check .deck{font-family:var(--in);color:#cfeedd}
+  #check .win{border:1px solid #3dff8a44;border-radius:10px;margin-top:2.6rem;background:#04130a;box-shadow:0 0 60px #3dff8a12}
+  #check .bar{display:flex;gap:.5rem;padding:.9rem 1.1rem;border-bottom:1px solid #3dff8a33;align-items:center}
+  #check .bar i{width:13px;height:13px;border-radius:50%;display:inline-block}
+  #check .bar span{margin-left:1rem;font-size:1rem;opacity:.6}
+  #check .body{padding:2rem 2.2rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem 3rem}
+  #check .cmd{color:var(--ac);font-weight:700;font-size:1.15rem}
+  #check .out{margin-top:.6rem;font-size:1.08rem;line-height:1.6;color:#bfffd5}
+  #check .out q{color:#eafff1}
+  #check .who{opacity:.6;font-size:1rem;margin-top:.4rem}
+  #check .chip{font-family:var(--mo);font-size:.98rem}
+  #check .cursor{display:inline-block;width:.6em;height:1.2em;background:var(--ac);vertical-align:-.2em;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  @media(max-width:900px){#check .body{grid-template-columns:1fr;padding:1.4rem}}
+
+  /* IX — BROADSHEET */
+  #bench{--ac:#b91c1c;--chipfg:#fff;background:#f3eddf;color:#1c1913;background-image:radial-gradient(#1c191310 1px,transparent 1px);background-size:6px 6px}
+  #bench .mast{border-top:5px double #1c1913;border-bottom:5px double #1c1913;padding:1rem 0;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:1rem}
+  #bench .mast b{font-family:var(--fr);font-size:clamp(2rem,4vw,3.4rem);font-weight:800;letter-spacing:-.02em}
+  #bench .mast span{font-size:1rem;text-transform:uppercase;letter-spacing:.2em;font-weight:600}
+  #bench .banner{background:var(--ac);color:#fff;display:flex;gap:2rem;align-items:center;padding:1.3rem 2rem;margin-top:2rem;flex-wrap:wrap}
+  #bench .banner b{font-family:var(--fr);font-size:clamp(3rem,6vw,5rem);line-height:1}
+  #bench .banner span{font-size:1.25rem;max-width:44ch}
+  #bench .cols{column-count:3;column-gap:3rem;column-rule:1px solid #1c191355;margin-top:2.2rem}
+  #bench .cols p{margin-bottom:1rem;line-height:1.6}
+  #bench .cols h3{font-size:1.7rem;margin-bottom:.7rem;break-after:avoid}
+  #bench .steps{list-style:none;counter-reset:s;break-inside:avoid;margin-bottom:1.2rem}
+  #bench .steps li{counter-increment:s;display:grid;grid-template-columns:2.4rem 1fr;gap:.5rem;padding:.55rem 0;border-bottom:1px solid #1c191333}
+  #bench .steps li::before{content:counter(s);font-family:var(--fr);font-weight:800;font-size:1.6rem;color:var(--ac);line-height:1}
+  #bench .box{break-inside:avoid;border:2px solid #1c1913;padding:1.3rem 1.4rem;margin-bottom:1.2rem}
+  #bench .chip{background:#f3eddf}
+  @media(max-width:1100px){#bench .cols{column-count:2}}
+
+  /* X — NEON CLOSER */
+  #closer{--ac:#22e3ff;--chipfg:#04020e;background:#05030f;color:#e6faff;background-image:radial-gradient(circle at 80% 0%,#2a0a4f 0%,transparent 55%)}
+  #closer .floor{position:absolute;left:-20%;right:-20%;bottom:-10%;height:55%;background-image:linear-gradient(#22e3ff22 1px,transparent 1px),linear-gradient(90deg,#22e3ff22 1px,transparent 1px);background-size:70px 70px;transform:perspective(500px) rotateX(62deg);transform-origin:bottom;z-index:0;mask-image:linear-gradient(transparent,#000 70%);-webkit-mask-image:linear-gradient(transparent,#000 70%)}
+  #closer .fix{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2.6rem}
+  #closer .fix div{border:1px solid #22e3ff66;border-radius:10px;padding:1.4rem;background:#22e3ff0a;box-shadow:inset 0 0 30px #22e3ff0d}
+  #closer .fix b{font-family:var(--fr);font-size:2.8rem;color:var(--ac);display:block;line-height:1}
+  #closer .fix h3{font-size:1.5rem;margin:.5rem 0 .5rem}
+  #closer .two{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2.4rem;margin-top:2.8rem}
+  #closer .two .lab{font-size:.95rem;text-transform:uppercase;letter-spacing:.24em;font-weight:700;color:#ff3ddb;margin-bottom:.7rem}
+  #closer .path{margin-top:3.4rem;border:1px solid #ff3ddb88;border-radius:14px;padding:2.2rem 2.4rem;background:#ff3ddb0a;box-shadow:0 0 50px #ff3ddb1a;--ac:#ff6be6;--chipfg:#05030f}
+  #closer .path h3{font-size:clamp(1.9rem,3vw,2.7rem)}
+  #closer .path ol{list-style:none;counter-reset:p;margin-top:1.2rem;display:grid;grid-template-columns:1fr;gap:.1rem}
+  #closer .path li{counter-increment:p;display:flex;gap:1rem;align-items:baseline}
+  #closer .path li::before{content:counter(p);font-family:var(--fr);font-size:1.8rem;color:var(--ac);font-weight:700;min-width:1.4rem}
+  #closer .path li .chip{margin-top:.5rem}
+  #closer .about{margin-top:2.4rem;font-size:1.2rem;max-width:80ch;line-height:1.6}
+  #closer .last{font-family:var(--fr);font-size:clamp(2.2rem,4.5vw,4rem);line-height:1.05;margin-top:3rem;font-weight:600;letter-spacing:-.02em}
+  #closer .last em{color:var(--ac);font-style:italic;font-weight:400}
+  #closer .foot{margin-top:2.4rem;font-size:1.05rem;opacity:.6}
+  @media(max-width:900px){#closer .two,#closer .path ol{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- I — COVER -->
+<section id="cover">
+  <div class="wrap">
+    <div class="kicker reveal">Podcast Picks · Themed Issue No. 1 · 14 October 2026</div>
+    <h1 class="reveal d1">Judging<br><em>the</em> Judges</h1>
+    <div class="rule reveal d2"></div>
+    <p class="sub reveal d2">When a model grades a model, who grades the grader? One argument, in ten spreads, told by the people who build the judges.</p>
+    <div class="stats reveal d3">
+      <div><b>25</b><span>clips</span></div>
+      <div><b>55</b><span>minutes</span></div>
+      <div><b>11</b><span>cut by the scorer</span></div>
+      <div><b>14</b><span>still in your queue</span></div>
+    </div>
+    <div class="legend reveal d4">
+      <span class="chip cut">✂ dashed: cut by the scorer</span>
+      <span class="chip">● solid: in your queue</span>
+    </div>
+    <nav class="contents reveal d5">
+      <a href="#blind"><b>II</b>You can't read it anymore</a>
+      <a href="#tiers"><b>III</b>S tier: look at the data</a>
+      <a href="#data"><b>IV</b>The customer who said thanks</a>
+      <a href="#bias"><b>V</b>Every judge has a type</a>
+      <a href="#ask"><b>VI</b>Yes or no beats one to five</a>
+      <a href="#trust"><b>VII</b>Who checks the checker?</a>
+      <a href="#check"><b>VIII</b>Make the work show itself</a>
+      <a href="#bench"><b>IX</b>Your benchmark, not theirs</a>
+      <a href="#closer"><b>X</b>Measure what matters</a>
+    </nav>
+    <p class="src reveal d5">From AI Engineer, Hamel Husain, The AI Daily Brief, The AI Automators, The Cognitive Revolution, Latent Space and Jake Van Clief · Clip links play only on David's private network</p>
+  </div>
+</section>
+
+<!-- II — THE PROBLEM -->
+<section id="blind">
+  <div class="bignum">II</div>
+  <div class="wrap">
+    <div class="kicker reveal">II · The problem</div>
+    <h2 class="reveal d1">You can't read it anymore</h2>
+    <p class="deck reveal d2">“With traditional software, you can read the code and you can tell with some degree of reliability what exactly that code is going to do. With agents, you have no idea.” Laurie Voss of Arize AI, opening his workshop.</p>
+    <div class="two">
+      <div class="reveal d2">
+        <div class="statrow">
+          <div><b>Same input</b><span>not the same output</span></div>
+          <div><b>Same output</b><span>maybe not the same path</span></div>
+          <div><b>Every call</b><span>LLM, tool, agent turn: a trace</span></div>
+        </div>
+        <p class="quote">“Your code isn't the source of truth for what does my agent do. Instead, the traces are your source of truth.”</p>
+        <p class="by">Laurie Voss · Arize AI</p>
+        <p style="margin-top:1rem">And not one trace: “your traces at scale are the source of truth,” because without them “you are essentially flying blind when you are building agents.”</p>
+        <a class="chip cut" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45843-192/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why traces, not code, are an agent&#x27;s source of truth (AI Engineer)">&#9654; 1:38 &middot; ✂ cut &middot; fit 60</a>
+      </div>
+      <div class="panel reveal d3">
+        <h3>The bill arrives at review</h3>
+        <p>Gabriel Martinez, an engineering manager at G2i, on what the speed actually buys: “The output arrives with the shape of completion, but the real work has just moved to the reviewer.”</p>
+        <p class="quote" style="margin-top:1.4rem">“Generation is cheap, but evaluation is expensive.”</p>
+        <p style="margin-top:1rem">“If AI produces more than humans can possibly evaluate, it has not accelerated the team. It has created a bottleneck.”</p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46082-439/clip.mp3" target="_blank" rel="noopener" title="Private network only: Generation is cheap, but evaluation is expensive (AI Engineer)">&#9654; 3:14 &middot; ● in queue &middot; fit 70</a>
+      </div>
+    </div>
+    <p class="bottom reveal d4">So the job becomes judging. The rest of this issue is how to judge well, and then how to judge the judge.</p>
+  </div>
+</section>
+
+<!-- III — TIER LIST -->
+<section id="tiers">
+  <div class="bignum">III</div>
+  <div class="wrap">
+    <div class="kicker reveal">III · Hamel Husain ranks the field</div>
+    <h2 class="reveal d1">S tier: look at the data</h2>
+    <p class="deck reveal d2">Hamel Husain has worked on evals with more than fifty companies. Asked to rank every eval idea from S down to F, he keeps putting the same habit at the top.</p>
+    <div class="split">
+      <div class="tiers reveal d2">
+        <div class="row"><div class="tier S">S</div><div class="items">
+          <p><b>Error analysis.</b><i>“A structured approach to looking at your data quickly so that you can find what's broken.”</i></p>
+          <p><b>A custom annotation tool.</b><i>Build one with Claude or Codex that “removes all the friction from looking at your traces.”</i></p>
+          <p><b>Reading traces yourself.</b><i>“There's nothing more valuable than looking at the data.”</i></p>
+        </div></div>
+        <div class="row"><div class="tier A">A</div><div class="items">
+          <p><b>Binary pass/fail.</b><i>“Binary is just going to cut through a lot of noise.”</i></p>
+        </div></div>
+        <div class="row"><div class="tier C">C</div><div class="items">
+          <p><b>Writing evals before building.</b><i>“There's infinite surface area of things that can go wrong.”</i></p>
+        </div></div>
+        <div class="row"><div class="tier D">D</div><div class="items">
+          <p><b>Evals that always pass.</b><i>“They're not telling you anything at all.”</i></p>
+        </div></div>
+        <div class="row"><div class="tier F">F</div><div class="items">
+          <p><b>Off-the-shelf LLM judges.</b><i>“I challenge you to go read those prompts.”</i></p>
+          <p><b>Prompt optimisation without evals.</b><i>“What are you even optimizing against if you don't have evals?”</i></p>
+        </div></div>
+      </div>
+      <aside class="side reveal d3">
+        <div class="kicker">The unit-test trap</div>
+        <p class="quote" style="margin-top:1rem">“You should think of evals a little bit different than your unit tests in software. Like you don't want them to always be passing.”</p>
+        <p>A suite that is 100% green has stopped teaching you anything. Keep a few hard cases you are still losing.</p>
+        <div class="chips"><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45976-51/clip.mp3" target="_blank" rel="noopener" title="Private network only: Look at your data before writing any evals (Hamel Husain)">&#9654; 2:37 &middot; ● in queue &middot; fit 74</a><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45976-210/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why generic judges and one to five scales fail (Hamel Husain)">&#9654; 1:41 &middot; ● in queue &middot; fit 68</a></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- IV — WHY LOOK -->
+<section id="data">
+  <div class="bignum">IV</div>
+  <div class="wrap">
+    <div class="kicker reveal">IV · Why you have to look</div>
+    <h2 class="reveal d1">The customer who said thanks and left</h2>
+    <p class="deck reveal d2">A real conversation Hamel Husain found in an AI leasing assistant's data. Point a generic grader at it and “it's going to say everything went well cuz it looks like the customer is happy.”</p>
+    <div class="split">
+      <div class="reveal d2">
+        <div class="phone">
+          <div class="hdr">Leasing assistant · one real thread</div>
+          <div class="msg them">Hey, this is out of my budget. Thank you for your business.</div>
+          <div class="msg bot">You're welcome. If your situation changes or if any other questions in the future, feel free to reach out. Have a great day.</div>
+          <div class="note"><b>✗ The metric that would have caught it:</b> “did we handle sales objection when a qualifying opportunity was presented?” It was a sales assistant. It could have offered other properties from the same company.</div>
+        </div>
+        <div class="dash">
+          <div><b>4.2</b><span>helpfulness</span></div>
+          <div><b>4.9</b><span>conciseness</span></div>
+          <div><b>—</b><span>truthfulness</span></div>
+        </div>
+        <p class="dashcap">The generic dashboard: “it looks good, but nobody knows what it means.”</p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46225-23/clip.mp3" target="_blank" rel="noopener" title="Private network only: Look at real data first, and skip generic metrics (Hamel Husain)">&#9654; 2:33 &middot; ● in queue &middot; fit 62</a>
+      </div>
+      <div class="feat reveal d3">
+        <div class="f"><div class="ic">1</div><div><h3>The right person looks</h3><p>“If it's a legal assistant, it should be a lawyer. If it's a medical assistant, it should be a doctor.” Developers are rarely the domain expert, “unless you're building a coding application.”</p></div></div>
+        <div class="f"><div class="ic">2</div><div><h3>Give them a tool made for the data</h3><p>A custom annotation app, built with Claude Code, Codex or another coding agent, so the expert reviewing it meets no friction.</p></div></div>
+        <div class="f"><div class="ic">3</div><div><h3>Don't hand the looking to an agent</h3><p>His team compared the automated error-finding in Observe.ai, LangSmith and BrainTrust on the same leasing data. They “can all find issues that are obvious, but they all fail in the same ways”: sales objections, markdown in text messages, voice interruptions, human handoff.</p></div></div>
+        <p class="quote" style="font-size:1.7rem">“It's impossible for you to know what good looks like without looking at some data.”</p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46225-605/clip.mp3" target="_blank" rel="noopener" title="Private network only: Let domain experts review data; automated evals miss errors (Hamel Husain)">&#9654; 2:34 &middot; ● in queue &middot; fit 68</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- V — BIASES -->
+<section id="bias">
+  <div class="stamp"><b>BIASED</b><span>every judge</span></div>
+  <div class="wrap">
+    <div class="kicker reveal">V · Meet the judge</div>
+    <h2 class="reveal d1">Every judge has a type</h2>
+    <p class="deck reveal d2">Laurie Voss lists the known ways an LLM grading another LLM goes wrong. Nufar Gaspar, on The AI Daily Brief, gives the last one a better name.</p>
+    <div class="bias-cards">
+      <div class="card reveal d1"><div class="n">01</div><h3>Position</h3><p>Shown two options, the judge “tends to favor whichever comes first.” Some models prefer the last, “but it always has some kind of preference to position.”</p></div>
+      <div class="card reveal d2"><div class="n">02</div><h3>Length</h3><p>“LLMs like longer responses.” They score them higher “even if the… extra length is just filler.”</p></div>
+      <div class="card reveal d3"><div class="n">03</div><h3>Confidence</h3><p>The one he loves: “The judge gets fooled by a response that sounds confident just like humans do.”</p></div>
+      <div class="card reveal d4"><div class="n">04</div><h3>Self-preference</h3><p>“If you use the same model to do the generation as you use to do the judging, they tend to like their own output.”</p></div>
+    </div>
+    <div class="two">
+      <div class="reveal d2">
+        <div class="lab">The fix, Voss</div>
+        <p>Use one model for the agent and another for the judge. He graded Haiku's output with Sonnet, “but it works even better if you use a different labs model entirely.”</p>
+        <a class="chip cut" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45845-5266/clip.mp3" target="_blank" rel="noopener" title="Private network only: Four biases that make AI judges unreliable (AI Engineer)">&#9654; 1:20 &middot; ✂ cut &middot; fit 50</a>
+      </div>
+      <div class="reveal d3">
+        <div class="lab">The name, Gaspar</div>
+        <p class="quote" style="font-size:1.8rem">“There is kind of an AI nepotism.”</p>
+        <p style="margin-top:.8rem">So she judged with a family she wasn't testing: “because I haven't evaluated anything with Gemini, the judge was a Gemini model.”</p>
+        <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45958-1131/clip.mp3" target="_blank" rel="noopener" title="Private network only: Judging model outputs fairly: side by side, AI judge, repeats (The AI Daily Brief)">&#9654; 3:08 &middot; ● in queue &middot; fit 76</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VI — HOW TO ASK -->
+<section id="ask">
+  <div class="bignum">VI</div>
+  <div class="wrap">
+    <div class="kicker reveal">VI · How to ask the question</div>
+    <h2 class="reveal d1">Yes or no beats one to five</h2>
+    <div class="hero">
+      <div class="stat reveal d2">39%</div>
+      <div class="reveal d3">
+        <p class="quote">“Pointwise is not which dish do you want. Pointwise is do you want food, yes or no.”</p>
+        <p class="by">Tejas Kumar · IBM</p>
+        <p style="margin-top:1rem">In one study he cites, pairwise comparison “was 39% more vulnerable to attack vectors than pointwise,” and pointwise “fell apart just like five times.”</p>
+        <a class="chip cut" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45851-1024/clip.mp3" target="_blank" rel="noopener" title="Private network only: Ask a judge yes or no, not which of two (AI Engineer)">&#9654; 0:56 &middot; ✂ cut &middot; fit 58</a>
+      </div>
+    </div>
+    <div class="grades reveal d3">
+      <div class="g">1</div><div class="g">2</div><div class="g">3</div><div class="g">4</div><div class="g">5</div>
+      <span class="arrow">→</span><div class="pf">PASS / FAIL</div>
+    </div>
+    <div class="two">
+      <div class="reveal d2"><h3>Scales hide the hard part</h3><p>“What is the difference between a three and a four? You would have to write a whole bunch of rules for the LLM to know that.” Laurie Voss. Default to zero or one; a 0.5 for “a half-ass job” if you must.</p></div>
+      <div class="reveal d3"><h3>Make it think first</h3><p>“Ask the judge to reason before it scores.” It “measurably improves accuracy,” and the explanation helps you too. “Just one of those weird things about LLMs.”</p><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45845-4346/clip.mp3" target="_blank" rel="noopener" title="Private network only: Keep judge scores binary and make it reason first (AI Engineer)">&#9654; 1:12 &middot; ● in queue &middot; fit 62</a></div>
+      <div class="reveal d4"><h3>And scales cost teams</h3><p>Hamel Husain: a score “hides a lot of complexity in it, and it becomes exponentially more expensive to align your team on what a one, two, three, four, five means.”</p></div>
+    </div>
+    <div class="except reveal d3">
+      <div class="lab">The exception: your own taste</div>
+      <p style="margin-top:.8rem">Nufar Gaspar, judging models for her own work: “it's often very difficult to judge something as a standalone… What is often easier is to see side by side several alternatives.” <span class="ours">So machines grade one answer at a time; your own taste is easier side by side.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- VII — JUDGE THE JUDGE -->
+<section id="trust">
+  <div class="bignum">VII</div>
+  <div class="wrap">
+    <div class="kicker reveal">VII · Judge the judge</div>
+    <h2 class="reveal d1">Who checks the checker?</h2>
+    <div class="cols reveal d2">
+      <p class="first">Humans are the benchmark, and humans are bad at this too. Laurie Voss: two experts with the same output and the same rules agree surprisingly little; human inter-rater reliability “is often as low as” 0.2 or 0.3. A judge that beats that is doing better than people.</p>
+      <div class="callout"><p class="quote">“What you're looking for is a judge that disagrees with you all of the time. That is the danger signal.”</p><p style="margin-top:.7rem">One that disagrees some of the time “is a judge correctly handling a genuinely ambiguous task.”</p></div>
+      <p>He leaves the room with a principle he credits to Anthropic's eval teams: failures should seem fair. “If you look at a failing trace and you think that answer looks fine to me, the problem is probably the eval and not the agent.”</p>
+      <div class="chips" style="margin-bottom:1.3rem"><a class="chip cut" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45845-5346/clip.mp3" target="_blank" rel="noopener" title="Private network only: A judge that sometimes disagrees with you is fine (AI Engineer)">&#9654; 1:20 &middot; ✂ cut &middot; fit 54</a></div>
+      <p>Hamel Husain says the same thing harder. Writing a judge prompt and assuming it works “would be the same thing as just praying that the eval is good.” Label data by hand, then split it:</p>
+      <div class="bar"><div style="width:20%;background:#8ad1c2">20 train</div><div style="width:40%;background:#c7e9e1">40 dev</div><div style="width:40%;background:#5b8fa3;color:#fff">40 test</div></div>
+      <p class="barcap">Examples for the prompt come from train. Hill-climb the judge against dev. Hide test from yourself until the very end. Measure TPR and TNR, not just accuracy.</p>
+      <div class="chips" style="margin-bottom:1.3rem"><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46225-201/clip.mp3" target="_blank" rel="noopener" title="Private network only: What makes a trustworthy eval and LLM judge (Hamel Husain)">&#9654; 2:38 &middot; ● in queue &middot; fit 76</a></div>
+      <p>The AI Automators, fine-tuning a small model on about nine thousand support chats, call this “the most important part,” and it happens “before you train anything.” Four piles: 5,900 to study, just under a thousand to quiz after every pass, a thousand to tune confidence, and a thousand that “play no part in anything until the very end.”</p>
+      <div class="callout"><p class="quote">“If you test a model on chats it's already trained on. It'll just remember the answers.”</p></div>
+      <div class="chips" style="margin-bottom:1.3rem"><a class="chip cut" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45891-279/clip.mp3" target="_blank" rel="noopener" title="Private network only: Splitting data so a fine-tuned model&#x27;s score means something (The AI Automators)">&#9654; 1:15 &middot; ✂ cut &middot; fit 46</a></div>
+      <p>And the blunt version, from Nufar Gaspar: “if the judge is completely not correlated to your taste, it's a bad judge and just throw it away.”</p>
+    </div>
+  </div>
+</section>
+
+<!-- VIII — BUILD IT TO BE CHECKED -->
+<section id="check">
+  <div class="wrap">
+    <div class="kicker reveal">VIII · Build it to be checked</div>
+    <h2 class="reveal d1">Make the work show itself</h2>
+    <p class="deck reveal d2">Four talks, one move: stop asking a judge to redo the work, and build the work so it can be checked.</p>
+    <div class="win reveal d2">
+      <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span>~/judging-the-judges · checkable</span></div>
+      <div class="body">
+        <div>
+          <div class="cmd">$ design --for-checking</div>
+          <div class="out">Hamel Husain's data agent answers a revenue question as a chatbot. To check it, <q>the only way to evaluate something like this would be to redo all of the work.</q> Instead, show <q>where the answer is coming from</q> and <q>the intermediate calculations.</q></div>
+          <div class="who"># Hamel Husain</div>
+          <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46225-371/clip.mp3" target="_blank" rel="noopener" title="Private network only: Design the AI product so its answers can be checked (Hamel Husain)">&#9654; 2:04 &middot; ● in queue &middot; fit 70</a>
+        </div>
+        <div>
+          <div class="cmd">$ eval --one-step-at-a-time</div>
+          <div class="out"><q>Every LLM step in an Orbit workflow enforces strict JSON schemas.</q> End-to-end evals are <q>noisy, expensive, and difficult to reproduce,</q> so their harness <q>isolates individual LLM steps</q>, then turns real traces into <q>a golden data set</q> versioned beside the code.</div>
+          <div class="who"># Eduardo Simon &amp; Javier Casal · Flywire</div>
+          <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46209-802/clip.mp3" target="_blank" rel="noopener" title="Private network only: Testing agent steps: schemas, isolated step evals, golden data sets (AI Engineer)">&#9654; 2:16 &middot; ● in queue &middot; fit 72</a>
+        </div>
+        <div>
+          <div class="cmd">$ agent --show-uncertainty</div>
+          <div class="out"><q>With agents it goes wrong quietly.</q> No seg fault: a missed scan on page 30. Their fix was making uncertainty legible. <q>We started failing the agent for building any shaky assumptions.</q> <q>We rewarded asking instead of guessing.</q></div>
+          <div class="who"># Abhi Arya · Reducto</div>
+          <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46023-515/clip.mp3" target="_blank" rel="noopener" title="Private network only: Make the agent&#x27;s uncertainty visible and reward asking (AI Engineer)">&#9654; 3:10 &middot; ● in queue &middot; fit 74</a>
+        </div>
+        <div>
+          <div class="cmd">$ trust --calibrated</div>
+          <div class="out">On AlphaFold: even at 95 GDT, if <q>the PLDDT score was completely uncalibrated. Who would trust it?</q> You would work on a confident wrong answer <q>for the next one year.</q> <q>The calibration of the uncertainty measure was extremely important.</q></div>
+          <div class="who"># Pushmeet Kohli · Google DeepMind, on Latent Space</div>
+          <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46111-1487/clip.mp3" target="_blank" rel="noopener" title="Private network only: Calibrated confidence matters more than interpretability (Latent Space)">&#9654; 3:44 &middot; ● in queue &middot; fit 62</a>
+        </div>
+        <div style="grid-column:1/-1"><span class="cmd">$</span> <span class="cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IX — PERSONAL BENCHMARK -->
+<section id="bench">
+  <div class="wrap">
+    <div class="mast reveal"><b>The Personal Benchmark</b><span>IX · The AI Daily Brief, Operator's Cut</span></div>
+    <h2 class="reveal d1">Your benchmark, not theirs</h2>
+    <div class="banner reveal d2"><b>11 days</b><span>Nathaniel Whittemore's estimate of the average gap between frontier model releases. Each one ships with a benchmark table.</span></div>
+    <div class="cols reveal d3">
+      <h3>Why the tables tell you little</h3>
+      <p>Not because anyone is lying: “most of these benchmarks are now in the training datasets,” and “the longer they've been around, the less value there is.” Even perfect benchmarks miss how a model fits your stack: “there are going to be times, I guarantee where the thing that is technically state of the art on some benchmark is worse at the version of the thing that you're doing.”</p>
+      <div class="box"><p class="quote" style="font-size:1.5rem">“There's kind of no shortcut solution to figuring out how a new model is or isn't going to fit into your process other than using it.”</p></div>
+      <a class="chip cut" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45958-137/clip.mp3" target="_blank" rel="noopener" title="Private network only: Published AI benchmarks tell you little about your own work (The AI Daily Brief)">&#9654; 1:28 &middot; ✂ cut &middot; fit 45</a>
+      <h3 style="margin-top:1.6rem">Nufar Gaspar's five steps</h3>
+      <ol class="steps">
+        <li><span><b>Pick the tasks.</b> “Arguably the most important step”: a diverse set you would act on.</span></li>
+        <li><span><b>Pick the candidates.</b> A model, or a new harness or tool with a model.</span></li>
+        <li><span><b>Run it.</b> By hand, with a small script, or on a platform.</span></li>
+        <li><span><b>Hide the names.</b> “We are very biased towards our beloved tools.”</span></li>
+        <li><span><b>Decide.</b> A win “does not necessarily mean that automatically you need to make changes”: cost, latency, or too small a delta.</span></li>
+      </ol>
+      <a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45958-268/clip.mp3" target="_blank" rel="noopener" title="Private network only: Five steps to build a personal AI benchmark (The AI Daily Brief)">&#9654; 2:28 &middot; ● in queue &middot; fit 74</a>
+      <h3 style="margin-top:1.6rem">Keep it fair</h3>
+      <p>Freeze everything: “the exact same request to each and every one of the models.” And run it more than once, because the same model with the same prompt gives different results. “Running it several times will seal the deal.”</p>
+      <div class="box">
+        <h3>When to train your own</h3>
+        <p style="margin-top:.6rem">The AI Automators' small Laya model, about 420 million parameters, “fits very well anywhere you make the same call over and over again where the available choices are reasonably stable and you have past examples of the right answer.” Trained on your data, it can outperform a model like Jev.</p>
+        <a class="chip cut" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45891-56/clip.mp3" target="_blank" rel="noopener" title="Private network only: When fine-tuning a small model beats a general one (The AI Automators)">&#9654; 0:46 &middot; ✂ cut &middot; fit 48</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- X — CLOSER -->
+<section id="closer">
+  <div class="floor"></div>
+  <div class="wrap">
+    <div class="kicker reveal">X · Closer</div>
+    <h2 class="reveal d1">Measure what matters</h2>
+    <p class="deck reveal d2">When the evals say the agent is failing, Laurie Voss has an order for where the effort goes. It starts where this issue started: the data.</p>
+    <div class="fix reveal d2">
+      <div><b>1</b><h3>Data quality</h3><p>Stale knowledge base? “No amount of prompt iteration is going to help.”</p></div>
+      <div><b>2</b><h3>Prompting</h3><p>Few-shot examples, explicit constraints. “Often the highest ROI.”</p></div>
+      <div><b>3</b><h3>Model choice</h3><p>Sometimes it solves what prompting can't, but it “will also cost more and be slower.”</p></div>
+      <div><b>4</b><h3>Temperature, top-p</h3><p>Easy to tweak, seldom a big lever. “The last thing you try.”</p></div>
+    </div>
+    <div class="chips reveal d3"><a class="chip cut" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45845-6030/clip.mp3" target="_blank" rel="noopener" title="Private network only: Where to invest when improving an AI agent (AI Engineer)">&#9654; 1:02 &middot; ✂ cut &middot; fit 58</a></div>
+    <div class="two">
+      <div class="reveal d2"><div class="lab">Outcomes, not tokens</div><p>Davis Palmie of Factory: token leaderboards are “Goodhart's law in real time.” Count signal-to-production time, human interventions, median time to repair, shelf life of code, cost per PR. “Don't token max.”</p><a class="chip cut" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45963-984/clip.mp3" target="_blank" rel="noopener" title="Private network only: Measure outcomes, not tokens (AI Engineer)">&#9654; 1:38 &middot; ✂ cut &middot; fit 58</a></div>
+      <div class="reveal d3"><div class="lab">Outcomes, not certainty</div><p>Jake Van Clief to a student who tripled his company's revenue and still felt he was building the wrong thing: “Put pressure on am I getting an outcome and am I building it in a way where I can fix it later.” “Outcomes matter more than is it right.”</p><a class="chip cut" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46125-3073/clip.mp3" target="_blank" rel="noopener" title="Private network only: Nobody Knows What They&#x27;re Doing; Judge Software By Outcomes (Jake Van Clief)">&#9654; 2:30 &middot; ✂ cut &middot; fit 46</a></div>
+      <div class="reveal d4"><div class="lab">Write down what right means</div><p>Runtime Verification, on The Cognitive Revolution: writing the spec is where bugs surface, “almost every time.” Their cheap version: once the code exists, ask the agent to write the spec and prove it. “It's like a review plus plus.”</p><div class="chips"><a class="chip cut" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46233-1360/clip.mp3" target="_blank" rel="noopener" title="Private network only: Formal verification explained; writing the spec finds bugs (Cognitive Revolution &quot;How AI Changes Everything&quot;)">&#9654; 4:19 &middot; ✂ cut &middot; fit 58</a><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46233-2744/clip.mp3" target="_blank" rel="noopener" title="Private network only: Poor man&#x27;s verification: fuzzing, plan review, spec after code (Cognitive Revolution &quot;How AI Changes Everything&quot;)">&#9654; 3:47 &middot; ● in queue &middot; fit 72</a></div></div>
+    </div>
+    <div class="path reveal d3">
+      <h3>The whole arc in seven clips, about 13 minutes</h3>
+      <ol>
+        <li><a class="chip cut" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45843-192/clip.mp3" target="_blank" rel="noopener" title="Private network only: Why traces, not code, are an agent&#x27;s source of truth (AI Engineer)">&#9654; Why traces, not code, are an agent&#x27;s source of truth &middot; 1:38 &middot; ✂ cut</a></li>
+        <li><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45976-51/clip.mp3" target="_blank" rel="noopener" title="Private network only: Look at your data before writing any evals (Hamel Husain)">&#9654; Look at your data before writing any evals &middot; 2:37 &middot; ● in queue</a></li>
+        <li><a class="chip cut" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45845-5266/clip.mp3" target="_blank" rel="noopener" title="Private network only: Four biases that make AI judges unreliable (AI Engineer)">&#9654; Four biases that make AI judges unreliable &middot; 1:20 &middot; ✂ cut</a></li>
+        <li><a class="chip cut" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45851-1024/clip.mp3" target="_blank" rel="noopener" title="Private network only: Ask a judge yes or no, not which of two (AI Engineer)">&#9654; Ask a judge yes or no, not which of two &middot; 0:56 &middot; ✂ cut</a></li>
+        <li><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/46225-201/clip.mp3" target="_blank" rel="noopener" title="Private network only: What makes a trustworthy eval and LLM judge (Hamel Husain)">&#9654; What makes a trustworthy eval and LLM judge &middot; 2:38 &middot; ● in queue</a></li>
+        <li><a class="chip" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45958-268/clip.mp3" target="_blank" rel="noopener" title="Private network only: Five steps to build a personal AI benchmark (The AI Daily Brief)">&#9654; Five steps to build a personal AI benchmark &middot; 2:28 &middot; ● in queue</a></li>
+        <li><a class="chip cut" href="https://davids-macbook-pro.tail81d194.ts.net/audio/45963-984/clip.mp3" target="_blank" rel="noopener" title="Private network only: Measure outcomes, not tokens (AI Engineer)">&#9654; Measure outcomes, not tokens &middot; 1:38 &middot; ✂ cut</a></li>
+      </ol>
+    </div>
+    <p class="about reveal d3">About the cut: the taste scorer cut 11 of these 25 (fit 45 to 60). The 14 still in your queue scored 62 to 76. The line runs through single talks. Laurie Voss's 101 workshop has three clips cut and one kept, and the AI Daily Brief webinar has one cut and two kept. Same speakers, same subject, opposite sides of the line.</p>
+    <p class="last reveal d4">Look at the data. <em>Then</em> decide whether to trust the judge.</p>
+    <p class="foot">Clip links play only on David's private network. No audio is embedded in this page. Quotes are from the clips' transcripts; italic asides are the editor's.</p>
+  </div>
+</section>
+
+<script>
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.08,rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
